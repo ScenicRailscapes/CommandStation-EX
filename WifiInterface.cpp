@@ -381,7 +381,7 @@ wifiSerialState WifiInterface::setup2(const FSH* SSid, const FSH* password,
   }
   // suck up anything after the IP. 
   if (!checkForOK(1000, true, false)) return WIFI_DISCONNECTED;
-  LCD(5,F("PORT=%d"),port);
+  //LCD(5,F("PORT=%d"),port);
    
   return WIFI_CONNECTED;
 }
