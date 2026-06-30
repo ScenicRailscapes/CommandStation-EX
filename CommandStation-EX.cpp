@@ -22,7 +22,7 @@
   #warning MOTOR_SHIELD_TYPE not found. Building with no motor shield
   #define MOTOR_SHIELD_TYPE NO_SHIELD 
 #endif
-
+#include <Arduino.h>
 /*
  *  © 2021 Neil McKechnie
  *  © 2020-2025 Chris Harlow, Harald Barth, David Cutting,
@@ -104,8 +104,8 @@ void setup()
 
   DISPLAY_START (
     // This block is still executed for DIAGS if display not in use
-    LCD(0,F("DCC-EX v" VERSION));
-    LCD(1,F("Lic GPLv3"));
+    //LCD(0,F("DCC-EX v" VERSION));
+    //LCD(1,F("Lic GPLv3"));
   );
 
   // Responsibility 2: Start all the communications before the DCC engine
@@ -116,7 +116,7 @@ void setup()
 #ifndef ARDUINO_ARCH_ESP32
   WifiInterface::setup(WIFI_SERIAL_LINK_SPEED, F(WIFI_SSID), F(WIFI_PASSWORD), F(WIFI_HOSTNAME), IP_PORT, WIFI_CHANNEL, WIFI_FORCE_AP);
 #else
-  WifiESP::setup();
+  WifiESP::setup(WIFI_SSID, WIFI_PASSWORD, WIFI_HOSTNAME, IP_PORT, WIFI_CHANNEL, WIFI_FORCE_AP);
 #endif // ARDUINO_ARCH_ESP32
 #endif // WIFI_ON
 
@@ -148,7 +148,7 @@ void setup()
   LCN_SERIAL.begin(115200);
   LCN::init(LCN_SERIAL);
   #endif
-  LCD(3, F("Ready"));
+  //LCD(3, F("Ready"));
   CommandDistributor::broadcastPower();
 }
 
@@ -227,14 +227,14 @@ void loop()
   int freeNow = DCCTimer::getMinimumFreeMemory();
   if (freeNow < ramLowWatermark) {
     ramLowWatermark = freeNow;
-    LCD(3,F("Free RAM=%5db"), ramLowWatermark);
+    //LCD(3,F("Free RAM=%5db"), ramLowWatermark);
   }
   #else
   // on other platforms, just report every 4kb
   int freeNow = DCCTimer::getMinimumFreeMemory() / 4096;
   if (freeNow < ramLowWatermark) {
     ramLowWatermark = freeNow;
-    LCD(3,F("Free RAM=%5dKb"), ramLowWatermark*4);
+    //LCD(3,F("Free RAM=%5dKb"), ramLowWatermark*4);
   }
   #endif
 }
