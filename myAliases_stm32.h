@@ -37,8 +37,8 @@ ALIAS (IR_H_3, 302)                 // IR Sensor Helix berg niveau
 ALIAS (IR_D_1_1, 308)               // IR Sensor Dorp branchlijn west (berg)
 ALIAS (IR_D_1_2, 309)               // IR Sensor Dorp branchlijn station
 ALIAS (IR_D_1_3, 310)               // IR Sensor hoofdspoor dorp - haven
-ALIAS (IR_D_2_1, 311)               // IR Sensor Hoofdspoor #1 Berg
-ALIAS (IR_D_3_1, 312)               // IR Sensor Hoofdspoor #2 Berg
+ALIAS (IR_D_2_1, 312)               // IR Sensor Hoofdspoor #1 Berg
+ALIAS (IR_D_3_1, 311)               // IR Sensor Hoofdspoor #2 Berg
 // Block detectors (negatief voor block occupied)
 ALIAS(BD_HBU_1, -304)               // Block #1 Helix buitenring op vPin 304 (pin 4 I2C I/O #1)
 ALIAS(BD_HBI_1, -305)               // Block #2 Helix binnenring op vPin 305 (pin 5 I2C I/O #1)

@@ -202,22 +202,6 @@ DONE
 */
 
 
-
-// ONSENSOR(BD_D_1) // Block detect Branchlijn dorp - station
-//   IF(BD_D_1)
-//     PRINT("BD_D_1:Branchlijn dorp bezet")
-//     RED(105)
-//     // en natuurlijk de reservering van het block
-//     SET(BD_D_1_BEZET) // flag dat het block bezet is
-//   ENDIF
-//   IFNOT(BD_D_1)
-//     PRINT("BD_D_1:Branchlijn dorp vrij")
-//     GREEN(105)
-//     // en natuurlijk de unreservering van het block
-//     RESET(BD_D_1_BEZET) // flag dat het block vrij is
-//   ENDIF
-// DONE
-
 ONSENSOR(BD_D_2) // Block detect Hoofdspoor #1
   IF(BD_D_2)
     PRINT("BD_D_2:Hoofdspoor #1 bezet")
@@ -248,20 +232,121 @@ ONSENSOR(BD_D_3) // Block detect Hoofdspoor #2
   ENDIF
 DONE
 
-ONSENSOR(BD_D_4) // Block detect Connectie dorp en hoofdsporen naar yard en helix dal 
-  IF(BD_D_4)
-    PRINT("BD_D_4:Connectie dorp en hoofdsporen naar yard en helix dal bezet")
-    //RED(108)
-    // en natuurlijk de reservering van het block
-    SET(BD_D_4_BEZET) // flag dat het block bezet is
-  ENDIF
-  IFNOT(BD_D_4)
-    PRINT("BD_D_4:Connectie dorp en hoofdsporen naar yard en helix dal vrij")
-    //GREEN(108)
-    // en natuurlijk de unreservering van het block
-    RESET(BD_D_4_BEZET) // flag dat het block vrij is
+/* Testen met Block BD 4*/
+/* **************************** Let op: als dit werkt wel de sequence nummers aanpassen naar mijn standaard ****************** */
+/* Blokbeveiliging & Richtingsdetectie Blok BD_D_4 */
+
+// =======================================================
+// INTERNE AUTOMATISCHE AFHANDELING (VRIJGAVE SEQUENCES)
+// =======================================================
+
+// Sequence voor het verlaten van het blok aan de CW-zijde (via IR_D_4_2_BEZET)
+SEQUENCE(142)
+  // De trein activeert de uitgangssensor. We wachten tot de laatste wagon de sluis gepasseerd is.
+  DELAY(2000) // Wacht 2 seconden (pas aan op basis van je langste trein/snelheid)
+  
+  RESET(BD_D_4_BEZET)
+  RESET(BD_D_4_CW)
+  // GREEN(108) // Optioneel: Sein weer op groen zetten
+  PRINT("BD_D_4: Trein is via CW-zijde (IR_D_4_2) volledig vertrokken")
+DONE
+
+// Sequence voor het verlaten van het blok aan de CCW-zijde (via IR_D_4_1_BEZET)
+SEQUENCE(141)
+  DELAY(2000)
+  RESET(BD_D_4_BEZET)
+  RESET(BD_D_4_CCW)
+  // GREEN(108)
+  PRINT("BD_D_4: Trein is via CCW-zijde (IR_D_4_1) volledig vertrokken")
+DONE
+
+
+// =======================================================
+// SENSOR TRIGGERS (INGANGEN EN UITGANGEN)
+// =======================================================
+
+// SENSOR 1: De Clockwise Ingang / Counter Clockwise Uitgang
+ONSENSOR(IR_D_4_1_BEZET)
+  IF(IR_D_4_1_BEZET)
+    // INGANGS-TRIGGER (CW): Als het blok vrij is, komt er een trein binnen vanaf zijde 1
+    IFNOT(BD_D_4_BEZET)
+      SET(BD_D_4_BEZET)
+      SET(BD_D_4_CW)
+      // RED(108) // Optioneel: Sein op rood
+      PRINT("BD_D_4: Connectie dorp bezet - BINNEN via CW-zijde (IR_D_4_1)")
+    ENDIF
+    
+    // UITGANGS-TRIGGER (CCW): Trein was al in het blok en reed CCW. Dit is de uitgang!
+    IF(BD_D_4_CCW)
+      START(141) // Start de vrijgave-timer voor zijde 1
+    ENDIF
   ENDIF
 DONE
+
+// SENSOR 2: De Counter Clockwise Ingang / Clockwise Uitgang
+ONSENSOR(IR_D_4_2_BEZET)
+  IF(IR_D_4_2_BEZET)
+    // INGANGS-TRIGGER (CCW): Als het blok vrij is, komt er een trein binnen vanaf zijde 2
+    IFNOT(BD_D_4_BEZET)
+      SET(BD_D_4_BEZET)
+      SET(BD_D_4_CCW)
+      // RED(108)
+      PRINT("BD_D_4: Connectie dorp bezet - BINNEN via CCW-zijde (IR_D_4_2)")
+    ENDIF
+    
+    // UITGANGS-TRIGGER (CW): Trein was al in het blok en reed CW. Dit is de uitgang!
+    IF(BD_D_4_CW)
+      START(142) // Start de vrijgave-timer voor zijde 2
+    ENDIF
+  ENDIF
+DONE
+
+// HARDWARE BACK-UP: De oorspronkelijke stroomloop-detector
+ONSENSOR(BD_D_4)
+  IF(BD_D_4)
+    // Mocht een trein handmatig in het blok geplaatst worden (of een IR-sluis missen):
+    IFNOT(BD_D_4_BEZET)
+      SET(BD_D_4_BEZET)
+      // RED(108)
+      PRINT("BD_D_4: Connectie dorp HARDWAREMATIG bezet (Back-up stroomdetectie)")
+    ENDIF
+  ENDIF
+  
+  // IFNOT(BD_D_4) IS BEWUST VERWIJDERD:
+  // Het wegvallen van stroommelder-contact (flikkeren) doet nu helemaal niets meer.
+  // Het blok wordt uitsluitend nog vrijgegeven via de veilige IR-sequences (141 en 142).
+DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ONSENSOR(BD_D_4) // Block detect Connectie dorp en hoofdsporen naar yard en helix dal 
+//   IF(BD_D_4)
+//     PRINT("BD_D_4:Connectie dorp en hoofdsporen naar yard en helix dal bezet")
+//     //RED(108)
+//     // en natuurlijk de reservering van het block
+//     SET(BD_D_4_BEZET) // flag dat het block bezet is
+//   ENDIF
+//   IFNOT(BD_D_4)
+//     PRINT("BD_D_4:Connectie dorp en hoofdsporen naar yard en helix dal vrij")
+//     //GREEN(108)
+//     // en natuurlijk de unreservering van het block
+//     RESET(BD_D_4_BEZET) // flag dat het block vrij is
+//   ENDIF
+// DONE
 
 ONSENSOR(BD_D_5) // Block detect Branchlijn yard - dorp
   IF(BD_D_5)
@@ -278,9 +363,13 @@ ONSENSOR(BD_D_5) // Block detect Branchlijn yard - dorp
   ENDIF
 DONE
 
-/* IR Detection */
+/* IR Detection 
+  IR sensoren en de treinen zijn nogal onvoorspelbaar. Een trein kan een IR sensor meerdere keren activeren, of helemaal niet. 
+  Daarom gebruiken we een bitmap latch om te voorkomen dat we teveel meldingen krijgen van dezelfde trein.
+  Pas als er NA ACTIVATIE van de IR sensor een bepaalde tijd (bijvoorbeeld 2 seconden) geen activatie meer is, dan wordt de bitmap weer vrijgegeven en kan de volgende activatie weer een melding geven.
+*/
 
-// IR Detectie sensoren 
+/* IR Detectie sensoren */
 ONSENSOR(IR_H_1)  // IR Sensor Helix dal niveau
   AT(IR_H_1)
     IFNOT(IR_H_1_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
