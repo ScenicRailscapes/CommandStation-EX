@@ -79,7 +79,7 @@ ALIAS (IR_D_1_4, 352)               // IR Sensor Haven - dorp hoofdspoor
 
 
 // Bitmaps (Latches )voor bezet / vrij 
-HAL(Bitmap,2000,30) // create flags 2000..2029 // Block bezet flags/latches
+HAL(Bitmap,2000,50) // create flags 2000..2029 // Block bezet flags/latches
 ALIAS(BD_HBI_1_BEZET, 2000)         // Block #1 occupied latch
 ALIAS(BD_HBU_1_BEZET, 2001)         // Block #2 occupied latch
 ALIAS(BD_D_1_BEZET, 2002)           // Block #3 occupied latch
@@ -104,13 +104,32 @@ ALIAS(BD_D_4_CW, 2020)              // Trein rijdt Clockwise door blok 4
 ALIAS(BD_D_4_CCW, 2021)             // Trein rijdt Counter Clockwise door blok 4
 ALIAS(BD_D_5_CW, 2022)              // Trein rijdt Clockwise door blok 5
 ALIAS(BD_D_5_CCW, 2023)             // Trein rijdt Counter Clockwise door blok 5
+ALIAS(IR_D_1_1_BEZET, 2024)         // IR Sensor Dorp branchlijn west (berg) bezet latch
+ALIAS(IR_D_1_2_BEZET, 2025)         // IR
+ALIAS(IR_D_1_3_BEZET, 2026)         // IR Sensor hoofdspoor dorp - haven bezet latch
+ALIAS(IR_D_2_1_BEZET, 2027)         // IR Sensor Hoofdspoor #1 Berg bezet latch
+ALIAS(IR_D_3_1_BEZET, 2028)         // IR Sensor Hoofdspoor #2 Berg bezet latch
+ALIAS(IR_D_3_2_BEZET, 2029)         // IR Sensor Hoofdspoor #2 Dorp
+ALIAS(IR_D_2_2_BEZET, 2030)         // IR Sensor Hoofdspoor #1 Dorp bezet latch
+ALIAS(IR_D_1_4_BEZET, 2031)         // IR Sensor Haven - dorp hoofdspoor bezet latch
+ALIAS(IR_D_4_1_BEZET, 2032)         // IR Sensor Connectie spoor #1 Dorp bezet latch
+ALIAS(IR_D_4_2_BEZET, 2033)         // IR Sensor Connectie spoor #1 Dal bezet latch
+ALIAS(IR_H_1_BEZET, 2034)           // IR Sensor Helix dal niveau bezet latch
+ALIAS(IR_H_2_BEZET, 2035)           // IR Sensor Helix midden niveau bezet latch
+ALIAS(IR_H_3_BEZET, 2036)           // IR Sensor Helix berg niveau bezet latch
+ALIAS(IR_S_1_BEZET, 2037)           // IR Stop sensor parkeerspoor #1 bezet latch
+ALIAS(IR_S_2_BEZET, 2038)           // IR Stop sensor parkeerspoor #2 bezet latch
+ALIAS(IR_S_3_BEZET, 2039)           // IR Stop sensor parkeerspoor #3 bezet latch
+ALIAS(IR_S_4_BEZET, 2040)           // IR Stop sensor parkeerspoor #4 bezet latch
+ALIAS(IR_S_5_BEZET, 2041)           // IR Stop sensor parkeerspoor #5 bezet latch
+ALIAS(IR_S_RIJ_BEZET, 2042)         // IR Stop sensor doorrij spoor bezet latch
 
 
 // Branchelijn dorp - reverse loop
-HAL(Bitmap,2030,5) // create flags 2030..2035 // General purpose latches
-ALIAS(REVERSE_SIGNAL_ACTIVE, 2030)  // Flag to indicate reverse signal is active on DCC track keerlus
-ALIAS(DORP_STATION_DETECT, 2031)    // Flag to indicate dorp station sensor detected train
-ALIAS(DORP_WEST_DETECT, 2032)       // Flag to indicate dorp west sensor detected train
+HAL(Bitmap,2050,5) // create flags 2050..2055 // General purpose latches
+ALIAS(REVERSE_SIGNAL_ACTIVE, 2050)  // Flag to indicate reverse signal is active on DCC track keerlus
+ALIAS(DORP_STATION_DETECT, 2051)    // Flag to indicate dorp station sensor detected train
+ALIAS(DORP_WEST_DETECT, 2052)       // Flag to indicate dorp west sensor detected train
 
 // Sequences en routes 
 ALIAS(BRANCH_DORP_KEERLUS,1600)     // Branchlijn dorp van oost naar west automation

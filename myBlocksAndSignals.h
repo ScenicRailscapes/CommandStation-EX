@@ -282,165 +282,258 @@ DONE
 
 // IR Detectie sensoren 
 ONSENSOR(IR_H_1)  // IR Sensor Helix dal niveau
-  IF(IR_H_1)
-    PRINT("Helix dal niveau sensor active")
-  ENDIF
-  IFNOT(IR_H_1)
-    PRINT("Helix dal niveau sensor inactive")
-  ENDIF
+  AT(IR_H_1)
+    IFNOT(IR_H_1_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_H_1_BEZET)
+      PRINT("Helix dal niveau sensor active")
+    ENDIF
+    AFTER(IR_H_1,2000)
+      IF(IR_H_1_BEZET)
+        RESET(IR_H_1_BEZET)
+        PRINT("Helix dal niveau sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_H_2)  // IR Sensor Helix midden niveau
-  IF(IR_H_2)
-    PRINT("Helix midden niveau sensor active")
-  ENDIF
-  IFNOT(IR_H_2)
-    PRINT("Helix midden niveau sensor inactive")
-  ENDIF
+  AT(IR_H_2)
+    IFNOT(IR_H_2_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_H_2_BEZET)
+      PRINT("Helix midden niveau sensor active")
+    ENDIF
+    AFTER(IR_H_2,2000)
+      IF(IR_H_2_BEZET)
+        RESET(IR_H_2_BEZET)
+        PRINT("Helix midden niveau sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_H_3)  // IR Sensor Helix berg niveau
-  IF(IR_H_3)
-    PRINT("Helix berg niveau sensor active")
-  ENDIF
-  IFNOT(IR_H_3)
-    PRINT("Helix berg niveau sensor inactive")
-  ENDIF
+  AT(IR_H_3)
+    IFNOT(IR_H_3_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_H_3_BEZET)
+      PRINT("Helix berg niveau sensor active")
+    ENDIF
+    AFTER(IR_H_3,2000)
+      IF(IR_H_3_BEZET)
+        RESET(IR_H_3_BEZET)
+        PRINT("Helix berg niveau sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_S_1) // IR Stop sensor parkeerspoor #1
-  IF(IR_S_1)
-    PRINT("Parkeerspoor 1 stop sensor active")
-  ENDIF
-  IFNOT(IR_S_1)
-    PRINT("Parkeerspoor 1 stop sensor inactive")
-  ENDIF
+  AT(IR_S_1)
+    IFNOT(IR_S_1_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_S_1_BEZET) 
+      PRINT("Parkeerspoor 1 stop sensor active")
+    ENDIF
+    AFTER(IR_S_1,2000)
+      IF(IR_S_1_BEZET)
+        RESET(IR_S_1_BEZET)
+        PRINT("Parkeerspoor 1 stop sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_S_2) // IR Stop sensor parkeerspoor #2
-  IF(IR_S_2)
-    PRINT("Parkeerspoor 2 stop sensor active")
-  ENDIF
-  IFNOT(IR_S_2)
-    PRINT("Parkeerspoor 2 stop sensor inactive")
-  ENDIF
+  AT(IR_S_2)
+    IFNOT(IR_S_2_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_S_2_BEZET)
+      PRINT("Parkeerspoor 2 stop sensor active")
+    ENDIF
+    AFTER(IR_S_2,2000)
+      IF(IR_S_2_BEZET)
+        RESET(IR_S_2_BEZET)
+        PRINT("Parkeerspoor 2 stop sensor inactive")
+      ENDIF
+  DONE
 DONE  
 
+
 ONSENSOR(IR_S_3) // IR Stop sensor parkeerspoor #3
-  IF(IR_S_3)
-    PRINT("Parkeerspoor 3 stop sensor active")
-  ENDIF
-  IFNOT(IR_S_3)
-    PRINT("Parkeerspoor 3 stop sensor inactive")
-  ENDIF
+  AT(IR_S_3)
+    IFNOT(IR_S_3_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_S_3_BEZET)
+      PRINT("Parkeerspoor 3 stop sensor active")
+    ENDIF
+    AFTER(IR_S_3,2000)
+      IF(IR_S_3_BEZET)
+        RESET(IR_S_3_BEZET)
+        PRINT("Parkeerspoor 3 stop sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_S_4) // IR Stop sensor parkeerspoor #4
-  IF(IR_S_4)
-    PRINT("Parkeerspoor 4 stop sensor active")
-  ENDIF
-  IFNOT(IR_S_4)
-    PRINT("Parkeerspoor 4 stop sensor inactive")
-  ENDIF
+  AT(IR_S_4)
+    IFNOT(IR_S_4_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_S_4_BEZET)
+      PRINT("Parkeerspoor 4 stop sensor active")
+    ENDIF
+    AFTER(IR_S_4,2000)
+      IF(IR_S_4_BEZET)
+        RESET(IR_S_4_BEZET)
+        PRINT("Parkeerspoor 4 stop sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_S_5) // IR Stop sensor parkeerspoor #5
-  IF(IR_S_5)
-    PRINT("Parkeerspoor 5 stop sensor active")
-  ENDIF
-  IFNOT(IR_S_5)
-    PRINT("Parkeerspoor 5 stop sensor inactive")
-  ENDIF
+  AT(IR_S_5)
+    IFNOT(IR_S_5_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_S_5_BEZET)
+      PRINT("Parkeerspoor 5 stop sensor active")
+    ENDIF
+    AFTER(IR_S_5,2000)
+      IF(IR_S_5_BEZET)
+        RESET(IR_S_5_BEZET)
+        PRINT("Parkeerspoor 5 stop sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_S_RIJ) // IR Stop sensor doorrij spoor
-  IF(IR_S_RIJ)
-    PRINT("Doorrij spoor stop sensor active")
-  ENDIF
-  IFNOT(IR_S_RIJ)
-    PRINT("Doorrij spoor stop sensor inactive")
-  ENDIF
-DONE
+  AT(IR_S_RIJ)
+    IFNOT(IR_S_RIJ_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_S_RIJ_BEZET)
+      PRINT("Doorrij spoor stop sensor active")
+    ENDIF
+    AFTER(IR_S_RIJ,2000)
+      IF(IR_S_RIJ_BEZET)
+        RESET(IR_S_RIJ_BEZET)
+        PRINT("Doorrij spoor stop sensor inactive")
+      ENDIF
+  DONE
+DONE  
 
 ONSENSOR(IR_D_4_1) // IR Sensor Connectie spoor #1 Dal
-  IF(IR_D_4_1)
-    PRINT("IR_D_4_1:Connectie spoor #1 Dal sensor active")
-  ENDIF
-  IFNOT(IR_D_4_1)
-    PRINT("IR_D_4_1:Connectie spoor #1 Dal sensor inactive")
-  ENDIF
-DONE
+  AT(IR_D_4_1)
+    IFNOT(IR_D_4_1_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_4_1_BEZET)
+      PRINT("IR_D_4_1:Connectie spoor #1 Dal sensor active")
+    ENDIF
+    AFTER(IR_D_4_1,2000)
+      IF(IR_D_4_1_BEZET)
+        RESET(IR_D_4_1_BEZET)
+        PRINT("IR_D_4_1:Connectie spoor #1 Dal sensor inactive")
+      ENDIF
+  DONE
+DONE  
 
 ONSENSOR(IR_D_4_2) // IR Sensor Connectie spoor #1 Dorp
-  IF(IR_D_4_2)
-    PRINT("IR_D_4_2:Connectie spoor #1 Dorp sensor active")
-  ENDIF 
-  IFNOT(IR_D_4_2)
-    PRINT("IR_D_4_2:Connectie spoor #1 Dorp sensor inactive")
-  ENDIF
+  AT(IR_D_4_2)
+    IFNOT(IR_D_4_2_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_4_2_BEZET)
+      PRINT("IR_D_4_2:Connectie spoor #1 Dorp sensor active")
+    ENDIF
+    AFTER(IR_D_4_2,2000)
+      IF(IR_D_4_2_BEZET)
+        RESET(IR_D_4_2_BEZET)
+        PRINT("IR_D_4_2:Connectie spoor #1 Dorp sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_D_2_2) // IR Sensor Hoofdspoor #1 Dorp
-  IF(IR_D_2_2)
-    PRINT("IR_D_2_2:Hoofdspoor #1 Dorp sensor active")
-  ENDIF
-  IFNOT(IR_D_2_2)
-    PRINT("IR_D_2_2:Hoofdspoor #1 Dorp sensor inactive") 
-  ENDIF
-DONE
+  AT(IR_D_2_2)
+    IFNOT(IR_D_2_2_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_2_2_BEZET)
+      PRINT("IR_D_2_2:Hoofdspoor #1 Dorp sensor active")
+    ENDIF
+    AFTER(IR_D_2_2,2000)
+      IF(IR_D_2_2_BEZET)
+        RESET(IR_D_2_2_BEZET)
+        PRINT("IR_D_2_2:Hoofdspoor #1 Dorp sensor inactive")
+      ENDIF
+  DONE
+DONE  
 
 ONSENSOR(IR_D_2_1) // IR Sensor Hoofdspoor #1 Berg
-  IF(IR_D_2_1)
-    PRINT("IR_D_2_1:Hoofdspoor #1 Berg sensor active")
-  ENDIF
-  IFNOT(IR_D_2_1)
-    PRINT("IR_D_2_1:Hoofdspoor #1 Berg sensor inactive")
-  ENDIF
+  AT(IR_D_2_1)
+    IFNOT(IR_D_2_1_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_2_1_BEZET)
+      PRINT("IR_D_2_1:Hoofdspoor #1 Berg sensor active")
+    ENDIF
+    AFTER(IR_D_2_1,2000)
+      IF(IR_D_2_1_BEZET)
+        RESET(IR_D_2_1_BEZET)
+        PRINT("IR_D_2_1:Hoofdspoor #1 Berg sensor inactive")
+      ENDIF
+  DONE
 DONE  
 
 ONSENSOR(IR_D_3_1) // IR Sensor Hoofdspoor #2 Berg
-  IF(IR_D_3_1)
-    PRINT("IR_D_3_1:Hoofdspoor #2 Berg sensor active")
-  ENDIF
-  IFNOT(IR_D_3_1)
-    PRINT("IR_D_3_1:Hoofdspoor #2 Berg sensor inactive")
-  ENDIF
+  AT(IR_D_3_1)
+    IFNOT(IR_D_3_1_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_3_1_BEZET)
+      PRINT("IR_D_3_1:Hoofdspoor #2 Berg sensor active")
+    ENDIF
+    AFTER(IR_D_3_1,2000)
+      IF(IR_D_3_1_BEZET)
+        RESET(IR_D_3_1_BEZET)
+        PRINT("IR_D_3_1:Hoofdspoor #2 Berg sensor inactive")
+      ENDIF
+  DONE  
 DONE
 
 ONSENSOR(IR_D_3_2) // IR Sensor Hoofdspoor #2 Dorp
-  IF(IR_D_3_2)
-    PRINT("IR_D_3_2:Hoofdspoor #2 Dorp sensor active")
-  ENDIF
-  IFNOT(IR_D_3_2)
-    PRINT("IR_D_3_2:Hoofdspoor #2 Dorp sensor inactive")
-  ENDIF
+  AT(IR_D_3_2)
+    IFNOT(IR_D_3_2_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_3_2_BEZET)
+      PRINT("IR_D_3_2:Hoofdspoor #2 Dorp sensor active")
+    ENDIF
+    AFTER(IR_D_3_2,2000)
+      IF(IR_D_3_2_BEZET)
+        RESET(IR_D_3_2_BEZET)
+        PRINT("IR_D_3_2:Hoofdspoor #2 Dorp sensor inactive")
+      ENDIF
+  DONE
 DONE
 
 ONSENSOR(IR_D_1_3) // IR Sensor hoofdspoor dorp - haven
-  IF(IR_D_1_3)
-    PRINT("IR_D_1_3:Hoofdspoor dorp - haven sensor active")
-  ENDIF
-  IFNOT(IR_D_1_3)
-    PRINT("IR_D_1_3:Hoofdspoor dorp - haven sensor inactive")
-  ENDIF
+  AT(IR_D_1_3)
+    IFNOT(IR_D_1_3_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_1_3_BEZET)
+      PRINT("IR_D_1_3:Hoofdspoor dorp - haven sensor active")
+    ENDIF
+    AFTER(IR_D_1_3,2000)
+      IF(IR_D_1_3_BEZET)
+        RESET(IR_D_1_3_BEZET)
+        PRINT("IR_D_1_3:Hoofdspoor dorp - haven sensor inactive")
+      ENDIF
+  DONE
 DONE  
 
+
 ONSENSOR(IR_D_1_4) // IR Sensor Haven - dorp hoofdspoor
-  IF(IR_D_1_4)
-    PRINT("IR_D_1_4:Haven - dorp hoofdspoor sensor active")
-  ENDIF
-  IFNOT(IR_D_1_4)
-    PRINT("IR_D_1_4:Haven - dorp hoofdspoor sensor inactive")
-  ENDIF
+  AT(IR_D_1_4)
+    IFNOT(IR_D_1_4_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_D_1_4_BEZET)
+      PRINT("IR_D_1_4:Haven - dorp hoofdspoor sensor active")
+    ENDIF
+    AFTER(IR_D_1_4,2000)
+      IF(IR_D_1_4_BEZET)
+        RESET(IR_D_1_4_BEZET)
+        PRINT("IR_D_1_4:Haven - dorp hoofdspoor sensor inactive")
+      ENDIF
+  DONE
 DONE 
 
-  IF(IR_S_1)
+ONSENSOR(IR_S_1)
+  AT(IR_S_1)
+    IFNOT(IR_S_1_BEZET) // bitmap latch, zodat we niet teveel meldingen krijgen
+      SET(IR_S_1_BEZET) 
     PRINT("Parkeerspoor 1 stop sensor active")
   ENDIF
-  IFNOT(IR_S_1)
-    PRINT("Parkeerspoor 1 stop sensor inactive")
-  ENDIF
-DONE
+  AFTER(IR_S_1,2000)
+    IF(IR_S_1_BEZET)
+      RESET(IR_S_1_BEZET)
+      PRINT("Parkeerspoor 1 stop sensor inactive")
+    ENDIF
+  DONE
+DONE  
 
 // Automations
 // Branchlijn dorp - reverse loop automation
