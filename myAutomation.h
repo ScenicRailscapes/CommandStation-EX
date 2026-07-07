@@ -2,23 +2,23 @@
   This file contains (general) automation setups and automations itselfs
 */
 
-/*
-  ** Macros en defines.. order is belangrijk, deze moeten voor de includes staan
-*/
-// macro voor de DF_Players
-#define PLAYSND(player, folder, track, volume) \
-    PLAY_FOLDER(player+10000,folder) \
-    PLAY_TRACK(player+10000,track,volume)  // Play track  / 
+// /*
+//   ** Macros en defines.. order is belangrijk, deze moeten voor de includes staan
+// */
+// // macro voor de DF_Players
+// #define PLAYSND(player, folder, track, volume) \
+//     PLAY_FOLDER(player+10000,folder) \
+//     PLAY_TRACK(player+10000,track,volume)  // Play track  / 
 
-    // macro voor de 7-segment display 
-#define CLEARSEG7(firstVpin) \
-  SEG7(firstVpin,0,4R) \
-  SEG7(firstVpin+4,0,4R)
-
+//     // macro voor de 7-segment display 
+// #define CLEARSEG7(firstVpin) \
+//   SEG7(firstVpin,0,4R) \
+//   SEG7(firstVpin+4,0,4R)
 
 // Include files, order is important
 #include "myHal.h"
 #include "myAliases_stm32.h"
+#include "myMacros.h"
 #include "myLedsandLights.h"
 #include "myBlocksAndSignals.h"
 #include "myReverseLoopAutomation.h"
@@ -34,8 +34,6 @@ AUTOSTART
 DELAY(1000)
 DONE  // Done met auto start
 
-
-
 // Even dingen goed zetten
 AUTOSTART SEQUENCE(1) 
   PRINT("Alles goed zetten")
@@ -48,9 +46,65 @@ AUTOSTART SEQUENCE(1)
   SET(455)  // Lichtenstein dorp leds aan
   SET(454)  // locoshed verlichting aan
   THROW(1023) // Wissel bergdorp naar binnenbaan
+
+  SET_TRACK(A,MAIN)
+  SET_TRACK(B,MAIN)
+  POWERON
+  DELAY(10000)
+  GREEN(101)  // Sein BD_D_2 op groen zetten
+  GREEN(102)  // Sein BD_D_3 op groen zetten
+  GREEN(105)  // Sein BD_D_4 op groen zetten
+  GREEN(108)  // Sein BD_D_5 op groen zetten
 DONE
 
-//                                           * * * * * Automation hier staan algemene routines * * * * * *    
+/*                 * * * * * Automation hier staan algemene routines * * * * * *    */
+
+// Stealth code voor het tonen van de loconamen op de LCD
+STEALTH_GLOBAL(
+  void myFilter(Print * stream, byte & opcode, byte & paramCount, int16_t p[]) {
+    (void)stream;
+    // use command <U locoId> to display name from roster
+    if (opcode == 'U' && paramCount == 1) {
+      auto locoId=p[0];
+      auto name=RMFT2::getRosterName(locoId);
+      if (!name) return; // caller will <X> this
+      opcode=0; // caller can now ignore this
+      StringFormatter::lcd2(7, 0, F("Loco %d %S"), locoId, name);
+    }
+  }
+)
+// Update logo screen every 500ms with the current loco speeds
+// HAL(UserAddin,updateLocoScreen,500)
+// HAL(HALDisplay<OLED>, 2, 0x3d, 128, 64)
+
+// STEALTH_GLOBAL(
+//   void updateLocoScreen() {
+//     const byte loco_slots=8;
+//     static byte current_slot=loco_slots-1;
+//     static byte shown_speed[loco_slots]; // remember what's already shown
+//     static bool first_call=true;
+
+//     if (first_call) {
+//       first_call=false;
+//       for (int i=0; i<loco_slots; i++) shown_speed[i]=127;
+//     }
+
+//     // switch to next row
+//     current_slot= (current_slot + 1) % loco_slots;
+//     loco=DCC::speedTable[current_slot].loco;
+//     if (loco<0) return; // this slot is no longetr used
+//     if (loco==0) return; // we are beyond the last loco
+
+//     speed = DCC::speedTable[current_slot].speedCode;
+//     if (speed== shown_speed[current_slot]) return; // no change in speed
+//     shown_speed[current_slot] = speed; // remember speed for next time
+
+//     auto direction = (speed & 0x80) ? 'F' : 'R';
+//     speed = speed & 0x7f;
+//     if (speed > 0) speed = speed - 1; // make it look like JMRI
+//     StringFormatter::lcd2(2, current_slot+2, F("Loco:%4d %3d %c"), loco, speed, direction);
+//   }
+// )
 
 // OLED Info Screen Sequence; Cabs, Track Power, sound On/Off en welke routes 
 // LCD Macro kan alleen statische teksten, met stealth directe C++ code ingrijpend op de onderliggende DCC-EX code

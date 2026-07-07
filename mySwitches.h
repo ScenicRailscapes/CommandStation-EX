@@ -2,16 +2,16 @@
    Dit bestand bevat de (EXRAIL) setups voor de schakelaars, relais en track statusdisplay
    Ook de schakelaars van bv de TM1638 decoder en LED display worden hier geconfigureerd
 */
+#include "myMacros.h"
 
 /* TM1638 Button and LED module setup */
-
 ONBUTTON(600)   // Reverse loop toggle switch
     IFNOT(REVERSE_SIGNAL_ACTIVE)
-      CALL(KEERLUS_REVERSE)
+      LOOP_ENTRY_WEST             // Set naar normaal signaal om aan oostkant uit te rijden
       RESET(DORP_STATION_DETECT)  // reset station detectie
       RESET(DORP_WEST_DETECT)     // reset west detectie
     ELSE
-      CALL(KEERLUS_NORMAAL)
+      LOOP_ENTRY_EAST             // Set naar normaal signaal om aan oostkant uit te rijden
       RESET(DORP_STATION_DETECT)  // reset station detectie
       RESET(DORP_WEST_DETECT)     // reset west detectie      
     ENDIF

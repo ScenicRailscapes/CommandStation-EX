@@ -31,7 +31,6 @@ int cab_now=4;  // Global variable; laatste bekende loc die reed met snelheid >0
 //#include "IO_PCF8575.h"     // 16-bit I/O expander (NXP & Texas Instruments).
 //#include "IO_TM1638.h"      // TM1638 8-digit 7-segment display with 8 buttons
 
-
 //==========================================================================
 // The function halSetup() is invoked from CS if it exists within the build.
 // The setup calls are included between the open and close braces "{ ... }".

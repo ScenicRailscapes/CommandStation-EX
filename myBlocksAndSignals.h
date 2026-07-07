@@ -10,191 +10,8 @@
   Due to the repeative nature of the block and signal definitions, macros are used to define the blocks and signals.
 */
 
-/* ====================================================================
-   CENTRALE MACRO VOOR BLOKBEVEILIGING MET IR EN RICHTING
-   Uitleg: de CONCAT(10 enzo) is nodig om de sequenties uniek te maken, anders werkt het niet. De sequenties starten met dit nummer
-   dus in dit geval worden de sequentie nummer 10x - 70x gebruikt, deze moeten dus wel uniek zijm anders aanpassen.
-   ==================================================================== */
-#define CONCAT_INTERNAL(x, y) x##y
-#define CONCAT(x, y) CONCAT_INTERNAL(x, y)
-
-#define SETUP_IR_BLOCK_WITH_AMBER(BLOCK_NUM, BD_SENSOR, IR_1, IR_2, BITMAP_BEZET, BITMAP_CW, BITMAP_CCW, DEBOUNCE_DELAY, BACKUP_DELAY, AMBER_DELAY, ACTIE_RED, ACTIE_AMBER, ACTIE_GREEN) \
-                                                                        \
-    /* 1. Vrijgave via zijde 2 (CW Uitgang) -> Sein naar GROEN */        \
-    SEQUENCE(CONCAT(10, BLOCK_NUM))                                     \
-        DELAY(DEBOUNCE_DELAY)                                           \
-        RESET(BITMAP_BEZET)                                             \
-        RESET(BITMAP_CW)                                                \
-        ACTIE_GREEN                                                     \
-        PRINT("Blok " #BLOCK_NUM ": Vertrokken via CW-zijde (Groen)")   \
-    DONE                                                                \
-                                                                        \
-    /* 2. Vrijgave via zijde 1 (CCW Uitgang) -> Sein naar GROEN */       \
-    SEQUENCE(CONCAT(20, BLOCK_NUM))                                     \
-        DELAY(DEBOUNCE_DELAY)                                           \
-        RESET(BITMAP_BEZET)                                             \
-        RESET(BITMAP_CCW)                                               \
-        ACTIE_GREEN                                                     \
-        PRINT("Blok " #BLOCK_NUM ": Vertrokken via CCW-zijde (Groen)")  \
-    DONE                                                                \
-                                                                        \
-    /* 3. Stroommelder Back-up met eigen delay */                       \
-    SEQUENCE(CONCAT(30, BLOCK_NUM))                                     \
-        DELAY(BACKUP_DELAY)                                             \
-        IFNOT(BITMAP_BEZET)                                             \
-            SET(BITMAP_BEZET)                                           \
-            ACTIE_RED                                                   \
-            PRINT("Blok " #BLOCK_NUM ": HARDWAREMATIG bezet (Back-up)") \
-        ENDIF                                                           \
-    DONE                                                                \
-                                                                        \
-    /* 4. Timer voor AMBER bij CW-binnenkomst (Triggert na verlaten IR_1) */ \
-    SEQUENCE(CONCAT(40, BLOCK_NUM))                                     \
-        DELAY(AMBER_DELAY)                                              \
-        IF(BITMAP_BEZET)                                                \
-            ACTIE_AMBER                                                 \
-            PRINT("Blok " #BLOCK_NUM ": Trein is IR_1 gepasseerd -> Sein naar AMBER") \
-        ENDIF                                                           \
-    DONE                                                                \
-                                                                        \
-    /* 5. Timer voor AMBER bij CCW-binnenkomst (Triggert na verlaten IR_2) */ \
-    SEQUENCE(CONCAT(50, BLOCK_NUM))                                     \
-        DELAY(AMBER_DELAY)                                              \
-        IF(BITMAP_BEZET)                                                \
-            ACTIE_AMBER                                                 \
-            PRINT("Blok " #BLOCK_NUM ": Trein is IR_2 gepasseerd -> Sein naar AMBER") \
-        ENDIF                                                           \
-    DONE                                                                \
-                                                                        \
-    /* 6. Hardware trigger zijde 1 */                                   \
-    ONSENSOR(IR_1)                                                      \
-        IF(IR_1)                                                        \
-            IF(BITMAP_CCW)                                              \
-                START(CONCAT(20, BLOCK_NUM))                            \
-            ENDIF                                                       \
-            IFNOT(BITMAP_CW)                                            \
-                IFNOT(BITMAP_CCW)                                       \
-                    SET(BITMAP_BEZET)                                   \
-                    SET(BITMAP_CW)                                      \
-                    ACTIE_RED                                           \
-                    PRINT("Blok " #BLOCK_NUM ": BINNEN via CW-zijde (Rood)") \
-                ENDIF                                                   \
-            ENDIF                                                       \
-        ENDIF                                                           \
-        IFNOT(IR_1)                                                     \
-            IF(BITMAP_CW)                                               \
-                START(CONCAT(40, BLOCK_NUM))                            \
-            ENDIF                                                       \
-        ENDIF                                                           \
-    DONE                                                                \
-                                                                        \
-    /* 7. Hardware trigger zijde 2 */                                   \
-    ONSENSOR(IR_2)                                                      \
-        IF(IR_2)                                                        \
-            IF(BITMAP_CW)                                               \
-                START(CONCAT(10, BLOCK_NUM))                            \
-            ENDIF /* <-- REPARATIE: Hier ontbrak de ENDIF */            \
-            IFNOT(BITMAP_CCW)                                           \
-                IFNOT(BITMAP_CW)                                        \
-                    SET(BITMAP_BEZET)                                   \
-                    SET(BITMAP_CCW)                                     \
-                    ACTIE_RED                                           \
-                    PRINT("Blok " #BLOCK_NUM ": BINNEN via CCW-zijde (Rood)") \
-                ENDIF                                                   \
-            ENDIF                                                       \
-        ENDIF                                                           \
-        IFNOT(IR_2)                                                     \
-            IF(BITMAP_CCW)                                              \
-                START(CONCAT(50, BLOCK_NUM))                            \
-            ENDIF                                                       \
-        ENDIF                                                           \
-    DONE                                                                \
-                                                                        \
-    /* 8. Hardware trigger Stroommelder */                              \
-    ONSENSOR(BD_SENSOR)                                                 \
-        IF(BD_SENSOR)                                                   \
-            START(CONCAT(30, BLOCK_NUM))                                \
-        ENDIF                                                           \
-    DONE
-
-/* ====================================================================
-   MACRO VOOR SCHADUWSTATION PARKEERSPOREN (1 IR + STROOMMELDER)
-   ==================================================================== */
-#define SETUP_YARD_BLOCK(BLOCK_NUM, BD_SENSOR, IR_STOP, BITMAP_BEZET, RELEASE_DELAY, BACKUP_DELAY) \
-                                                                        \
-    /* 1. Vrijgave sequence: start zodra de stroommelder afvalt */      \
-    SEQUENCE(CONCAT(70, BLOCK_NUM))                                     \
-        DELAY(RELEASE_DELAY)                                            \
-        /* Als na de delay de stroommelder én de IR-sensor nog steeds vrij zijn */ \
-        IFNOT(BD_SENSOR)                                                \
-            IFNOT(IR_STOP)                                              \
-                RESET(BITMAP_BEZET)                                     \
-                PRINT("Parkeerspoor " #BLOCK_NUM ": Volledig VRIJ")     \
-            ENDIF                                                       \
-        ENDIF                                                           \
-    DONE                                                                \
-                                                                        \
-    /* 2. Stroommelder trigger: activeert bij binnenrijden */           \
-    ONSENSOR(BD_SENSOR)                                                 \
-        IF(BD_SENSOR)                                                   \
-            DELAY(BACKUP_DELAY) /* Voorkom racecondition met IR */      \
-            IFNOT(BITMAP_BEZET)                                         \
-                SET(BITMAP_BEZET)                                       \
-                PRINT("Parkeerspoor " #BLOCK_NUM ": Binnenrijden gedetecteerd") \
-            ENDIF                                                       \
-        ENDIF                                                           \
-        /* Zodra de trein wegrijdt en de stroommelder inactief wordt: */ \
-        IFNOT(BD_SENSOR)                                                \
-            IF(BITMAP_BEZET)                                            \
-                START(CONCAT(70, BLOCK_NUM))                            \
-            ENDIF                                                       \
-        ENDIF                                                           \
-    DONE                                                                \
-                                                                        \
-    /* 3. IR Stop-melder trigger: de harde stop/bezetbevestiging */     \
-    ONSENSOR(IR_STOP)                                                   \
-        IF(IR_STOP)                                                     \
-            SET(BITMAP_BEZET)                                           \
-            PRINT("Parkeerspoor " #BLOCK_NUM ": Trein op STOP-positie!") \
-        ENDIF                                                           \
-    DONE
-
-
-/* ====================================================================
-   CENTRALE MACRO VOOR STANDAARD DEBOUNCED IR-SENSOREN
-   ==================================================================== */
-#define SETUP_IR_SENSOR(SENSOR_ID, BITMAP_BEZET, DEBOUNCE_DELAY, TEXT_MSG) \
-                                                                        \
-    ONSENSOR(SENSOR_ID)                                                 \
-        AT(SENSOR_ID)                                                   \
-            IFNOT(BITMAP_BEZET)                                         \
-                SET(BITMAP_BEZET)                                       \
-                PRINT(TEXT_MSG " sensor active")                        \
-            ENDIF                                                       \
-            AFTER(SENSOR_ID, DEBOUNCE_DELAY)                            \
-                IF(BITMAP_BEZET)                                        \
-                    RESET(BITMAP_BEZET)                                 \
-                    PRINT(TEXT_MSG " sensor inactive")                  \
-                ENDIF                                                   \
-            DONE                                                        \
-        DONE                                                            \
-    DONE    
-
-/* ====================================================================
-   CENTRALE MACRO VOOR SEINLOGICA EN ASPECTEN
-   ==================================================================== */
-// Voor blokken ZONDER sein
-#define NO_SIGNAL(pin)        DELAY(0)
-
-// Voor 2-aspect seinen (Rood / Groen)
-#define SIGNAL_2A_RED(pin)    RED(pin)
-#define SIGNAL_2A_GREEN(pin)  GREEN(pin)
-
-// Voor 3-aspect seinen (Rood / Geel / Groen)
-// Bij vertrek (vrijgave) zetten we hem eerst op AMBER (Geel) voor extra realisme, of direct op groen.
-#define SIGNAL_3A_RED(pin)    RED(pin)
-#define SIGNAL_3A_AMBER(pin)  AMBER(pin)
-#define SIGNAL_3A_GREEN(pin)  GREEN(pin)    
+/* Alle gebruikte macros zijn gedefinieerd in myMacros.h */
+#include "myMacros.h"
 
 /* 
   Block Aspects (signals) via DCC Accessory decoder configureren
@@ -229,6 +46,12 @@ ALIAS(OFF, 0)    // Off
    LET OP: We zetten de volgorde van sensoren alsof de trein in CW richting ze tegenkomt in de prompt.
    Doordat Amber geen specifieke IR detector heeft, wordt de AMBER actie getriggerd door een timer na het passeren van de IR sensor.
 */
+// FORMAT: SETUP_IR_BLOCK_WITH_AMBER(BLOK_ID, STROOM, IR1, IR2, VLAG_BEZET, VLAG_CW, VLAG_CCW, DEBOUNCE, BACKUP, AMBER_TIMEOUT, ROOD_ACTIE, AMBER_ACTIE, GROEN_ACTIE)
+
+// Blok 1 (Keerlus): 
+// Als de trein via West (IR_D_1_1) binnenkomt (CW), activeert hij LOOP_ENTRY_WEST.
+// Als de trein via Oost (IR_D_1_2) binnenkomt (CCW), activeert hij LOOP_ENTRY_EAST.
+SETUP_IR_BLOCK_WITH_AMBER(1, BD_D_1, IR_D_1_1, IR_D_1_2, BD_D_1_BEZET, BD_D_1_CW, BD_D_1_CCW, 2000, 500, 4000, LOOP_ENTRY_WEST, NO_SIGNAL(0), LOOP_ENTRY_EAST)
 
 // Blok BD2: Hoofdspoor #1 Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
 SETUP_IR_BLOCK_WITH_AMBER(2, BD_D_2, IR_D_2_1_BEZET, IR_D_2_2_BEZET, BD_D_2_BEZET, BD_D_2_CW, BD_D_2_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
@@ -238,6 +61,10 @@ SETUP_IR_BLOCK_WITH_AMBER(3, BD_D_3, IR_D_3_2_BEZET, IR_D_3_1_BEZET, BD_D_3_BEZE
 SETUP_IR_BLOCK_WITH_AMBER(4, BD_D_4, IR_D_4_2_BEZET, IR_D_4_1_BEZET, BD_D_4_BEZET, BD_D_4_CW, BD_D_4_CCW, 2000, 500, 0, SIGNAL_3A_RED(105), NO_SIGNAL(0), SIGNAL_3A_GREEN(105))
 // Blok BD5: Branchlijn yard - dorp Lang block (3-aspect sein op 108). Na het passeren van de IR-sluis duurt het 5000ms (5 seconden) voor het sein op Geel springt.
 SETUP_IR_BLOCK_WITH_AMBER(5, BD_D_5, IR_D_1_4_BEZET, IR_D_1_1_BEZET, BD_D_5_BEZET, BD_D_5_CW, BD_D_5_CCW, 2000, 500, 5000, SIGNAL_3A_RED(108), SIGNAL_3A_AMBER(108), SIGNAL_3A_GREEN(108))
+// Blok HBI: Helix binnenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
+SETUP_IR_BLOCK_WITH_AMBER(6, BD_HBI_1, IR_H_1_BEZET, IR_H_3_BEZET, BD_HBI_1_BEZET, BD_HBI_1_CW, BD_HBI_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
+// Blok HBU: Helix buitenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
+SETUP_IR_BLOCK_WITH_AMBER(7, BD_HBU_1, IR_H_2_BEZET, IR_H_3_BEZET, BD_HBU_1_BEZET, BD_HBU_1_CW, BD_HBU_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
 
 
 /* ====================================================================
@@ -266,9 +93,9 @@ SETUP_YARD_BLOCK(6, BD_S_RIJ, IR_S_RIJ_BEZET, BD_S_RIJ_BEZET, 4000, 500)
 */
 
 // --- Helix Sensoren ---
-SETUP_IR_SENSOR(IR_H_1,   IR_H_1_BEZET,   2000, "Helix dal niveau")
+SETUP_IR_SENSOR(IR_H_1,   IR_H_1_BEZET,   4000, "Helix dal niveau")
 SETUP_IR_SENSOR(IR_H_2,   IR_H_2_BEZET,   2000, "Helix midden niveau")
-SETUP_IR_SENSOR(IR_H_3,   IR_H_3_BEZET,   2000, "Helix berg niveau")
+SETUP_IR_SENSOR(IR_H_3,   IR_H_3_BEZET,   4000, "Helix berg niveau")
 
 // --- Schaduwstation (Yard) Stop Sensoren ---
 SETUP_IR_SENSOR(IR_S_1,   IR_S_1_BEZET,   2000, "Parkeerspoor 1 stop")
@@ -295,53 +122,21 @@ SETUP_IR_SENSOR(IR_D_1_3, IR_D_1_3_BEZET, 2000, "IR_D_1_3:Hoofdspoor dorp - have
 SETUP_IR_SENSOR(IR_D_1_4, IR_D_1_4_BEZET, 2000, "IR_D_1_4:Haven - dorp hoofdspoor")
 
 
-// Deze nog even herschrijven, kan ook in de centrale call maar de IR sensoren werken nog niet perfect dus even zo...
-/* Block detection */
-ONSENSOR(BD_HBI_1) // Block detect Helix binnenring
-  IF(BD_HBI_1)
-    PRINT("BD_HBI_1:Helix binnenring bezet")
-    //RED(102)
-    // en natuurlijk de reservering van het block
-    SET(BD_HBI_1_BEZET) // flag dat het block bezet is
-  ENDIF
-  IFNOT(BD_HBI_1)
-    PRINT("BD_HBI_1:Helix binnenring vrij")
-    //GREEN(102)
-    // en natuurlijk de unreservering van het block
-    RESET(BD_HBI_1_BEZET) // flag dat het block vrij is
-  ENDIF
-DONE
-
-ONSENSOR(BD_HBU_1) // Block detect Helix buitenring
-  IF(BD_HBU_1)
-    PRINT("BD_HBU_1:Helix buitenring bezet")
-    //RED(103)
-    // en natuurlijk de reservering van het block
-    SET(BD_HBU_1_BEZET) // flag dat het block bezet is
-  ENDIF
-  IFNOT(BD_HBU_1)
-    PRINT("BD_HBU_1:Helix buitenring vrij")
-    //GREEN(103)
-    // en natuurlijk de unreservering van het block
-    RESET(BD_HBU_1_BEZET) // flag dat het block vrij is
-  ENDIF
-DONE
-
 // Automations
-// Branchlijn dorp - reverse loop automation
-ONSENSOR(IR_D_1_1) // IR Sensor Dorp branchlijn west (berg)
-  IF(IR_D_1_1)
-    PRINT("IR_D_1_1:Dorp west sensor active")
-    AT(IR_D_1_1) 
-      SET(DORP_WEST_DETECT)
-  ENDIF
-DONE
+// // Branchlijn dorp - reverse loop automation
+// ONSENSOR(IR_D_1_1) // IR Sensor Dorp branchlijn west (berg)
+//   IF(IR_D_1_1)
+//     PRINT("IR_D_1_1:Dorp west sensor active")
+//     AT(IR_D_1_1) 
+//       SET(DORP_WEST_DETECT)
+//   ENDIF
+// DONE
 
-ONSENSOR(IR_D_1_2) // IR Sensor Dorp branchlijn station
-  IF(IR_D_1_2)
-    PRINT("IR_D_1_2:Dorp station sensor active")
-    AT(IR_D_1_2)
-      SET(DORP_STATION_DETECT)
-  ENDIF
-DONE
+// ONSENSOR(IR_D_1_2) // IR Sensor Dorp branchlijn station
+//   IF(IR_D_1_2)
+//     PRINT("IR_D_1_2:Dorp station sensor active")
+//     AT(IR_D_1_2)
+//       SET(DORP_STATION_DETECT)
+//   ENDIF
+// DONE
 

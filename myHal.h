@@ -1,6 +1,7 @@
 /*
  HAL drivers, moved from myhal.cpp 
 */
+
 //#include "IO_PCA9555.h"     // 16-bit I/O expander (NXP & Texas Instruments).
   //=======================================================================
   // The following directive defines a TM1638 8-digit 7-segment display
@@ -48,7 +49,7 @@
 //   I2C address of module=0x40
 
 HAL(PCA9685,400, 16, {I2CMux_1, SubBus_1, 0x40})
-HAL(PCA9685,420, 16, {I2CMux_1, SubBus_2, 0x41})
+HAL(PCA9685,420, 16, {I2CMux_1, SubBus_3, 0x41})
 HAL(PCA9685,440, 16, {I2CMux_1, SubBus_0, 0x42})
 
 //=======================================================================
@@ -71,9 +72,9 @@ HAL(PCA9685,440, 16, {I2CMux_1, SubBus_0, 0x42})
 //   I2C address of module=0x23
 
 HAL(PCF8575,300, 16, {I2CMux_1, SubBus_1, 0x20})
-HAL(PCF8575,320, 16, {I2CMux_1, SubBus_2, 0x21})
+HAL(PCF8575,320, 16, {I2CMux_1, SubBus_3, 0x21})
 HAL(PCF8575,340, 16, {I2CMux_1, SubBus_0, 0x22})
-HAL(PCF8575,360, 16, {I2CMux_1, SubBus_1, 0x23})
+//HAL(PCF8575,360, 16, {I2CMux_1, SubBus_1, 0x23}) toekomstig
 
 //=======================================================================
 // Play mp3 player DFPlayer Mini

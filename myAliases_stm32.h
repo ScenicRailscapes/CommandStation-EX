@@ -123,6 +123,10 @@ ALIAS(IR_S_3_BEZET, 2039)           // IR Stop sensor parkeerspoor #3 bezet latc
 ALIAS(IR_S_4_BEZET, 2040)           // IR Stop sensor parkeerspoor #4 bezet latch
 ALIAS(IR_S_5_BEZET, 2041)           // IR Stop sensor parkeerspoor #5 bezet latch
 ALIAS(IR_S_RIJ_BEZET, 2042)         // IR Stop sensor doorrij spoor bezet latch
+ALIAS(BD_HBI_1_CW, 2043)            // Trein rijdt Clockwise door blok HBI
+ALIAS(BD_HBI_1_CCW, 2044)           // Trein rijdt Counter Clockwise door blok HBI
+ALIAS(BD_HBU_1_CW, 2045)            // Trein rijdt Clockwise door blok HBU
+ALIAS(BD_HBU_1_CCW, 2046)           // Trein rijdt Counter Clockwise door blok HBU  
 
 
 // Branchelijn dorp - reverse loop
@@ -134,8 +138,8 @@ ALIAS(DORP_WEST_DETECT, 2052)       // Flag to indicate dorp west sensor detecte
 // Sequences en routes 
 ALIAS(BRANCH_DORP_KEERLUS,1600)     // Branchlijn dorp van oost naar west automation
 ALIAS(BRANCH_DORP_WEST_OOST,1601)   // Branchlijn dorp van west naar oost automation
-ALIAS(KEERLUS_NORMAAL,1602)         // Sequence to set reverse loop to normaal dcc signal
-ALIAS(KEERLUS_REVERSE,1603)         // Sequence to set reverse loop to reverse dcc signal
+ALIAS(KEERLUS_NORMAAL,1900)         // Sequence to set reverse loop to normaal dcc signal
+ALIAS(KEERLUS_REVERSE,1901)         // Sequence to set reverse loop to reverse dcc signal
 
 
 // Relais: Let op: deze zijn inverted signal. Aanzetten met 'RESET' en uit met 'SET' commandp
