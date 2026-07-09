@@ -22,11 +22,46 @@
  *  along with CommandStation.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/****************** W I F I C O N F I G ******************************
+ Let op: Wifi config op een ESP32 is volledig anders, de onderstaande 
+ configuraties werken niet meer.
+ Wifi config is nu via de commandline te doen:
+ bv <C WIFI "Nijlstroom_24" "52694646">
+ <C WIFI HOSTNAME "SilberBachTalBahn">
+ Met <D WIFI SHOW> kan je de huidige wifi config zien.
+ <C WIFI AP "SilberBachAP" "MsJmdg11"> voor AP mode
+*/
+
 /**********************************************************************
 
 The configuration file for DCC-EX Command Station
 
 **********************************************************************/
+// #ifdef ARDUINO_ARCH_ESP32
+//   #define TM1638_CLOCK 23
+//   #define TM1638_DATA 5
+//   #define TM1638_STROBE 19
+//   #define RELAIS_3 15
+//   #define RELAIS_4 17  
+// #else
+//   #define TM1638_CLOCK PC6
+//   #define TM1638_DATA PC5
+//   #define TM1638_STROBE PC8
+//   #define RELAIS_3 PA11
+//   #define RELAIS_4 PA12
+// #endif
+#ifdef ARDUINO_ARCH_ESP32
+  #define TM1638_CLOCK   27
+  #define TM1638_DATA    14
+  #define TM1638_STROBE  16
+  #define RELAIS_KEERLUS 17 
+#else
+  #define TM1638_CLOCK   PC6
+  #define TM1638_DATA    PC5
+  #define TM1638_STROBE  PC8
+  #define RELAIS_KEERLUS PA11
+#endif
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 // If you want to add your own motor driver definition(s), add them here
@@ -37,10 +72,12 @@ The configuration file for DCC-EX Command Station
  new MotorDriver( 3, 12, UNUSED_PIN, 9, A0, 5.08, 3000, A4), \
  new MotorDriver(11, 13, UNUSED_PIN, 8, A1, 5.08, 1500, A5)
 */
+
 #define IBT_2_L298N F("IBT_2_L298N"),\
   new MotorDriver(14 /* EN*/, 12 /*LPWM*/, 13 /*RPWM*/, UNUSED_PIN, 35, 50, 4000, UNUSED_PIN), \
   new MotorDriver(25 /* ENB*/, 26 /*IN3*/, 27 /*IN4*/, UNUSED_PIN, 34 /*ADC1_6*/, 0.99, 2000, UNUSED_PIN) 
-  
+
+// ESP32 met DIY more motor shield
 #define MY_MOTORSHIELD_V2 F("DIY More L298NH"),\
   new MotorDriver(25 /* PWMA */, 26 /* DIRA */, UNUSED_PIN, 33 /* BRAKEA */, 34 /* A0 */, 0.3, 2000, UNUSED_PIN), \
   new MotorDriver(27 /* PWMB */, 14 /* DIRB */, UNUSED_PIN, 32 /* BRAKEB */, 35 /* A1 */, 0.3, 1500, UNUSED_PIN)
@@ -48,6 +85,12 @@ The configuration file for DCC-EX Command Station
 #define MY_L298N_BOARD F("MY_L298N_BOARD"),\
   new MotorDriver(27 /* ENA*/, 12 /* IN1 */, 14 /* IN2 */, UNUSED_PIN, 35 /*ADC1_7*/, 0.99, 2000, UNUSED_PIN), \
   new MotorDriver(33 /* ENB*/, 25 /* IN3 */, 26 /* IN4 */, UNUSED_PIN, 34 /*ADC1_6*/, 0.99, 2000, UNUSED_PIN)
+
+// Keyestudio IOT ESP32 PLUS met EX8874 motorshield
+#define EX8874_KEYES_ESP32 F("EX8874_KEYES_ESP32"), \
+    new MotorDriver(25/* 3*/, 19/*12*/, UNUSED_PIN, 13/*9*/, 32/*A0*/, 1.52, 5000, 36 /*A4*/), \
+    new MotorDriver(23/*11*/, 18/*13*/, UNUSED_PIN, 12/*8*/, 33/*A1*/, 1.52, 5000, 39 /*A5*/)
+
 /////////////////////////////////////////////////////////////////////////////////////
 //  NOTE: Before connecting these boards and selecting one in this software
 //        check the quick install guides!!! Some of these boards require a voltage
@@ -67,8 +110,7 @@ The configuration file for DCC-EX Command Station
 //   |
 //   +-----------------------v
 //
-#define MOTOR_SHIELD_TYPE EX8874_SHIELD //STANDARD_MOTOR_SHIELD //IBT_2_L298N
-//
+#define MOTOR_SHIELD_TYPE EX8874_KEYES_ESP32 //MY_MOTORSHIELD_V2 //EX8874_SHIELD 
 /////////////////////////////////////////////////////////////////////////////////////
 //
 // If you want to restrict the maximum current LOWER than what your

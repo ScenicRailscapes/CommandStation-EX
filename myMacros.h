@@ -204,15 +204,13 @@
 // We sturen de pinnen direct aan via de macro-expansie!
 #define LOOP_ENTRY_WEST \
     SET(REVERSE_SIGNAL_ACTIVE) \
-    RESET(RELAIS_DCC_REVERSE_A) \
-    RESET(RELAIS_DCC_REVERSE_B) \
+    RESET(RELAIS_DCC_REVERSE) \
     BLINK(600,500,500)
 
 #define LOOP_ENTRY_EAST \
     RESET(REVERSE_SIGNAL_ACTIVE) \
     DELAY(5000) /* even wachten tot de trein het keerlusdeel heeft verlaten */ \
-    SET(RELAIS_DCC_REVERSE_A) \
-    SET(RELAIS_DCC_REVERSE_B) \
+    SET(RELAIS_DCC_REVERSE) \
     RESET(600)
 
 #endif // MY_MACROS_H

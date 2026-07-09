@@ -1,6 +1,8 @@
 /*
- HAL drivers, moved from myhal.cpp 
-*/
+ HAL drivers, moved from myhal.cpp
+ Voor drivers die direct (v)Pins gebruiken is er in config.m een lijst met defines aanwezig die de vPin nummers van de gebruikte hardware bevatten. 
+ Daarmee kan de code in de drivers generiek blijven, en kan de gebruiker zelf de vPin nummers aanpassen in config.m specifiek voor bv een ESP32 / Nucleo
+ */
 
 //#include "IO_PCA9555.h"     // 16-bit I/O expander (NXP & Texas Instruments).
   //=======================================================================
@@ -15,7 +17,7 @@
 
   //	TM1638::create(600, PC6,PC5,PC8); // org HAL code
   
-  HAL(TM1638,600,PC6,PC8,PC5)
+  HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)
 
   //=======================================================================
   // The following directive defines a DS1307 RTC
@@ -27,7 +29,8 @@
   //   SCL pin=PC3
   //   Set clock with <D ANOUT 630 hh mm ss> for example <D ANOUT 630 21 55 00> of <D ANOUT 20 17>
   //   bij melding <* DS1307 clock in standby *> is de klok niet goed ingesteld
-  HAL(DS1307,630, {I2CMux_1, SubBus_1, 0x68})
+  //HAL(DS1307,630, {I2CMux_1, SubBus_1, 0x68})
+  HAL(DS1307,630, 0x68)
   
   //=======================================================================
   // The following directive defines a VL53L0X distance sensor
@@ -48,9 +51,9 @@
 //   Number of VPINs=16 (numbered 100-115)
 //   I2C address of module=0x40
 
-HAL(PCA9685,400, 16, {I2CMux_1, SubBus_1, 0x40})
-HAL(PCA9685,420, 16, {I2CMux_1, SubBus_3, 0x41})
-HAL(PCA9685,440, 16, {I2CMux_1, SubBus_0, 0x42})
+HAL(PCA9685,400, 16, 0x40)
+HAL(PCA9685,420, 16, 0x41)
+HAL(PCA9685,440, 16, 0x42)
 
 //=======================================================================
 // The following directive defines an PCF8574 8-port I2C GPIO Extender module.
@@ -71,10 +74,10 @@ HAL(PCA9685,440, 16, {I2CMux_1, SubBus_0, 0x42})
 //   Number of VPINs=16 (numbered 200-215)
 //   I2C address of module=0x23
 
-HAL(PCF8575,300, 16, {I2CMux_1, SubBus_1, 0x20})
-HAL(PCF8575,320, 16, {I2CMux_1, SubBus_3, 0x21})
-HAL(PCF8575,340, 16, {I2CMux_1, SubBus_0, 0x22})
-//HAL(PCF8575,360, 16, {I2CMux_1, SubBus_1, 0x23}) toekomstig
+HAL(PCF8575,300, 16, 0x20)
+HAL(PCF8575,320, 16, 0x21)
+HAL(PCF8575,340, 16, 0x22)
+//HAL(PCF8575,360, 16, 0x23}) toekomstig
 
 //=======================================================================
 // Play mp3 player DFPlayer Mini
@@ -91,6 +94,6 @@ HAL(PCF8575,340, 16, {I2CMux_1, SubBus_0, 0x22})
   //                1st vPin for UART 0
   // I2C Address  : I2C address of the serial controller, in 0x format
 
-HAL(DFPlayer,10000, 1, {I2CMux_1, SubBus_1, 0x48})
-HAL(DFPlayer,10001, 1, {I2CMux_1, SubBus_1, 0x49})
-HAL(DFPlayer,10002, 1, {I2CMux_1, SubBus_1, 0x4C})
+HAL(DFPlayer,10000, 1, 0x48)
+HAL(DFPlayer,10001, 1, 0x49)
+HAL(DFPlayer,10002, 1, 0x4C)

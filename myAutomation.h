@@ -2,19 +2,6 @@
   This file contains (general) automation setups and automations itselfs
 */
 
-// /*
-//   ** Macros en defines.. order is belangrijk, deze moeten voor de includes staan
-// */
-// // macro voor de DF_Players
-// #define PLAYSND(player, folder, track, volume) \
-//     PLAY_FOLDER(player+10000,folder) \
-//     PLAY_TRACK(player+10000,track,volume)  // Play track  / 
-
-//     // macro voor de 7-segment display 
-// #define CLEARSEG7(firstVpin) \
-//   SEG7(firstVpin,0,4R) \
-//   SEG7(firstVpin+4,0,4R)
-
 // Include files, order is important
 #include "myHal.h"
 #include "myAliases_stm32.h"
@@ -36,6 +23,8 @@ DONE  // Done met auto start
 
 // Even dingen goed zetten
 AUTOSTART SEQUENCE(1) 
+  PARSE("<C WIFI \"Nijlstroom_24\" \"52694646\">")
+  PARSE("<C WIFI HOSTNAME \"SilberBachTalBahn\">")
   PRINT("Alles goed zetten")
   UNLATCH(POWER_ON) // Unlatch power on
   DELAY(1000) // even wachten
@@ -73,6 +62,7 @@ STEALTH_GLOBAL(
     }
   }
 )
+
 // Update logo screen every 500ms with the current loco speeds
 // HAL(UserAddin,updateLocoScreen,500)
 // HAL(HALDisplay<OLED>, 2, 0x3d, 128, 64)

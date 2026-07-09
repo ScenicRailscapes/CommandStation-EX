@@ -68,8 +68,9 @@ ALIAS(BD_D_5, -329)                 // Block #13 yard vissersdorp /dorp branchli
 // IR Sensors (infrarood) voor blok detectie
 ALIAS (IR_S_RIJ, 340)               // IR Stop sensor doorrij spoor
 ALIAS (IR_L_1, 341)                 // IR Sensor Liechtenstein spoor eindpunt
-ALIAS (IR_L_2, 342)                 // IR Sensor Liechtenstein spoor station midden
-ALIAS (IR_L_3, 343)                 // IR Sensor Liechtenstein spoorstation berg
+ALIAS (IR_L_2, 345)                 // IR Sensor Liechtenstein spoor station midden
+ALIAS (IR_L_3, 346)                 // IR Sensor Liechtenstein spoorstation berg
+ALIAS (IR_D_1_5, 342)               // IR Sensor Visserdorp - dorp hoofdspoor
 ALIAS (IR_D_4_1, 349)               // IR Sensor Connectie spoor #1 Dorp 
 ALIAS (IR_D_4_2, 348)               // IR Sensor Connectie spoor #1 Dal
 ALIAS (IR_D_3_2, 350)               // IR Sensor Hoofdspoor #2 Dorp
@@ -105,28 +106,29 @@ ALIAS(BD_D_4_CCW, 2021)             // Trein rijdt Counter Clockwise door blok 4
 ALIAS(BD_D_5_CW, 2022)              // Trein rijdt Clockwise door blok 5
 ALIAS(BD_D_5_CCW, 2023)             // Trein rijdt Counter Clockwise door blok 5
 ALIAS(IR_D_1_1_BEZET, 2024)         // IR Sensor Dorp branchlijn west (berg) bezet latch
-ALIAS(IR_D_1_2_BEZET, 2025)         // IR
+ALIAS(IR_D_1_2_BEZET, 2025)         // IR Sensor Dorp branchlijn station bezet latch
 ALIAS(IR_D_1_3_BEZET, 2026)         // IR Sensor hoofdspoor dorp - haven bezet latch
 ALIAS(IR_D_2_1_BEZET, 2027)         // IR Sensor Hoofdspoor #1 Berg bezet latch
 ALIAS(IR_D_3_1_BEZET, 2028)         // IR Sensor Hoofdspoor #2 Berg bezet latch
-ALIAS(IR_D_3_2_BEZET, 2029)         // IR Sensor Hoofdspoor #2 Dorp
+ALIAS(IR_D_3_2_BEZET, 2029)         // IR Sensor Hoofdspoor #2 Dorp bezet latch
 ALIAS(IR_D_2_2_BEZET, 2030)         // IR Sensor Hoofdspoor #1 Dorp bezet latch
 ALIAS(IR_D_1_4_BEZET, 2031)         // IR Sensor Haven - dorp hoofdspoor bezet latch
-ALIAS(IR_D_4_1_BEZET, 2032)         // IR Sensor Connectie spoor #1 Dorp bezet latch
-ALIAS(IR_D_4_2_BEZET, 2033)         // IR Sensor Connectie spoor #1 Dal bezet latch
-ALIAS(IR_H_1_BEZET, 2034)           // IR Sensor Helix dal niveau bezet latch
-ALIAS(IR_H_2_BEZET, 2035)           // IR Sensor Helix midden niveau bezet latch
-ALIAS(IR_H_3_BEZET, 2036)           // IR Sensor Helix berg niveau bezet latch
-ALIAS(IR_S_1_BEZET, 2037)           // IR Stop sensor parkeerspoor #1 bezet latch
-ALIAS(IR_S_2_BEZET, 2038)           // IR Stop sensor parkeerspoor #2 bezet latch
-ALIAS(IR_S_3_BEZET, 2039)           // IR Stop sensor parkeerspoor #3 bezet latch
-ALIAS(IR_S_4_BEZET, 2040)           // IR Stop sensor parkeerspoor #4 bezet latch
-ALIAS(IR_S_5_BEZET, 2041)           // IR Stop sensor parkeerspoor #5 bezet latch
-ALIAS(IR_S_RIJ_BEZET, 2042)         // IR Stop sensor doorrij spoor bezet latch
-ALIAS(BD_HBI_1_CW, 2043)            // Trein rijdt Clockwise door blok HBI
-ALIAS(BD_HBI_1_CCW, 2044)           // Trein rijdt Counter Clockwise door blok HBI
-ALIAS(BD_HBU_1_CW, 2045)            // Trein rijdt Clockwise door blok HBU
-ALIAS(BD_HBU_1_CCW, 2046)           // Trein rijdt Counter Clockwise door blok HBU  
+ALIAS(IR_D_1_5_BEZET, 2032)         // IR Sensor Visserdorp - dorp hoofdspoor bezet latch
+ALIAS(IR_D_4_1_BEZET, 2033)         // IR Sensor Connectie spoor #1 Dorp bezet latch
+ALIAS(IR_D_4_2_BEZET, 2034)         // IR Sensor Connectie spoor #1 Dal bezet latch
+ALIAS(IR_H_1_BEZET, 2035)           // IR Sensor Helix dal niveau bezet latch
+ALIAS(IR_H_2_BEZET, 2036)           // IR Sensor Helix midden niveau bezet latch
+ALIAS(IR_H_3_BEZET, 2037)           // IR Sensor Helix berg niveau bezet latch
+ALIAS(IR_S_1_BEZET, 2038)           // IR Stop sensor parkeerspoor #1 bezet latch
+ALIAS(IR_S_2_BEZET, 2039)           // IR Stop sensor parkeerspoor #2 bezet latch
+ALIAS(IR_S_3_BEZET, 2040)           // IR Stop sensor parkeerspoor #3 bezet latch
+ALIAS(IR_S_4_BEZET, 2041)           // IR Stop sensor parkeerspoor #4 bezet latch
+ALIAS(IR_S_5_BEZET, 2042)           // IR Stop sensor parkeerspoor #5 bezet latch
+ALIAS(IR_S_RIJ_BEZET, 2043)         // IR Stop sensor doorrij spoor bezet latch
+ALIAS(BD_HBI_1_CW, 2044)            // Trein rijdt Clockwise door blok HBI
+ALIAS(BD_HBI_1_CCW, 2045)           // Trein rijdt Counter Clockwise door blok HBI
+ALIAS(BD_HBU_1_CW, 2046)            // Trein rijdt Clockwise door blok HBU
+ALIAS(BD_HBU_1_CCW, 2047)           // Trein rijdt Counter Clockwise door blok HBU  
 
 
 // Branchelijn dorp - reverse loop
@@ -143,10 +145,7 @@ ALIAS(KEERLUS_REVERSE,1901)         // Sequence to set reverse loop to reverse d
 
 
 // Relais: Let op: deze zijn inverted signal. Aanzetten met 'RESET' en uit met 'SET' commandp
-ALIAS(STREETLIGHTS, PB1)            // Relais straatverlichting
-ALIAS(RELAIS2, PB2)                 // Relais #2 nog niet ingezet (Schaatsers en langlaufers?)
-ALIAS(RELAIS_DCC_REVERSE_A, PA11)   // Relais #3 - DCC reverse loop deel A
-ALIAS(RELAIS_DCC_REVERSE_B, PA12)   // Relais #3 - DCC reverse loop deel B
+ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais, draait de fase van het DCC signal om in een keerlus
 
 // Leds
 
@@ -157,15 +156,9 @@ ALIAS(RELAIS_DCC_REVERSE_B, PA12)   // Relais #3 - DCC reverse loop deel B
 // Virtual (Latches), de pennen boven de 40 bestaan niet op de ESP. Let op: WEL op de STM32
 ALIAS(TREIN_AANKOMST, 200)	      // Trein aankomst latch voor baanvak tot station detectie
 ALIAS(KIEPER_OPERATING, 201)
-ALIAS(TARDIS_WACHT,202)
-ALIAS(TARDIS_AANKOMST,203)
-ALIAS(CCW,204)                     // ClockWise of CounterClockwise rijden van trein. Maakt uit voor bv de fotograag en overgangsseinen
+
 VIRTUAL_TURNOUT( 9101,"ClockWise - CounterClockWise")
 ALIAS(AUTOROUTE_1, 210)            // Route latch voor station rondje
-ALIAS(YARD_BEZET,211)              // IR Sensor yard blokkeer latch
-ALIAS(WACHT,212)                   // Wacht bij station latch
-ALIAS(BINNEN_ROUTE,213)            // Binnen of buitenroute latch
-ALIAS(YARD_ROUTE,214)              // Yard route, dan moet BINNEN_ROUTE uit staan
 
 ALIAS(STOOM_LOC_ACTIVE,220)        // Stoom loc is actief in de route automation
 ALIAS(ELEC_LOC_ACTIVE,221)         // Electric loc is actien in de route automation
@@ -175,7 +168,7 @@ ALIAS(STEAM_MAN_SELECT,225)        // Manual select Steam '4800' train vanuit 3e
 ALIAS(DIES_MAN_SELECT,226)         // Manual select Dies 'BR290 DB' train vanuit 3e systeem (ESPHome)
 
 ALIAS(STRAATLAMP_KNIPPER,230)      // Straatlamp in knipper storing simulatie
-// 235-239 voor latched distace detectie in myBlocksAndSignals.h
+// 235-239 voor latched distance detectie in myBlocksAndSignals.h
 // 240-247 voor latched block detectie in myBlocksAndSignals.h
 ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus LATCH maken            
 ALIAS(SOUND,255)                   // Geluidseffecten ann/uit

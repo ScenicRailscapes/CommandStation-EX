@@ -73,7 +73,7 @@ SERVO_TURNOUT(1030, 440, 320, 210, Fast, "S15 SchaduwStat 1 en 2 rechts")   // S
 SERVO_TURNOUT(1031, 441, 290, 210, Fast, "S16 SchaduwStat 3 en 4 rechts")   // S16
 SERVO_TURNOUT(1032, 442, 270, 190, Fast, "S17 SchaduwStat 5 en 6 rechts")   // S17
 SERVO_TURNOUT(1033, 443, 250, 160, Fast, "S18 Locoshed / haven")            // S18
-SERVO_TURNOUT(1034, 444, 350, 280, Fast, "S19 Haven - dorp branchlijn")     // S19 (defect??)
+SERVO_TURNOUT(1034, 444, 330, 260, Fast, "S19 Haven - dorp branchlijn")     // S19 (defect??)
 SERVO_TURNOUT(1035, 445, 350, 250, Fast, "S20 Main #1 / schaduwstation")    // S20 hoofdspoor 1 / schaduwstation
 SERVO_TURNOUT(1036, 446, 280, 130, Fast, "S21 Dorp / dal")                  // S21
 SERVO_TURNOUT(1037, 447, 250, 160, Fast, "S22 Dorp / Vissersdorp station")  // S22
