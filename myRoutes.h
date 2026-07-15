@@ -1,314 +1,179 @@
-// // * * * * * * * * * * * * * * EXRAIL Automation routes * * * * * * * * * * * * * *
+/* ====================================================================
+                     AUTOMATISCHE RIJDEN ROUTES
+   ==================================================================== */
 
-// // Start met </ START CAB# 100>
-// ROUTE(100,"Automatisch rijden volledige baan")
-//   PRINT("Auto rijden")
-//   LCD(4," ")
-//   LCD(5," ")
-//   LCD(6," ")
-//   FWD(17)
-//   LATCH(AUTOROUTE_1)
-//   DELAY(500)
-//   IFLOCO(STOOM) LATCH (STOOM_LOC_ACTIVE) ENDIF
-//   IFLOCO(ELEC) LATCH(ELEC_LOC_ACTIVE) ENDIF
-//   IFLOCO(DIESEL) LATCH (DIESEL_LOC_ACTIVE) ENDIF
-//   CALL(155)       // Reset de DFPlayers
-//   IF (CCW)        // CCW rijden     // moeten dit geen follow worden?, komt hier toch niet terug?
-//     CALL(80)
-//   ELSE
-//     FOLLOW(85)    // CW rijden
-//   ENDIF
-// DONE
+// Snelheidscompensatie macro per loc
+#define SET_LOCO_SPEED(target_speed)                  \
+    IFLOCO (13)                                       \
+        IF(target_speed == 30)                        \
+            SPEED(60)                                 \
+        ENDIF                                         \
+        IF(target_speed == 25)                        \
+            SPEED(50)                                 \
+        ENDIF                                         \
+    ELSE                                              \
+        SPEED(target_speed)                           \
+    ENDIF
 
+/* ====================================================================
+   AUTOMATISCHE RIT: RONDE 1 (Volledig conform EX-RAIL Instructieset)
+   ==================================================================== */
 
-// // CW Automatic station Route sequence 
-// // Bij CW route nog een gave 3e route mogelijk-> naar de Yard.. Rijden.. stop .. watervullen wanneer stoomloc.. terugrijden voorbij IR3, wissel om en verder
-// SEQUENCE(85)
-//   IF (STOOM_LOC_ACTIVE) SETLOCO(STOOM) ENDIF  // Lijkt af en toe de loco in de routine te verliezen
-//   IF (ELEC_LOC_ACTIVE) SETLOCO(ELEC) ENDIF
-//   IF (DIESEL_LOC_ACTIVE) SETLOCO(DIESEL) ENDIF
-//   IFNOT(TREIN_AANKOMST)
-//     DELAY(100)
-//     //PRINT("LOOP")
-//     FOLLOW (85)
-//   ELSE
-//   AT(IR1_STATION_1)       // Op het station
-//     PRINT("Op IR Station")
-//     IF(WACHT)
-//       PRINT("Wachten")
-//       LCD(4,"- - - -STOP - - - -")
-//       STOP                // stop the train
-//       CALL(153)           // stop the train sound
-//       DELAYRANDOM(9000,20000) // delay somewhere between 5 and 20 seconds
-//       LCD(4,"- - Vertrekken - -")
-//       CALL(150)           // Departure sound
-//       PRINT("Snel Optrekken")           
-//       IF(STOOM_LOC_ACTIVE)
-//         FWD(20)           // Gas erop door de tunnel   
-//       ENDIF
-//       IF(ELEC_LOC_ACTIVE)
-//         FWD(30)           // Gas erop door de tunnel   
-//       ENDIF
-//       IF(DIESEL_LOC_ACTIVE)
-//         FWD(15)           // Gas erop door de tunnel   
-//       ENDIF        
-//     ELSE  // doorrijden
-//       PRINT("Snel doorrijden")
-//       IF(STOOM_LOC_ACTIVE)
-//         FWD(20)           // Gas erop door de tunnel   
-//       ENDIF
-//       IF(ELEC_LOC_ACTIVE)
-//         FWD(30)           // Gas erop door de tunnel   
-//       ENDIF
-//       IF(DIESEL_LOC_ACTIVE)
-//         FWD(15)           // Gas erop door de tunnel   
-//       ENDIF                   
-//     ENDIF
-//     AFTER(IR1_STATION_1)
-//       PRINT("Voorbij IR station")
-//       UNLATCH(TREIN_AANKOMST)
-//       CALL(86)            // Keuzes route en wacht of stop bij station       
-//       DELAY(9000)
-//       PRINT("Vertragen na station")
-//       IF(STOOM_LOC_ACTIVE)
-//         FWD(15) 
-//       ENDIF
-//       IF(ELEC_LOC_ACTIVE)
-//         FWD(20)
-//       ENDIF
-//       IF(DIESEL_LOC_ACTIVE)
-//         FWD(12)          
-//       ENDIF               
-// // staat deze goed of nog een indent ?
-//   IF (AUTOROUTE_1)      // Do we still want to continue (latch Autoroute on)
-//       PRINT("Nog een rondje")
-//       DELAY(100)
-//       LCD(4," ")
-//       LCD(5," ")
-//       FOLLOW (85)       // And again
-//   ELSE
-//       PRINT("Route gestopt")
-//       LCD(4," ")
-//       LCD(5," ")
-//       LCD(6," ")
-//       LCD(7," ")
-//       // clean up latches, in use or not
-//       UNLATCH(TREIN_AANKOMST)
-//       UNLATCH(BINNEN_ROUTE)
-//       UNLATCH(WACHT)
-//       UNLATCH(STOOM_LOC_ACTIVE)
-//       UNLATCH(ELEC_LOC_ACTIVE)
-//       UNLATCH(DIESEL_LOC_ACTIVE)
-//     ENDIF
-//   ENDIF // IF treinaankomst
-//   PRINT("Terug van seq 85")
-//   IF(AUTOROUTE_1) PRINT("Autoroute nog aan") ENDIF
-//   IF(TREIN_AANKOMST) PRINT("Trein aankomst nog aan") ENDIF          
-// DONE //RETURN
+AUTOMATION(1650, "AutoRoute: Start dal CCW")
+  IFROUTE_ACTIVE(1650) 
+    ROUTE_INACTIVE(1650)
+    ROUTE_CAPTION(1650,"Start")
+  ELSE  
+    ROUTE_ACTIVE(1650)
+    ROUTE_CAPTION(1650,"Stop")
+  ENDIF
+    // 1. OPSTARTEN
+    SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
+    FON(0)                     // Lichten aan (F0)
+    FON(1)                     // Interne verlichting aan of sound aan (F1)
+    PRINT("AutoRit: Gestart vanaf Rangeerterrein, richting BD_D_4")
+    //LOCO_HANDOVER(cab_now, 1660)
 
-// // Keuze sequence behorend bij seq 85 CW rijden
-// SEQUENCE(86)
-//   // Kies alvast een langszaam doorrij of stop bij station keuze. De Stoom met passagiers heeft 505 kans, de Elec goederen 30%
-//   IF (STOOM_LOC_ACTIVE) SETLOCO(STOOM) ENDIF  // Lijkt af en toe de loco in de routine te verliezen
-//   IF (ELEC_LOC_ACTIVE) SETLOCO(ELEC) ENDIF  
-//   IF (DIESEL_LOC_ACTIVE) SETLOCO(DIESEL) ENDIF  
-//   IFLOCO(STOOM)
-//     PRINT("Stoom loco")
-//     IFRANDOM(50)          // 50% kans
-//       LATCH (WACHT)       // Wacht bij station latch
-//     ELSE
-//       UNLATCH(WACHT)      // niet wachten doorrijden
-//     ENDIF
-//   ENDIF
-//   IFLOCO(ELEC)
-//     PRINT("Elec loco")
-//     IFRANDOM(30)          // 30% kans
-//       LATCH (WACHT)       // Wacht bij station latch
-//     ELSE
-//       UNLATCH(WACHT)      // niet wachten doorrijden
-//     ENDIF
-//   ENDIF
-//   IFLOCO(DIESEL)
-//     PRINT("Diesel loco")
-//     IFRANDOM(30)          // 30% kans
-//       LATCH (WACHT)       // Wacht bij station latch
-//     ELSE
-//       UNLATCH(WACHT)      // niet wachten doorrijden
-//     ENDIF
-//   ENDIF  
-// // welke route de volgende ronde? 1= Binnenbaan, 2= Buitenbaan, 3=Naar Yard/Groot rondje toekomst
-//   PRINT("Even route kiezen")
-//   IFRANDOM(60)            // 60% kans route 1
-//     LATCH(BINNEN_ROUTE)
-//     //LCD(5,"Binnen Route") 
-//     CLOSE(TURN_STATION)
-//     CLOSE(TURN_BINBUITRING)                 
-//   ELSE                    // 40% kans route 2
-//     UNLATCH(BINNEN_ROUTE)
-//     //LCD(5,"Buiten Route") 
-//     THROW(TURN_STATION)
-//     THROW(TURN_BINBUITRING)
-//     // Nog extra keuze, een route naar de Yard maken
-//     // Op dit moment alleen als de YARD niet bezet is ()
-//     IFNOT(YARD_BEZET)
-//         IFRANDOM(40)     // 40% kans route 3
-//           LATCH(YARD_ROUTE)
-//           CLOSE(TURN_YARD)
-//         ELSE
-//           PRINT ("Niet naar de Yard")
-//           UNLATCH(YARD_ROUTE)
-//           THROW(TURN_YARD)
-//         ENDIF // if random yard 
-//     ENDIF // ifnot yard bezet
-//   ENDIF // ifrandom 
-// RETURN
+    // 2. BENADEREN BLOK BD_D_4
+    SAVE_SPEED
+    IFRED(105) PRINT("Sein op rood, wacht")
+    ELSE PRINT("Sein op groen, verder")
+    ENDIF
+    WAIT_WHILE_RED(105) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
+    RESTORE_SPEED 
+    PRINT("AutoRit: Blok BD_D_4 binnen rijden")
 
-// // - - - - - - - IR Sensor acties zoals baanvak reserveren, versnellen, vertragen, sounds wanneer CW gereden wordt - - - - - - -
-// // CW Rijden; route en alle IR sensoren bekijken, baan reserveringen en autoroute acties bij sensors
-// AUTOSTART SEQUENCE(51)
-//   IFNOT (CCW)                               // Met klok mee, niet de standaard stand
-//     IF(IR2_BINRNG_1)                        // komend vanuit dorp binnenring
-//       LATCH(TREIN_AANKOMST)                 // Trein op baanvak binnenring - station          
-//       IFNOT(AUTOROUTE_1) 
-//         IFNOT(TREIN_AANKOMST)
-//           LCD(4, "Binnenrijden Station")    // Display message on LCD/OLED
-//           PRINT( "Binnenrijden Station") 
-//         ENDIF
-//       ELSE
-//         IF(WACHT)
-//           CALL(152)           // arrival sound 
-//         ELSE
-//           AFTER(IR2_BINRNG_1)           // veranderd om niet steeds de sound te herstarten, geen idee of dit blokking is)
-//             CALL(151)           // Passthrough sound 
-//         ENDIF // wacht        
-//       ENDIF // ifnot autoroute  
-//     ENDIF // binnenring
-//     IF(IR3_BUIRNG_1)                        // komend vanuit buitenring
-//       LATCH(TREIN_AANKOMST)
-//       IFTHROWN(TURN_YARD)                   // wissel op baanvak buitenring - station?
-//         IFNOT(AUTOROUTE_1) 
-//           IFNOT(TREIN_AANKOMST)
-//             LCD(4, "Binnenrijden Station")  // Display message on LCD/OLED
-//             PRINT( "Binnenrijden Station") 
-//           ENDIF
-//         ELSE                                // Autoroute is bezig
-//           IF(STOOM_LOC_ACTIVE)
-//             SETLOCO(STOOM)
-//             FWD(30)                         // sneller om door alle wissels te komen
-//           ENDIF
-//           IF(ELEC_LOC_ACTIVE)
-//             SETLOCO(ELEC)
-//             FWD(20)
-//           ENDIF
-//           IF(DIESEL_LOC_ACTIVE)
-//             SETLOCO(DIESEL)
-//             FWD(15)
-//           ENDIF          
-//           IF(WACHT)
-//             DELAY(2000)
-//             CALL(152)           // arrival sound 
-//           ELSE
-//             AFTER(IR3_BUIRNG_1)           // veranderd om niet steeds de sound te herstarten door trein met meerdere wagons, geen idee of dit blokking is)
-//               DELAY(2000)
-//               CALL(151)           // Passthrough sound 
-//           ENDIF // wacht
-//         ENDIF  // ifnot autoroute 
-//       ENDIF // wissel naar station
-//       IFCLOSED(TURN_YARD)       // Naar de Yard..
-//         IFTHROWN(TURN_SUMTRACK) // controle op summertrack gesloten want anders (toekomst) doorrijden
-//           CALL(53)   // Yard sequence summertrack gesloten
-//         ENDIF // Summertrack
-//       ENDIF // Wissel naar Yard 
-//     ENDIF // buitenring
-//     IF(IR1_STATION_1)
-//       //DELAY(1000)
-//       AFTER(IR1_STATION_1)
-//         UNLATCH(TREIN_AANKOMST)    
-//     ENDIF
-//     IF(IR4_BRUG)
-//       IF(AUTOROUTE_1)                       // Automatic route in progress
-//       // helaas zijn commandos zoals IFLOCO en FWD/SPEED alleen in een actuele route te gebruiken hier dus een latch gebruiken
-//         IF(STOOM_LOC_ACTIVE)
-//           SETLOCO(STOOM)
-//           DELAY(4000)                       // voorbij fotograaf
-//           PRINT("Versnellen stoom")
-//           FWD(30)                           // Speed up for decending track and turnout
-//           IF (BINNEN_ROUTE)
-//             DELAY(12000)
-//           ELSE
-//             DELAY(16000)
-//           ENDIF
-//           PRINT("Vertragen stoom")
-//           FWD(15)                           // hopefully through the mountain and turnout so slowdown 
-//         ENDIF
-//         IF(ELEC_LOC_ACTIVE)
-//           SETLOCO(ELEC)
-//           PRINT("Versnellen elec")
-//           FWD(30)
-//           DELAY(5000)
-//           FWD(35)                           // Speed up for decending track and turnout
-//           DELAY(3500)
-//           PRINT("Vertragen elec")
-//           FWD(25)
-//           DELAY(5000)
-//           FWD(20)                           // hopefully through the mountain and turnout so slowdown 
-//         ENDIF 
-//         // voor de diesel niets nodig, die gaat wel  
-//       ENDIF // if autoroute
-//     ENDIF // if IR4
-//   ENDIF // ifnot ccw
-// FOLLOW(51)
-// DONE
+    // Als we CCW binnenkomen, dan keuze maken voor wissel. 
+    AT (IR_D_4_1_BEZET)
+      PRINT("Debug: IR 4 1 bezet")
+      AFTER(IR_D_4_1_BEZET)
+        PRINT("Debug: IR 4 1 voorbij")
+        DELAY(3000)
+        PRINT("Debug: IR 4 1 wacht voorbij")
 
+    // 3. WISSELS GOED ZETTEN NA VERLATEN BD_D_4
+    // Rit eerst over hoofdspoor #1, dan naar dorp
+    PRINT("AutoRit: Gaan BD_D_4 verlaten. Wissels omzetten voor Hoofdspoor #1")
+    THROW(1038)   // S23 Haven / main #1
+    THROW(1035)   // S20 Main #1 / schaduwstation
+    //RANDOM_FOLLOW(1660,1661)
+    CALL(ROUTE_1)
+    
+  // Als we hier komen is de automatisering rit klaar
+  SPEED(0)  // remmen
+  DELAY(6000) // Geef remtijd
+  PRINT ("Einde automation")
+DONE  // nu even done, als ik ga werken met calls ipv follow dan iets anders verzinnen
 
-// SEQUENCE(53)  // Yard sequence summertrack gesloten
-//   IF (STOOM_LOC_ACTIVE)  SETLOCO(STOOM)  ENDIF  // Lijkt af en toe de loco in de routine te verliezen
-//   IF (ELEC_LOC_ACTIVE)   SETLOCO(ELEC)   ENDIF  
-//   IF (DIESEL_LOC_ACTIVE) SETLOCO(DIESEL) ENDIF  
-//   UNLATCH(IR5_YARD)         // Soms wordt de Latch niet gereleased
-//   DELAY(3000)
-//   IFLOCO(STOOM)
-//     FWD(12)
-//   ENDIF
-//   IFLOCO(ELEC)
-//     FWD(20)
-//   ENDIF
-//   IFLOCO(DIESEL)
-//     FWD(10) // misschen nog met een FON(3) voor crawl snelheid?
-//   ENDIF  
-//   // Later nog eens kijken voor een Yard Bezet optie dan delay OF stoppen bij IR sensor
-//   // IF (YARD_BEZET)
-//   //      DELAY(iets)
-//   //      enz..
-//   //    ELSE
-//   // Voorlopig maak ik een YARD_BEZET onderdeel van de random keuze voor trace 3.. Bezet = geen trace 3. 
-//   // Mooier zou zijn dat trace 3 gebruikt wordt in de auto route als tijdelijke parkeer en dat de 2e trein dan verder kan gaan.. Toekomst
-//   ATTIMEOUT(IR5_YARD,35000) // Eind bereikt, voor de zekerheid een timeout
-//     STOP
-//     DELAYRANDOM(20000,60000)
-//     CALL(150)               // Voor nu een departure, later iets van stoomfluit ofzo
-//     IFLOCO(STOOM)
-//       REV(15)               // Ga terug
-//     ENDIF
-//     IFLOCO(ELEC)
-//       REV(25)
-//     ENDIF
-//     IFLOCO(DIESEL)
-//       REV(10)
-//     ENDIF        
-//     IFTHROWN(WATERKRAAN)
-//       CLOSE(WATERKRAAN)
-//     ENDIF
-//     AFTER(IR3_BUIRNG_1)     // Voorbij de tunnel sensor
-//       IFLOCO(DIESEL)        // Diesel is langszamer, duurt langer voorbij de sensor
-//         DELAY(7000)
-//       ELSE
-//         DELAY(3000)
-//       ENDIF
-//       STOP
-//       UNLATCH(IR5_YARD)
-//       UNLATCH(YARD_BEZET)      
-//       DELAY(5000)
-//       THROW(TURN_YARD)      // Zet wissel om
-//       FWD(20)               // hierna richting station waar de routes weer opnieuw bepaald worden
-// RETURN
+/* ====================================================================
+   ROUTE ROUTE_1 (Alias voor 1660): Hoofdspoor #1 (CCW) 
+   ==================================================================== */
+ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
+  IFROUTE_ACTIVE(ROUTE_1) 
+    ROUTE_INACTIVE(ROUTE_1)
+    ROUTE_CAPTION(ROUTE_1,"Start")
+  ELSE  
+    ROUTE_ACTIVE(ROUTE_1)
+    ROUTE_CAPTION(ROUTE_1,"Stop")
+  ENDIF
+  PRINT("AutoRit: Route #1 CCW Hoofdspoor #1")
+  CLOSE(1040)   // S25 main #1 / main #2
+  // 1. Hoofdspoor #1 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR (nog niet geplaatst)
+  //WAIT_WHILE_RED(102)
+
+  // AT wacht tot de sensor actief (1) wordt
+  AT(IR_D_2_2_BEZET)
+  PRINT("AutoRit: IR_D_2_2 dal geraakt, snelheid naar 25")
+  SAVE_SPEED
+  SLOWDOWN(5)
+
+  // 2. Hoofdspoor #1 : BINNENKOMST HELIX (Blok BD_HBI_1)
+  AT(IR_D_2_1_BEZET)
+    PRINT("AutoRit: IR_D_2_1 berg geraakt")
+    // Voor nu nog geen keuzes, later dorp - yard of dorp - station en keerlus
+    // Wissels omzetten om de helix halverwege te verlaten richting het dorp
+    THROW(1006)   // S06 Helix buitenring / dorp
+    CLOSE(1007)   // S08 Branchlijn hoofdstation / Haven-dorp
+  // 3a. Helix Berg sensor 
+  AT (IR_H_3_BEZET)
+    PRINT("AutoRit: Helix buitenring")
+  // 3b. Helix Midden sensor 
+  AFTER(IR_H_2_BEZET)
+    PRINT("AutoRit: Helix verlaten")
+  // 4. BINNENKOMST DORP (Blok BD_D_5)
+    SAVE_SPEED
+    IFRED(108) PRINT("Sein op rood, wacht")
+    ELSE PRINT("Sein op groen, verder")
+    ENDIF
+    WAIT_WHILE_RED(108) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
+    RESTORE_SPEED       // terug naar de snelheid die we hadden opgeslagen 
+
+  AT(BD_D_5_BEZET)
+    PRINT("AutoRit: Blok BD_D_5 bereikt. Snelheid terug naar 30")
+    DELAY(5000)
+    CLOSE(1006)         // S06 Helix buitenring / dorp
+    PRINT("AutoRit: Wissel S06 omgezet naar Helix buitenring")
+  
+  // Keuzes maken: Nog een rondje, of hoofdspoor #2 of via keerlus 
+    //RANDOM_FOLLOW(1660,1661)
+      //PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
+ROUTE_INACTIVE(ROUTE_1) 
+RETURN
+
+/* ====================================================================
+   ROUTE ROUTE_2 (1661): Hoofdspoor #2 (CCW)
+   ==================================================================== */
+ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
+  ROUTE_ACTIVE(ROUTE_2)
+  PRINT("AutoRit: Route #2 CCW Hoofdspoor #2")
+  // hmmm, moet ik hier eerst kijken waar de trein vandaan komt?, soms dus op verkeerde binnenkomst en dan is throw niet goed
+  CLOSE(1040)   // S25 main #1 / main #2
+  // 4. Hoofdspoor #2 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR
+  //WAIT_WHILE_RED(102)
+  // AT wacht tot de sensor actief (1) wordt
+  AT(IR_D_3_2_BEZET)
+  PRINT("AutoRit: IR_D_3_2 dal geraakt, snelheid naar 25")
+  SAVE_SPEED
+  SLOWDOWN(5)
+  //PRINT("AutoRit: Hoofdspoor #2 bereikt, we geven Blok 5 handmatig vrij")
+  //RESET(BD_D_5_BEZET)   // tijdelijk tot IR sensor IR_D_1_5 geplaatst is...
+  //RESET(BD_D_5_CCW) 
+  // 5. Hoofdspoor #2 : BINNENKOMST HELIX (Blok BD_HBI_1)
+  AT(IR_D_3_1_BEZET)
+    PRINT("AutoRit: IR_D_3_1 berg geraakt")
+    RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
+    PRINT("AutoRit: Verlaat Hoofdspoor #2, rijdt Helix Binnenring (BD_HBI_1) binnen")
+    AFTER(BD_HBI_1_BEZET)
+
+  // 6. Terug in dal
+      PRINT("AutoRit: Helix Binnenring is weer vrij")
+  // Keuzes maken: Nog een rondje of hoofdspoor #1    
+      RANDOM_FOLLOW(1660,1661)
+      PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
+ROUTE_INACTIVE(ROUTE_2)       
+DONE
+    
+    // Voor nu nog geen keuzes, vanuit dal naaar dorp - station - keerlus / dal - hoofdspoor 2 / dal - schaduwstation
+    // schaduw station, keuzes doorrij track of trein wisselen.
+    // Als ik keerlus heb gebruikt dan het probleem dat trein niet meer CCW kan rijden. In toekomst schaduwnstation gebruiken
+    // en andere trein kiezen, dan handmatig trein omkeren en were in schaduw station plaatsen voor toekomstige CCW ritten    
+
+  /* ====================================================================
+  ROUTE ROUTE_3 (1662): Dorp - station (wachten) - haven dorp #1 (CCW) 
+  ==================================================================== */
+SEQUENCE(ROUTE_3)
+  ROUTE_ACTIVE(ROUTE_3)
+  PRINT("AutoRit: Route #3 CW Dorp-Station-Haven")
+  // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
+ROUTE_INACTIVE(ROUTE_3)  
+DONE
+
+  /* ====================================================================
+  ROUTE ROUTE_3 (1663): Dorp - haven dorp - Station (wachten) (CCW) 
+  ==================================================================== */
+SEQUENCE(ROUTE_4)
+  ROUTE_ACTIVE(ROUTE_4)
+  PRINT("AutoRit: Route #4 CCW Dorp-Haven-Station")
+  // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
+ROUTE_INACTIVE(ROUTE_4)  
+DONE
