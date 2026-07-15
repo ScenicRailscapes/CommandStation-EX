@@ -2,8 +2,7 @@
       Temp voor visuele output identificatie Blockdetect
 */
 
-// Eind tijdelijke code
-// Snelheidscompensatie macro (Gecorrigeerd zonder accolades)
+// Snelheidscompensatie macro per loc
 #define SET_LOCO_SPEED(target_speed)                  \
     IFLOCO (13)                                       \
         IF(target_speed == 30)                        \
@@ -20,37 +19,115 @@
    AUTOMATISCHE RIT: RONDE 1 (Volledig conform EX-RAIL Instructieset)
    ==================================================================== */
 
-AUTOMATION(1650, "Route #1 CCW Start Rangeerterrein")
+AUTOMATION(1650, "AutoRoute: Start dal CCW")
+  IFROUTE_ACTIVE(1650) 
+    ROUTE_INACTIVE(1650)
+    ROUTE_CAPTION(1650,"Start")
+  ELSE  
+    ROUTE_ACTIVE(1650)
+    ROUTE_CAPTION(1650,"Stop")
+  ENDIF
     // 1. OPSTARTEN
     SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
     FON(0)                     // Lichten aan (F0)
-    FON(1)                     // Interne verlichting aan (F1)
+    FON(1)                     // Interne verlichting aan of sound aan (F1)
     PRINT("AutoRit: Gestart vanaf Rangeerterrein, richting BD_D_4")
+    //LOCO_HANDOVER(cab_now, 1660)
 
     // 2. BENADEREN BLOK BD_D_4
     SAVE_SPEED
+    IFRED(105) PRINT("Sein op rood, wacht")
+    ELSE PRINT("Sein op groen, verder")
+    ENDIF
     WAIT_WHILE_RED(105) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
     RESTORE_SPEED 
-    PRINT("AutoRit: Blok BD_D_4 binnengereden")
+    PRINT("AutoRit: Blok BD_D_4 binnen rijden")
 
-    // We wachten tot de trein duidelijk CW rijdt.
-    AFTER(BD_D_4_CCW)
+    // Als we CCW binnenkomen, dan keuze maken voor wissel. 
+    AT (IR_D_4_1_BEZET)
+      PRINT("Debug: IR 4 1 bezet")
+      AFTER(IR_D_4_1_BEZET)
+        PRINT("Debug: IR 4 1 voorbij")
+        DELAY(3000)
+        PRINT("Debug: IR 4 1 wacht voorbij")
 
     // 3. WISSELS GOED ZETTEN NA VERLATEN BD_D_4
-    PRINT("AutoRit: BD_D_4 verlaten. Wissels omzetten voor Hoofdspoor #1")
+    // Rit eerst over hoofdspoor #1, dan naar dorp
+    PRINT("AutoRit: Gaan BD_D_4 verlaten. Wissels omzetten voor Hoofdspoor #1")
     THROW(1038)   // S23 Haven / main #1
     THROW(1035)   // S20 Main #1 / schaduwstation
+    //RANDOM_FOLLOW(1660,1661)
+    CALL(ROUTE_1)
+    
+  // Als we hier komen is de automatisering rit klaar
+  SPEED(0)  // remmen
+  DELAY(6000) // Geef remtijd
+  PRINT ("Einde automation")
+DONE  // nu even done, als ik ga werken met calls ipv follow dan iets anders verzinnen
 
-    // 4. Keuze maken: Hoofdspoor #1 of Hoofdspoor #2
-    RANDOM_FOLLOW(1660,1661)
-    PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
-  DONE
+/* ====================================================================
+   ROUTE ROUTE_1 (Alias voor 1660): Hoofdspoor #1 (CCW) 
+   ==================================================================== */
+ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
+  IFROUTE_ACTIVE(ROUTE_1) 
+    ROUTE_INACTIVE(ROUTE_1)
+    ROUTE_CAPTION(ROUTE_1,"Start")
+  ELSE  
+    ROUTE_ACTIVE(ROUTE_1)
+    ROUTE_CAPTION(ROUTE_1,"Stop")
+  ENDIF
+  PRINT("AutoRit: Route #1 CCW Hoofdspoor #1")
+  CLOSE(1040)   // S25 main #1 / main #2
+  // 1. Hoofdspoor #1 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR (nog niet geplaatst)
+  //WAIT_WHILE_RED(102)
+
+  // AT wacht tot de sensor actief (1) wordt
+  AT(IR_D_2_2_BEZET)
+  PRINT("AutoRit: IR_D_2_2 dal geraakt, snelheid naar 25")
+  SAVE_SPEED
+  SLOWDOWN(5)
+
+  // 2. Hoofdspoor #1 : BINNENKOMST HELIX (Blok BD_HBI_1)
+  AT(IR_D_2_1_BEZET)
+    PRINT("AutoRit: IR_D_2_1 berg geraakt")
+    // Voor nu nog geen keuzes, later dorp - yard of dorp - station en keerlus
+    // Wissels omzetten om de helix halverwege te verlaten richting het dorp
+    THROW(1006)   // S06 Helix buitenring / dorp
+    CLOSE(1007)   // S08 Branchlijn hoofdstation / Haven-dorp
+  // 3a. Helix Berg sensor 
+  AT (IR_H_3_BEZET)
+    PRINT("AutoRit: Helix buitenring")
+  // 3b. Helix Midden sensor 
+  AFTER(IR_H_2_BEZET)
+    PRINT("AutoRit: Helix verlaten")
+  // 4. BINNENKOMST DORP (Blok BD_D_5)
+    SAVE_SPEED
+    IFRED(108) PRINT("Sein op rood, wacht")
+    ELSE PRINT("Sein op groen, verder")
+    ENDIF
+    WAIT_WHILE_RED(108) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
+    RESTORE_SPEED       // terug naar de snelheid die we hadden opgeslagen 
+
+  AT(BD_D_5_BEZET)
+    PRINT("AutoRit: Blok BD_D_5 bereikt. Snelheid terug naar 30")
+    DELAY(5000)
+    CLOSE(1006)         // S06 Helix buitenring / dorp
+    PRINT("AutoRit: Wissel S06 omgezet naar Helix buitenring")
+  
+  // Keuzes maken: Nog een rondje, of hoofdspoor #2 of via keerlus 
+    //RANDOM_FOLLOW(1660,1661)
+      //PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
+ROUTE_INACTIVE(ROUTE_1) 
+RETURN
+
 
 
 /* ====================================================================
    ROUTE 1660: Hoofdspoor #1 (CCW) 
    ==================================================================== */
-SEQUENCE(1660)
+/*   
+ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
+  ROUTE_ACTIVE(ROUTE_1)
   PRINT("AutoRit: Route #1 CCW Hoofdspoor #1")
   CLOSE(1040)   // S25 main #1 / main #2
   // 4. Hoofdspoor #1 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR
@@ -64,18 +141,21 @@ SEQUENCE(1660)
   // 5. Hoofdspoor #1 : BINNENKOMST HELIX (Blok BD_HBI_1)
   AT(IR_D_2_1_BEZET)
     PRINT("AutoRit: IR_D_2_1 berg geraakt")
-    RESET(BD_D_5_BEZET)   // tijdelijk tot IR sensor IR_D_1_5 geplaatst is...
-    RESET(BD_D_5_CCW) 
     // Voor nu nog geen keuzes, later dorp - yard of dorp - station en keerlus
     // Wissels omzetten om de helix halverwege te verlaten richting het dorp
     THROW(1006)   // S06 Helix buitenring / dorp
     CLOSE(1007)   // S08 Branchlijn hoofdstation / Haven-dorp
 
   // 6. BINNENKOMST DORP (Blok BD_D_5)
-  WAIT_WHILE_RED(108) // Wacht tot het sein op groen staat (Blok BD_D_5 is bezet)
+  SAVE_SPEED
+  IFRED(108) PRINT("Sein op rood, wacht")
+  ELSE PRINT("Sein op groen, verder")
+  ENDIF
+  WAIT_WHILE_RED(108) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
+  RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen 
+
   AT(BD_D_5_BEZET)
     PRINT("AutoRit: Blok BD_D_5 bereikt. Snelheid terug naar 30")
-    RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
     DELAY(5000)
     CLOSE(1006)   // S06 Helix buitenring / dorp
     PRINT("AutoRit: Wissel S06 omgezet naar Helix buitenring")
@@ -83,14 +163,18 @@ SEQUENCE(1660)
   // Keuzes maken: Nog een rondje of hoofdspoor #2  
     RANDOM_FOLLOW(1660,1661)
       PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
+ROUTE_INACTIVE(ROUTE_1) 
 DONE
+*/
 
 /* ====================================================================
-   ROUTE 1661: Hoofdspoor #2 (CCW)
+   ROUTE ROUTE_2 (1661): Hoofdspoor #2 (CCW)
    ==================================================================== */
-SEQUENCE(1661)
-  PRINT("AutoRit: Route #1 CCW Hoofdspoor #2")
-  THROW(1040)   // S25 main #1 / main #2
+ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
+  ROUTE_ACTIVE(ROUTE_2)
+  PRINT("AutoRit: Route #2 CCW Hoofdspoor #2")
+  // hmmm, moet ik hier eerst kijken waar de trein vandaan komt?, soms dus op verkeerde binnenkomst en dan is throw niet goed
+  CLOSE(1040)   // S25 main #1 / main #2
   // 4. Hoofdspoor #2 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR
   //WAIT_WHILE_RED(102)
   // AT wacht tot de sensor actief (1) wordt
@@ -98,9 +182,9 @@ SEQUENCE(1661)
   PRINT("AutoRit: IR_D_3_2 dal geraakt, snelheid naar 25")
   SAVE_SPEED
   SLOWDOWN(5)
-  PRINT("AutoRit: Hoofdspoor #2 bereikt, we geven Blok 5 handmatig vrij")
-  RESET(BD_D_5_BEZET)   // tijdelijk tot IR sensor IR_D_1_5 geplaatst is...
-  RESET(BD_D_5_CCW) 
+  //PRINT("AutoRit: Hoofdspoor #2 bereikt, we geven Blok 5 handmatig vrij")
+  //RESET(BD_D_5_BEZET)   // tijdelijk tot IR sensor IR_D_1_5 geplaatst is...
+  //RESET(BD_D_5_CCW) 
   // 5. Hoofdspoor #2 : BINNENKOMST HELIX (Blok BD_HBI_1)
   AT(IR_D_3_1_BEZET)
     PRINT("AutoRit: IR_D_3_1 berg geraakt")
@@ -113,221 +197,34 @@ SEQUENCE(1661)
   // Keuzes maken: Nog een rondje of hoofdspoor #1    
       RANDOM_FOLLOW(1660,1661)
       PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
+ROUTE_INACTIVE(ROUTE_2)       
 DONE
     
     // Voor nu nog geen keuzes, vanuit dal naaar dorp - station - keerlus / dal - hoofdspoor 2 / dal - schaduwstation
     // schaduw station, keuzes doorrij track of trein wisselen.
-    // Als ik keerlus heb gebruikt dan het probleem dat tein niet meer CCW kan rijden. In toekomst schaduwnstation gebruiken
+    // Als ik keerlus heb gebruikt dan het probleem dat trein niet meer CCW kan rijden. In toekomst schaduwnstation gebruiken
     // en andere trein kiezen, dan handmatig trein omkeren en were in schaduw station plaatsen voor toekomstige CCW ritten    
 
+  /* ====================================================================
+  ROUTE ROUTE_3 (1662): Dorp - station (wachten) - haven dorp #1 (CCW) 
+  ==================================================================== */
+SEQUENCE(ROUTE_3)
+  ROUTE_ACTIVE(ROUTE_3)
+  PRINT("AutoRit: Route #3 CW Dorp-Station-Haven")
+  // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
+ROUTE_INACTIVE(ROUTE_3)  
+DONE
 
+  /* ====================================================================
+  ROUTE ROUTE_3 (1663): Dorp - haven dorp - Station (wachten) (CCW) 
+  ==================================================================== */
+SEQUENCE(ROUTE_4)
+  ROUTE_ACTIVE(ROUTE_4)
+  PRINT("AutoRit: Route #4 CCW Dorp-Haven-Station")
+  // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
+ROUTE_INACTIVE(ROUTE_4)  
+DONE
 
-// /* ====================================================================
-//    AUTOMATISCHE RIT: RONDE 1 (Volledig conform EX-RAIL Instructieset)
-//    ==================================================================== */
-
-// AUTOMATION(1650, "Hoofdspoor #1 CCW Start Rangeerterrein")
-//     // 1. OPSTARTEN
-//     SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
-//     FON(0)                     // Lichten aan (F0)
-//     FON(1)                     // Interne verlichting aan (F1)
-//     PRINT("AutoRit: Gestart vanaf Rangeerterrein, richting BD_D_4")
-
-//     // 2. BENADEREN BLOK BD_D_4
-//     SAVE_SPEED
-//     WAIT_WHILE_RED(105) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
-//     RESTORE_SPEED 
-//     PRINT("AutoRit: Blok BD_D_4 binnengereden")
-
-//     // We wachten tot de trein duidelijk CW rijdt.
-//     AFTER(BD_D_4_CCW)
-
-//     // 3. WISSELS GOED ZETTEN NA VERLATEN BD_D_4
-//     PRINT("AutoRit: BD_D_4 verlaten. Wissels omzetten voor Hoofdspoor #1")
-//     THROW(1038)   // S23 Haven / main #1
-//     THROW(1035)   // S20 Main #1 / schaduwstation
-//     CLOSE(1040)   // S25 main #1 / main #2 
-    
-//     // 4. Hoofdspoor #1 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR
-//     //WAIT_WHILE_RED(102)
-//     // AT wacht tot de sensor actief (1) wordt
-//     AT(IR_D_2_2_BEZET)
-//     PRINT("AutoRit: IR_D_2_2 geraakt, snelheid naar 25")
-//     SAVE_SPEED 
-//     //SET_LOCO_SPEED(25)
-//     SLOWDOWN(5) 
-
-//     // 5. DOORRIJDEN NAAR HELIX BUITENRING
-//     AT(IR_D_2_1_BEZET)
-//     PRINT("AutoRit: Verlaat Hoofdspoor #1, rijdt Helix Buitenring (BD_HBU_1) binnen")
-
-//     // Wissels omzetten om de helix halverwege te verlaten richting het dorp
-//     THROW(1006)   // S06 Helix buitenring / dorp
-//     CLOSE(1007)   // S08 Branchlijn hoofdstation / Haven-dorp
-
-//     // 6. BINNENKOMST DORP (Blok BD_D_5)
-//     WAIT_WHILE_RED(108) // Wacht tot het sein op groen staat (Blok BD_D_5 is bezet)
-//     AT(BD_D_5_BEZET)
-//     PRINT("AutoRit: Blok BD_D_5 bereikt. Snelheid terug naar 30")
-//     //SET_LOCO_SPEED(30)
-//     //SPEEDUP(5)
-//     RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
-
-//     // Na 5 seconden wissel 1040 omzetten voor de volgende ronde naar Hoofdspoor #2
-//     DELAY(5000)
-//     CLOSE(1040)   // S25 main #1 / main #2
-//     PRINT("AutoRit: Wissel S25 omgezet naar Hoofdspoor #2")
-
-//     // BACK-UP LOGICA VOOR ONTBREKENDE EXIT-SENSOR BLOK 5:
-//     // Wacht tot de stroom- of IR-melder van Hoofdspoor 2 aanspringt
-//     AT(BD_D_3_BEZET)
-    
-//     PRINT("AutoRit: Hoofdspoor #2 bereikt, we geven Blok 5 handmatig vrij")
-//     RESET(BD_D_5_BEZET) 
-//     RESET(BD_D_5_CCW)   
-
-//     // 7. HOOFDSPOOR #2 EN HELIX BINNENRING
-//     PRINT("AutoRit: Rijden op Hoofdspoor #2 met snelheid 25")
-//     //SET_LOCO_SPEED(25)
-//     SLOWDOWN(5)
-
-//     // We wachten tot de trein in de Helix binnenring (BD_HBI_1) wordt gedetecteerd
-//     AT(BD_HBI_1_BEZET)
-//     PRINT("AutoRit: Trein bevindt zich in Helix Binnenring (dalwaarts)")
-
-//     // Wacht tot de Helix binnenring weer volledig vrij is (vlag wordt 0)
-//     AFTER(BD_HBI_1_BEZET)
-
-//     // 8. EINDE RONDE 1
-//     PRINT("AutoRit: Einde Ronde 1. We staan weer voor Blok BD_D_4!")
-// DONE
-
-// // Test automation 1e poging
-// // werkt niet goed, veel valse meldingen van bezet en vrije blockdetectors. Daar moet iets mee gedaan worden, misschien een soort debounce ofzo, of misschien is er een fout in de mapping van de blockdetectors waardoor er valse meldingen komen. Voor nu even testen met de automation zonder de bezetmeldingen van de blockdetectors, en later debuggen wat daar het probleem is.
-
-// AUTOMATION(1650,"Hoofdspoor #1 CCW Start Rangeerterein")
-//       FWD(30)
-//       FON(0)
-//       DELAY(1000)
-//       FON(1)
-//       // Ronde 1  (dal - main #1 - helix - dal)
-//       PRINT ("Ronde 1: dal - main #1 - helix - dal")
-//       IF(BD_D_4_BEZET) // Block #6 Connectie dorp en hoofdsporen naar yard en helix dal
-//         PRINT("Auto 1650 - Bezet: dal naar visserdorp lijn")
-//       ENDIF
-//       AT (IR_D_4_1) // IR Sensor Connectie spoor #1 Dal
-//             PRINT("Auto 1650 - Ronde 1: IR Sensor dal #1")
-//             THROW(1038) // S23 Haven / main #1
-//             PRINT ("Auto 1650 - Wissel 1038")
-//             DELAY(1000)
-//             THROW(1035) // S20 hoofdspoor 1 / schaduwstation
-//             PRINT ("Auto 1650 - Wissel 1035")   
-//             DELAY(1000)
-//             CLOSE(1040) // S25 main #1 / main #2 kruiswissel
-//             PRINT ("Auto 1650 - Wissel 1040")
-//       IF(BD_D_2_BEZET) // Block #4 Hoofdspoor #1
-//         PRINT("Auto 1650 - Bezet: hoofdspoor #1")
-//       ENDIF
-//       // de after misschien IN de block detection zetten?
-//       AFTER(IR_D_2_2) // IR Sensor Hoofdspoor #1 Dorp
-//         PRINT("Auto 1650 - Hoofdspoor #1 dorp sensor active")
-//         FWD(25)       // Iets langzamer voor de paraderoute 
-
-//         // hmm berg sensor reageert niet, fout? desnoods IR_H_3 gebruiken in de helix berg niveau
-//       AFTER(IR_D_2_1) // IR Sensor Hoofdspoor #1 Berg
-//         PRINT("Auto 1650 - Hoofdspoor #1 berg sensor active")
-//         IF (BD_HBU_1_BEZET) // Block #2 Helix buitenring
-//             PRINT("Auto 1650 - Bezet: helix buitenring")
-//             THROW(1006) // S6 Helix buitenring - dal  (naar dorp)
-//             PRINT("Auto 1650 - Wissel 1006")
-//             CLOSE(1007) // S7 vissersdorp - dorp branchlijn (naar visserdorp)
-//             PRINT("Auto 1650 - Wissel 1007")
-//         ENDIF
-//       // IFNOT (BD_HBU_1_BEZET)
-//       //   PRINT("Auto 1650 - Helix verlaten")
-//       // ENDIF
-//               // dit is te vroeg, de ronde is nog niet klaar, pas bij uitgaan van de helix..
-//       // Ronde 2 (dal - main #1 - helix - dorp)
-//       PRINT ("Auto 1650 - Ronde 2: dal - main #1 - helix - dorp")
-//       // IR Detectors buitenring voor positie van de trein in de helix, zodat er niet te vroeg of te laat versneld wordt
-//       IF(BD_D_5_BEZET) // Block #13 yard vissersdorp /dorp branchlijn
-//         PRINT("Auto 1650 - Bezet: yard vissersdorp /dorp branchlijn")
-//         THROW(1038) // S23 Haven / main #1
-//         PRINT ("Auto 1650 - Wissel 1038")
-//         DELAY(1000)
-//         CLOSE(1039) // S24 Haven - dorp / main #2
-//         PRINT ("Auto 1650 - Wissel 1039")
-//         DELAY(1000)
-//         THROW(1040) // S25 main #1 / main #2 kruiswissel
-//         PRINT ("Auto 1650 - Wissel 1040")
-//         DELAY(1000)
-//       ENDIF
-//       AT(IR_D_2_2) // IR Sensor Hoofdspoor #1 Dorp
-//         PRINT("Auto 1650 - Hoofdspoor #1 Dorp sensor active")
-//         FWD(30)    // iets versnellen voor helling
-//       AFTER(IR_D_2_2) // IR Sensor Hoofdspoor #1 Dorp
-//         PRINT("Auto 1650 - Hoofdspoor #1 Berg sensor active")
-//         FWD(25)       // Iets langzamer voor de paraderoute
-//       AFTER(IR_D_2_1) // IR Sensor Hoofdspoor #1 Berg
-//         PRINT("Auto 1650 - Hoofdspoor #1 berg sensor active")
-//         IF (BD_HBU_1_BEZET) // Block #2 Helix buitenring
-//             PRINT("Auto 1650 - Bezet: helix buitenring")
-//             THROW(1006) // S6 Helix buitenring - dal  (naar dorp)
-//             PRINT("Auto 1650 - Wissel 1006")
-//             CLOSE(1007) // S7 vissersdorp - dorp branchlijn (naar visserdorp)
-//             PRINT("Auto 1650 - Wissel 1007")
-//         ENDIF        
-
-//       // Hier zou ronde 3 moeten komen
-//       DELAY(5000)    // temp omdat de automation nog niet af is en anders direct weer versneld in het begin van de automation wordt.
-//       PRINT("Auto 1650 - Temp: herhaal automation")
-//       // ...
-//       // Ronde 3 (dorp - main #1 - helix - dorp - keerlus)
-//       // komt later eerst dit testen
-//       // later ook extras om te bepalen wat voor loc er rijdt, en bv met sound dan ook FON commandos voor geluiden etc. 
-//       // Bij geen sound loc dan rijgeluiden via de dfplayers
-// FOLLOW(1650)
-
-// // Test voor distance sensor, led gaat knipperen afgaande op de afstand. Later gebruiken voor vertragen en stoppen van treinen
-// AUTOSTART SEQUENCE(801)
-//   ATLT(VL53L0X_STATION, 300 / 0.75)
-//     BLINK(602,500,500)  // blink the second led
-//   ATLT(VL53L0X_STATION, 250 / 0.75)
-//     BLINK(602,300,300)  // blink the second led
-//   ATLT(VL53L0X_STATION, 200 / 0.75)
-//       BLINK(602,100,100)  // blink the second led
-//   ATLT(VL53L0X_STATION, 150 / 0.75)
-//       SET(602)
-//   AFTER(VL53L0X_STATION) RESET(602)
-//   // STEALTH(
-//   //   StringFormatter::send(&USB_SERIAL,
-//   //     F("Distance: %d\n|"), IODevice::readAnalogue(VL53L0X_STATION) );
-//   // ) 
-//   DELAY(100)  // small delay
-// FOLLOW(801)
-
-
-// Oke hier het probleem dat er waarschijnlijk geen mapping (bug) zit tussen de pin definities en namen (A10 hangt nergens aan)
-// Als ik een digitale variant neem, het pin nummer van A10 = 29 bv dan krijg ik de fout dat deze niet geinitaliseerd (als analog) is.
-// voor nu stopt het dus even
-//IFGTE(29,500) ENDIF
-//IFGTE(28,500) ENDIF
-//IFGTE(13,500) ENDIF
-//IFGTE(12,500) ENDIF
-
-// misschien moet hier nog een autostart op
-//AUTOSTART SEQUENCE(456)
-//STEALTH(
-//  StringFormatter::send(&USB_SERIAL,
-//    F("Value of A10: %d, A9: %d, A8:  %d, A7: %d\n|"),
-//    IODevice::readAnalogue(A10),
-//    IODevice::readAnalogue(A9),
-//    IODevice::readAnalogue(A8),
-//    IODevice::readAnalogue(A7) );
-
-//)
-//DELAY(1000)
-//FOLLOW(456)
 
 /* Oud
     // STEALTH(

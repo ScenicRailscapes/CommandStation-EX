@@ -23,8 +23,13 @@ DONE  // Done met auto start
 
 // Even dingen goed zetten
 AUTOSTART SEQUENCE(1) 
-  PARSE("<C WIFI \"Nijlstroom_24\" \"52694646\">")
-  PARSE("<C WIFI HOSTNAME \"SilberBachTalBahn\">")
+  LCD(0, " SilberBachTalBahn")
+  LCD(1,"")
+  LCD(2,"")
+  LCD(3,"")
+  PARSE("<C WIFI ON>")
+  //PARSE("<C WIFI \"Nijlstroom_24\" \"52694646\">")
+  //PARSE("<C WIFI HOSTNAME \"SilberBachTalBahn\">")
   PRINT("Alles goed zetten")
   UNLATCH(POWER_ON) // Unlatch power on
   DELAY(1000) // even wachten
@@ -39,62 +44,79 @@ AUTOSTART SEQUENCE(1)
   SET_TRACK(A,MAIN)
   SET_TRACK(B,MAIN)
   POWERON
+  HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)  // Init de TM1683 LED/Key matrix hier ivm blokkeren init.
   DELAY(10000)
   GREEN(101)  // Sein BD_D_2 op groen zetten
   GREEN(102)  // Sein BD_D_3 op groen zetten
   GREEN(105)  // Sein BD_D_4 op groen zetten
   GREEN(108)  // Sein BD_D_5 op groen zetten
+  ROUTE_HIDDEN(ROUTE_1)
+  ROUTE_HIDDEN(ROUTE_2)
+  ROUTE_HIDDEN(ROUTE_3)
+  ROUTE_HIDDEN(ROUTE_4)
 DONE
 
 /*                 * * * * * Automation hier staan algemene routines * * * * * *    */
 
-// Stealth code voor het tonen van de loconamen op de LCD
+/* Shows current locos running and direction on screen 2 */
 STEALTH_GLOBAL(
-  void myFilter(Print * stream, byte & opcode, byte & paramCount, int16_t p[]) {
-    (void)stream;
-    // use command <U locoId> to display name from roster
-    if (opcode == 'U' && paramCount == 1) {
-      auto locoId=p[0];
-      auto name=RMFT2::getRosterName(locoId);
-      if (!name) return; // caller will <X> this
-      opcode=0; // caller can now ignore this
-      StringFormatter::lcd2(7, 0, F("Loco %d %S"), locoId, name);
+  extern int cab_now;                   // gedefinieerd in myhall.cpp buiten deze routine anders wordt deze iedere loop opnieuw gereset
+  void updateLocoScreen() {
+
+    byte row=1;
+    const byte maxRows=3;
+    for (auto loco=LocoSlot::getFirst();loco && row<maxRows;loco=loco->getNext(),row++) {
+      auto speed = loco->getTargetSpeed();
+      auto direction = (speed & 0x80) ? 'V' : 'A';
+      speed &=0x7F;
+      if (speed > 0) speed --;
+      StringFormatter::lcd2(1, row, F("Loco: %2d %3d %c"), loco->getLoco(), speed, direction);
+      cab_now = loco->getLoco();
     }
-  }
+  }  
 )
+/* Shows status of pre-defined routes on screen 2, only on state change */
+AUTOSTART SEQUENCE(40)
+    STEALTH(
+      // De route ID's staan in myAliases_stm32.h
+      // 1. Vaste 'static' variabelen om de vorige status te onthouden tussen de loops door
+      static bool last_state_1 = false;
+      static bool last_state_2 = false;
+      static bool last_state_3 = false;
+      static bool last_state_4 = false;
 
-// Update logo screen every 500ms with the current loco speeds
-// HAL(UserAddin,updateLocoScreen,500)
-// HAL(HALDisplay<OLED>, 2, 0x3d, 128, 64)
+      // 2. Haal de huidige status op (true = actief, false = inactief)
+      bool current_state_1 = RMFT2::ifRouteState(ROUTE_1, 1);
+      bool current_state_2 = RMFT2::ifRouteState(ROUTE_2, 1);
+      bool current_state_3 = RMFT2::ifRouteState(ROUTE_3, 1);
+      bool current_state_4 = RMFT2::ifRouteState(ROUTE_4, 1);
 
-// STEALTH_GLOBAL(
-//   void updateLocoScreen() {
-//     const byte loco_slots=8;
-//     static byte current_slot=loco_slots-1;
-//     static byte shown_speed[loco_slots]; // remember what's already shown
-//     static bool first_call=true;
+      // 3. Controleer of er iets is veranderd ten opzichte van de vorige meting
+      if (current_state_1 != last_state_1 || 
+          current_state_2 != last_state_2 || 
+          current_state_3 != last_state_3 || 
+          current_state_4 != last_state_4) {
 
-//     if (first_call) {
-//       first_call=false;
-//       for (int i=0; i<loco_slots; i++) shown_speed[i]=127;
-//     }
+          // Er is een verandering! Update het LCD scherm (en dus eenmalig de terminal)
+          StringFormatter::lcd2(1, 0, F("Route 1:%1s 2:%1s 3:%1s 4:%1s"),
+              current_state_1 ? F("*") : F("-"),
+              current_state_2 ? F("*") : F("-"),
+              current_state_3 ? F("*") : F("-"),
+              current_state_4 ? F("*") : F("-")
+          );
 
-//     // switch to next row
-//     current_slot= (current_slot + 1) % loco_slots;
-//     loco=DCC::speedTable[current_slot].loco;
-//     if (loco<0) return; // this slot is no longetr used
-//     if (loco==0) return; // we are beyond the last loco
+          // 4. Sla de nieuwe status op voor de volgende vergelijking
+          last_state_1 = current_state_1;
+          last_state_2 = current_state_2;
+          last_state_3 = current_state_3;
+          last_state_4 = current_state_4;
+      }
+    )
+    DELAY(2500) // Wacht 5 seconden voor de volgende snelle check
+FOLLOW(40)
+HAL(UserAddin,updateLocoScreen,2000)
 
-//     speed = DCC::speedTable[current_slot].speedCode;
-//     if (speed== shown_speed[current_slot]) return; // no change in speed
-//     shown_speed[current_slot] = speed; // remember speed for next time
 
-//     auto direction = (speed & 0x80) ? 'F' : 'R';
-//     speed = speed & 0x7f;
-//     if (speed > 0) speed = speed - 1; // make it look like JMRI
-//     StringFormatter::lcd2(2, current_slot+2, F("Loco:%4d %3d %c"), loco, speed, direction);
-//   }
-// )
 
 // OLED Info Screen Sequence; Cabs, Track Power, sound On/Off en welke routes 
 // LCD Macro kan alleen statische teksten, met stealth directe C++ code ingrijpend op de onderliggende DCC-EX code

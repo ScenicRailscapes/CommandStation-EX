@@ -3,6 +3,8 @@
  Voor drivers die direct (v)Pins gebruiken is er in config.m een lijst met defines aanwezig die de vPin nummers van de gebruikte hardware bevatten. 
  Daarmee kan de code in de drivers generiek blijven, en kan de gebruiker zelf de vPin nummers aanpassen in config.m specifiek voor bv een ESP32 / Nucleo
  */
+/* 2nd OLED screen */
+HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
 
 //#include "IO_PCA9555.h"     // 16-bit I/O expander (NXP & Texas Instruments).
   //=======================================================================
@@ -17,7 +19,8 @@
 
   //	TM1638::create(600, PC6,PC5,PC8); // org HAL code
   
-  HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)
+  // Als test HAL init verplaatst naar myAutomation aan einde. lijkt erop dat op de ESP32 de TM1638 driver de init blokeert
+  //HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)
 
   //=======================================================================
   // The following directive defines a DS1307 RTC

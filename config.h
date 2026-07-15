@@ -37,24 +37,13 @@
 The configuration file for DCC-EX Command Station
 
 **********************************************************************/
-// #ifdef ARDUINO_ARCH_ESP32
-//   #define TM1638_CLOCK 23
-//   #define TM1638_DATA 5
-//   #define TM1638_STROBE 19
-//   #define RELAIS_3 15
-//   #define RELAIS_4 17  
-// #else
-//   #define TM1638_CLOCK PC6
-//   #define TM1638_DATA PC5
-//   #define TM1638_STROBE PC8
-//   #define RELAIS_3 PA11
-//   #define RELAIS_4 PA12
-// #endif
+
+/* Welke pins worden gebruikt voor TM1638 display en relais op een ESP32 of een Nucleo */
 #ifdef ARDUINO_ARCH_ESP32
-  #define TM1638_CLOCK   27
-  #define TM1638_DATA    14
-  #define TM1638_STROBE  16
-  #define RELAIS_KEERLUS 17 
+  #define TM1638_CLOCK   16
+  #define TM1638_DATA    27
+  #define TM1638_STROBE  17
+  #define RELAIS_KEERLUS 14
 #else
   #define TM1638_CLOCK   PC6
   #define TM1638_DATA    PC5
@@ -73,18 +62,10 @@ The configuration file for DCC-EX Command Station
  new MotorDriver(11, 13, UNUSED_PIN, 8, A1, 5.08, 1500, A5)
 */
 
-#define IBT_2_L298N F("IBT_2_L298N"),\
-  new MotorDriver(14 /* EN*/, 12 /*LPWM*/, 13 /*RPWM*/, UNUSED_PIN, 35, 50, 4000, UNUSED_PIN), \
-  new MotorDriver(25 /* ENB*/, 26 /*IN3*/, 27 /*IN4*/, UNUSED_PIN, 34 /*ADC1_6*/, 0.99, 2000, UNUSED_PIN) 
-
 // ESP32 met DIY more motor shield
 #define MY_MOTORSHIELD_V2 F("DIY More L298NH"),\
   new MotorDriver(25 /* PWMA */, 26 /* DIRA */, UNUSED_PIN, 33 /* BRAKEA */, 34 /* A0 */, 0.3, 2000, UNUSED_PIN), \
   new MotorDriver(27 /* PWMB */, 14 /* DIRB */, UNUSED_PIN, 32 /* BRAKEB */, 35 /* A1 */, 0.3, 1500, UNUSED_PIN)
-
-#define MY_L298N_BOARD F("MY_L298N_BOARD"),\
-  new MotorDriver(27 /* ENA*/, 12 /* IN1 */, 14 /* IN2 */, UNUSED_PIN, 35 /*ADC1_7*/, 0.99, 2000, UNUSED_PIN), \
-  new MotorDriver(33 /* ENB*/, 25 /* IN3 */, 26 /* IN4 */, UNUSED_PIN, 34 /*ADC1_6*/, 0.99, 2000, UNUSED_PIN)
 
 // Keyestudio IOT ESP32 PLUS met EX8874 motorshield
 #define EX8874_KEYES_ESP32 F("EX8874_KEYES_ESP32"), \
@@ -110,7 +91,7 @@ The configuration file for DCC-EX Command Station
 //   |
 //   +-----------------------v
 //
-#define MOTOR_SHIELD_TYPE EX8874_KEYES_ESP32 //MY_MOTORSHIELD_V2 //EX8874_SHIELD 
+#define MOTOR_SHIELD_TYPE EX8874_KEYES_ESP32 //MY_MOTORSHIELD_V2 
 /////////////////////////////////////////////////////////////////////////////////////
 //
 // If you want to restrict the maximum current LOWER than what your
@@ -161,16 +142,16 @@ The configuration file for DCC-EX Command Station
 //
 // Your SSID may not contain ``"'' (double quote, ASCII 0x22).
 // Your SSID may not contain ``"'' (double quote, ASCII 0x22).
-#define WIFI_SSID "Nijlstroom_24"
+#define WIFI_SSID ""
 //
 // WIFI_PASSWORD is the network password for your home network or if
 // you want to change the password from default AP mode password
 // to the AP password you want. 
 // Your password may not contain ``"'' (double quote, ASCII 0x22).
-#define WIFI_PASSWORD "52694646"
+#define WIFI_PASSWORD ""
 //
 // WIFI_HOSTNAME: You probably don't need to change this
-#define WIFI_HOSTNAME "siberbacktalbahn"
+#define WIFI_HOSTNAME ""
 //
 // WIFI_CHANNEL: If the line "#define ENABLE_WIFI true" is uncommented, 
 // WiFi will be enabled (Mega only). The default channel is set to "1" whether
@@ -212,7 +193,7 @@ The configuration file for DCC-EX Command Station
 //OR define OLED_DRIVER width,height[,address] in pixels (address auto detected if not supplied)
 // 128x32 or 128x64 I2C SSD1306-based devices are supported.
 // Use 132,64 for a SH1106-based I2C device with a 128x64 display.
-#define OLED_DRIVER 0x3c,128,64
+#define OLED_DRIVER 0x3d,128,64
 
 // Define scroll mode as 0, 1 or 2
 //  *  #define SCROLLMODE 0 is scroll continuous (fill screen if poss),
@@ -345,7 +326,7 @@ The configuration file for DCC-EX Command Station
 // 3. There is no securuity (PIN) implemented. Everyone in radio range can pair
 //    with your CS.
 //
-//#define SERIAL_BT_COMMANDS
+// #define SERIAL_BT_COMMANDS
 
 // BOOSTER PIN INPUT ON ESP32
 // On ESP32 you have the possibility to define a pin as booster input

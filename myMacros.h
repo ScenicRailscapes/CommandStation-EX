@@ -213,4 +213,10 @@
     SET(RELAIS_DCC_REVERSE) \
     RESET(600)
 
+// // moet nog iets maken wat het actieve loco address oppikt..
+#define LOCO_HANDOVER(loconum, sequencenum) \
+  SENDLOCO(loconum,sequencenum)             \
+  DONE
+
 #endif // MY_MACROS_H
+

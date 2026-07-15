@@ -16,7 +16,7 @@ ROSTER(12,"18 201","Lights/Steam/////Shunting")
 ROSTER(13,"V60","Lights/Sound/*Horn/Smoke/*Coupler/Lights Off F/Lights Off R/Cab Lights/Shunting/*Sec Horn/DownLights/Brake/Radio#1/Heavy/Dash Lights/Bell/Train Brakes/Hand Brakes/Heater/Indusi/Sanding/Compressor/Wissel geluid/Baan geluid/Air release/Fuel pump/Bocht geluid/Whistle/Radio #2/Radio #3/Muting/")
 ROSTER(14,"BR 86 LichtensteinBahn","////Shunting")
 ROSTER(15,"Kittel Steam tram","Lights/Cabine//Shunting")
-ROSTER(17,"OBB 691","Lights/Sound/*Horn/Bell/Fire/*Coupler/Shunting/DownLights/Whistle/Pump/Station #1/Station #2/Language/Volume/TunnelMode/Steam Release/Long Whistle/Airpump/Waterpump/Sanding/Firebox Feed//Brakes/Emergency Brakes")
+ROSTER(17,"OBB 691","Lights/Sound/*Horn/Bell/Fire/*Coupler//Shunting/DownLights/Whistle/Pump/Station #1/Station #2/Language/Volume/TunnelMode/Steam Release/Long Whistle/Airpump/Waterpump/Sanding/Firebox Feed//Brakes/Emergency Brakes")
 ROSTER(18,"OBB 2060","Lights///Shunting")
 // Aliassen - LET OP: De aliassen werken het beste met echte vPin, niet de ID's, wissels werken wel goed met ID's
 // Sensors
@@ -137,6 +137,12 @@ ALIAS(REVERSE_SIGNAL_ACTIVE, 2050)  // Flag to indicate reverse signal is active
 ALIAS(DORP_STATION_DETECT, 2051)    // Flag to indicate dorp station sensor detected train
 ALIAS(DORP_WEST_DETECT, 2052)       // Flag to indicate dorp west sensor detected train
 
+// Routes
+ALIAS(ROUTE_1,1660)                 // Alias voor route 1660 
+ALIAS(ROUTE_2,1661)                 // Alias voor route 1661
+ALIAS(ROUTE_3,1662)                 // Alias voor route 1662
+ALIAS(ROUTE_4,1663)                 // Alias voor route 1663
+
 // Sequences en routes 
 ALIAS(BRANCH_DORP_KEERLUS,1600)     // Branchlijn dorp van oost naar west automation
 ALIAS(BRANCH_DORP_WEST_OOST,1601)   // Branchlijn dorp van west naar oost automation
@@ -154,24 +160,10 @@ ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais,
 
 // Oud, van kerstbaan, hergebruiken voor iets anders
 // Virtual (Latches), de pennen boven de 40 bestaan niet op de ESP. Let op: WEL op de STM32
-ALIAS(TREIN_AANKOMST, 200)	      // Trein aankomst latch voor baanvak tot station detectie
-ALIAS(KIEPER_OPERATING, 201)
 
-VIRTUAL_TURNOUT( 9101,"ClockWise - CounterClockWise")
-ALIAS(AUTOROUTE_1, 210)            // Route latch voor station rondje
 
-ALIAS(STOOM_LOC_ACTIVE,220)        // Stoom loc is actief in de route automation
-ALIAS(ELEC_LOC_ACTIVE,221)         // Electric loc is actien in de route automation
-ALIAS(DIESEL_LOC_ACTIVE,222)       // Diesel loc is actien in de route automation
-ALIAS(ELEC_MAN_SELECT,224)         // Manual select Elec 'E32-103' train vanuit 3e systeem (ESPHome)
-ALIAS(STEAM_MAN_SELECT,225)        // Manual select Steam '4800' train vanuit 3e systeem (ESPHome) 
-ALIAS(DIES_MAN_SELECT,226)         // Manual select Dies 'BR290 DB' train vanuit 3e systeem (ESPHome)
-
-ALIAS(STRAATLAMP_KNIPPER,230)      // Straatlamp in knipper storing simulatie
-// 235-239 voor latched distance detectie in myBlocksAndSignals.h
-// 240-247 voor latched block detectie in myBlocksAndSignals.h
 ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus LATCH maken            
-ALIAS(SOUND,255)                   // Geluidseffecten ann/uit
+
 // temp
 VIRTUAL_TURNOUT( 9102,"Sound")
 VIRTUAL_TURNOUT( 9103,"Sound")

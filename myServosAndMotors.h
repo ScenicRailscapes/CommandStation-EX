@@ -54,6 +54,23 @@ ROUTE(95, "Yard dal naar vissersdorp")
     THROW (1003) // Yard dal naar vissersdorp
     DONE
 
+ROUTE(96, "Helix CCW vissersdorp - hoofdstation")
+    CLOSE (1007) // S08 Branchlijn hoofdstation / Haven-dorp
+    CLOSE (1037) // S22 Dorp -> Vissersdorp station"
+    THROW (1034) // S19 Haven -> dorp 
+    THROW (1039) // 
+    CLOSE (1024) // S13 -> hoofdstation
+    DONE    
+
+    // even checken
+ROUTE(97, "Helix CCW dorp - hoofdstation - havendorp - helix CW")
+    THROW (1007) // S08 Branchlijn hoofdstation / Haven-dorp
+    CLOSE (1037) // S22 Dorp -> Vissersdorp station"
+    THROW (1034) // S19 Haven -> dorp 
+    THROW (1039) // 
+    CLOSE (1024) // S13 -> hoofdstation
+    DONE        
+
 // Servos via PC9685 #2 (420-435)
 // SERVO_TURNOUT(id, vpin, active_angle, inactive_angle, profile, "description") // profile: Instant, Fast, Medium, Slow, Bounce, NoPowerOff
 SERVO_TURNOUT(1020, 420, 260, 170, Fast, "S09 SchaduwStat 1 en 2 links")
