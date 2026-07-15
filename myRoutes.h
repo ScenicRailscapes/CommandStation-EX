@@ -15,11 +15,29 @@
         SPEED(target_speed)                           \
     ENDIF
 
+// Geluids mogelijkheden per loc
+// #define SET_LOCO_SOUND_BELL(sound)                         \
+//     IFLOCO(17)
+//       hier iets met dat loc 17 nummer 3 (dus FON(3)) gebruikt voor bell
+//     ELSE
+//     IFLOCO(10)
+//       hier iets met dat loc 10 nummer 3 (dus FON(3)) gebruikt voor bell
+//     ELSE    
+//     IFLOCO(13)
+//       hier iets met dat loc 13 nummer 15 (dus FON(15)) gebruikt voor bell
+//     ELSE
+//      IFLOCO(9)
+//       hier iets met dat loc 9 nummer 4 (dus FON(4)) gebruikt voor bell  
+//     ENDIF
+
+
 /* ====================================================================
    AUTOMATISCHE RIT: RONDE 1 (Volledig conform EX-RAIL Instructieset)
    ==================================================================== */
 
 AUTOMATION(1650, "AutoRoute: Start dal CCW")
+// hier bepalen of het een soundloc is of niet, dus via een macro en het zetten van een latch. Kan verderop gebruikt 
+// worden door random sounds via loc of via DFplayer
   IFROUTE_ACTIVE(1650) 
     ROUTE_INACTIVE(1650)
     ROUTE_CAPTION(1650,"Start")
@@ -53,11 +71,12 @@ AUTOMATION(1650, "AutoRoute: Start dal CCW")
 
     // 3. WISSELS GOED ZETTEN NA VERLATEN BD_D_4
     // Rit eerst over hoofdspoor #1, dan naar dorp
-    PRINT("AutoRit: Gaan BD_D_4 verlaten. Wissels omzetten voor Hoofdspoor #1")
+    PRINT("AutoRit: Gaan BD_D_4 verlaten. Wissels richting hoofdsporen")
     THROW(1038)   // S23 Haven / main #1
     THROW(1035)   // S20 Main #1 / schaduwstation
-    //RANDOM_FOLLOW(1660,1661)
-    CALL(ROUTE_1)
+    RANDOM_FOLLOW(ROUTE_1,ROUTE_2, ROUTE_1)
+    //RANDOM_CALL(ROUTE_1,ROUTE_2) // deze komen hier terug...
+    //CALL(ROUTE_1)
     
   // Als we hier komen is de automatisering rit klaar
   SPEED(0)  // remmen
@@ -83,9 +102,9 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
 
   // AT wacht tot de sensor actief (1) wordt
   AT(IR_D_2_2_BEZET)
-  PRINT("AutoRit: IR_D_2_2 dal geraakt, snelheid naar 25")
-  SAVE_SPEED
-  SLOWDOWN(5)
+    PRINT("AutoRit: IR_D_2_2 dal geraakt, snelheid naar 25")
+    SAVE_SPEED
+    SLOWDOWN(5)
 
   // 2. Hoofdspoor #1 : BINNENKOMST HELIX (Blok BD_HBI_1)
   AT(IR_D_2_1_BEZET)
@@ -115,8 +134,11 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
     PRINT("AutoRit: Wissel S06 omgezet naar Helix buitenring")
   
   // Keuzes maken: Nog een rondje, of hoofdspoor #2 of via keerlus 
-    //RANDOM_FOLLOW(1660,1661)
-      //PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
+    RANDOM_FOLLOW(ROUTE_2,ROUTE_1, ROUTE_1, ROUTE_4)
+  // Als we hier komen is de automatisering rit klaar
+  SPEED(0)  // remmen
+  DELAY(6000) // Geef remtijd
+  PRINT ("Einde automation")
 ROUTE_INACTIVE(ROUTE_1) 
 RETURN
 
@@ -124,33 +146,49 @@ RETURN
    ROUTE ROUTE_2 (1661): Hoofdspoor #2 (CCW)
    ==================================================================== */
 ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
-  ROUTE_ACTIVE(ROUTE_2)
+  IFROUTE_ACTIVE(ROUTE_2) 
+    ROUTE_INACTIVE(ROUTE_2)
+    ROUTE_CAPTION(ROUTE_2,"Start")
+  ELSE  
+    ROUTE_ACTIVE(ROUTE_2)
+    ROUTE_CAPTION(ROUTE_2,"Stop")
+  ENDIF
   PRINT("AutoRit: Route #2 CCW Hoofdspoor #2")
   // hmmm, moet ik hier eerst kijken waar de trein vandaan komt?, soms dus op verkeerde binnenkomst en dan is throw niet goed
-  CLOSE(1040)   // S25 main #1 / main #2
+  //IFTHROWN( turnout_id ) Test if turnout is thrown
+  THROW(1040)   // S25 main #1 / main #2
   // 4. Hoofdspoor #2 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR
   //WAIT_WHILE_RED(102)
   // AT wacht tot de sensor actief (1) wordt
-  AT(IR_D_3_2_BEZET)
-  PRINT("AutoRit: IR_D_3_2 dal geraakt, snelheid naar 25")
-  SAVE_SPEED
-  SLOWDOWN(5)
-  //PRINT("AutoRit: Hoofdspoor #2 bereikt, we geven Blok 5 handmatig vrij")
-  //RESET(BD_D_5_BEZET)   // tijdelijk tot IR sensor IR_D_1_5 geplaatst is...
-  //RESET(BD_D_5_CCW) 
-  // 5. Hoofdspoor #2 : BINNENKOMST HELIX (Blok BD_HBI_1)
+
+  // 2. Hoofdspoor #2 : BINNENKOMST HELIX (Blok BD_HBI_1)
   AT(IR_D_3_1_BEZET)
     PRINT("AutoRit: IR_D_3_1 berg geraakt")
     RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
     PRINT("AutoRit: Verlaat Hoofdspoor #2, rijdt Helix Binnenring (BD_HBI_1) binnen")
-    AFTER(BD_HBI_1_BEZET)
+  
+    AFTER(BD_HBI_1_BEZET)  
+  // 3a. Helix Berg sensor 
+    AT(IR_D_3_2_BEZET)
+      PRINT("AutoRit: IR_D_3_2 dal geraakt, snelheid naar 25")
+      SAVE_SPEED
+      SLOWDOWN(5)
+    AT (IR_H_3_BEZET)
+      PRINT("AutoRit: Helix binnenring")
+    // 3b. Helix Midden sensor 
+    AT(IR_H_2_BEZET)
+      PRINT("AutoRit: Helix midden")
+  // 3c. Helix Dal sensor 
+  AFTER(IR_H_2_BEZET)
+    PRINT("AutoRit: Helix verlaten")    
 
-  // 6. Terug in dal
-      PRINT("AutoRit: Helix Binnenring is weer vrij")
   // Keuzes maken: Nog een rondje of hoofdspoor #1    
-      RANDOM_FOLLOW(1660,1661)
-      PRINT("AutoRit ERROR Returned from RANDOM_FOLLOW")
-ROUTE_INACTIVE(ROUTE_2)       
+      RANDOM_FOLLOW(ROUTE_1,ROUTE_2)
+  // Als we hier komen is de automatisering rit klaar
+  SPEED(0)  // remmen
+  DELAY(6000) // Geef remtijd
+  PRINT ("Einde automation")
+  ROUTE_INACTIVE(ROUTE_2)       
 DONE
     
     // Voor nu nog geen keuzes, vanuit dal naaar dorp - station - keerlus / dal - hoofdspoor 2 / dal - schaduwstation
@@ -161,19 +199,88 @@ DONE
   /* ====================================================================
   ROUTE ROUTE_3 (1662): Dorp - station (wachten) - haven dorp #1 (CCW) 
   ==================================================================== */
+
+  // Deze moet herschreven worden, de keuze om route_3 te volgen moet eerder (in de helix) genomen worden anders
+  // worden de wissels niet op tijd gezet.
 SEQUENCE(ROUTE_3)
-  ROUTE_ACTIVE(ROUTE_3)
+  IFROUTE_ACTIVE(ROUTE_3) 
+    ROUTE_INACTIVE(ROUTE_3)
+    ROUTE_CAPTION(ROUTE_3,"Start")
+  ELSE  
+    ROUTE_ACTIVE(ROUTE_3)
+    ROUTE_CAPTION(ROUTE_3,"Stop")
+  ENDIF
   PRINT("AutoRit: Route #3 CW Dorp-Station-Haven")
   // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
-ROUTE_INACTIVE(ROUTE_3)  
+    THROW (1007) // S08 Branchlijn hoofdstation / Haven-dorp
+    CLOSE (1037) // S22 Dorp -> Vissersdorp station"
+    THROW (1034) // S19 Haven -> dorp 
+    THROW (1039) // 
+    CLOSE (1024) // S13 -> hoofdstation
+  
+  SPEED(0)  // remmen
+  DELAY(6000) // Geef remtijd
+  PRINT ("Einde automation")
+  ROUTE_INACTIVE(ROUTE_3)  
 DONE
 
   /* ====================================================================
-  ROUTE ROUTE_3 (1663): Dorp - haven dorp - Station (wachten) (CCW) 
+  ROUTE ROUTE_4 (1663): Dorp - haven dorp - Station (wachten) (CCW) 
   ==================================================================== */
 SEQUENCE(ROUTE_4)
-  ROUTE_ACTIVE(ROUTE_4)
+  IFROUTE_ACTIVE(ROUTE_4) 
+    ROUTE_INACTIVE(ROUTE_4)
+    ROUTE_CAPTION(ROUTE_4,"Start")
+  ELSE  
+    ROUTE_ACTIVE(ROUTE_4)
+    ROUTE_CAPTION(ROUTE_4,"Stop")
+  ENDIF
   PRINT("AutoRit: Route #4 CCW Dorp-Haven-Station")
   // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
-ROUTE_INACTIVE(ROUTE_4)  
+  DELAY(4000)
+  PRINT("AutoRit: wissels zetten voor keerlus naar station")
+  CLOSE (1007) // S08 Branchlijn hoofdstation / Haven-dorp
+  CLOSE (1037) // S22 Dorp -> Vissersdorp station"
+  THROW (1039) // 
+  THROW (1034) // S19 Haven -> dorp 
+  CLOSE (1024) // S13 -> hoofdstation
+  // 1. Dorpbranch CW: Hoofdstation nadert
+  AT(IR_D_1_2_BEZET)
+    PRINT("AutoRit: Station - wachten")
+    SAVE_SPEED
+    SPEED(0)  // Remmen
+    FON(2)    // Horn/Whistle en later bij geen sound locs iets via de DFplayer  
+    DELAYRANDOM(5000,10000) // Wachten tussen 5 en 10s
+    FON(2)    // Later vervangen door vertrek bel via macro
+    RESTORE_SPEED
+  // 2. Dorpbranch CW: Helix buitenring naar berg
+    // hier nog checks of de helix vrij is, later ook met seinen if_red enzo
+  AT(IR_D_1_1_BEZET)
+    PRINT("AutoRit: verlaten dorp, helix in")
+  // 3. Helix berg nadert
+  AT(IR_H_3_BEZET)
+      PRINT("AutoRit: verlaten helix, parade hoofdspoor #1")
+  AFTER(IR_D_2_1_BEZET)
+      SAVE_SPEED
+      SLOWDOWN(10)  // rustig naar beneden
+
+      /* ***********************************************************/
+      DELAY(10000)  // tijdelijk, nog de route afmaken geen zin meer
+      /* ***********************************************************/
+
+      /* ***********************************************************/
+      /*
+        Wat gaan we doen, we rijden nu dus clockwise en zullen uiteindelijk moeten stoppen en (handmatig) de loc moeten keren.
+        We kunnen nu nog een rondje rijden via station-dorp-helix
+        of de lange route langs dorp (bv even wachten bij mini station haven-dorp) en dan helix weer in
+        of naar dal
+        of naar schaduwstation extra rondje
+        of naar schaduwstation, parkeren en handover naar andere loc
+        of naar yard dal / stoppen op spoor #1 of spoor #2, melding op scherm voor omkeren en dan terug naar route/automation 1650 ofzo voor alles opnieuw?
+      */
+
+  SPEED(0)  // remmen
+  DELAY(6000) // Geef remtijd
+  PRINT ("Einde automation")
+  ROUTE_INACTIVE(ROUTE_4)  
 DONE

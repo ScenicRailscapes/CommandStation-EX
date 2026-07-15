@@ -150,6 +150,7 @@ ALIAS(KEERLUS_NORMAAL,1900)         // Sequence to set reverse loop to normaal d
 ALIAS(KEERLUS_REVERSE,1901)         // Sequence to set reverse loop to reverse dcc signal
 
 
+
 // Relais: Let op: deze zijn inverted signal. Aanzetten met 'RESET' en uit met 'SET' commandp
 ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais, draait de fase van het DCC signal om in een keerlus
 
