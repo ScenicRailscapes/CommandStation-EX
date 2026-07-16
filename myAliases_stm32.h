@@ -150,7 +150,6 @@ ALIAS(KEERLUS_NORMAAL,1900)         // Sequence to set reverse loop to normaal d
 ALIAS(KEERLUS_REVERSE,1901)         // Sequence to set reverse loop to reverse dcc signal
 
 
-
 // Relais: Let op: deze zijn inverted signal. Aanzetten met 'RESET' en uit met 'SET' commandp
 ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais, draait de fase van het DCC signal om in een keerlus
 
@@ -169,8 +168,3 @@ ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus L
 VIRTUAL_TURNOUT( 9102,"Sound")
 VIRTUAL_TURNOUT( 9103,"Sound")
 VIRTUAL_TURNOUT( 9104,"Sound")
-
-// Locs
-ALIAS(STOOM, 5)                   // Stoomloc
-ALIAS(ELEC,4)                     // Electrisch
-ALIAS(DIESEL,6)                   // Diesel

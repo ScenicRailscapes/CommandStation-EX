@@ -57,7 +57,8 @@ DONE
 
 /*                 * * * * * Automation hier staan algemene routines * * * * * *    */
 
-/* Shows current locos running and direction on screen 2 */
+/* Shows current locos running and direction on screen 2 */ 
+/* Deze ook zo maken dat als er geen verandering is, dan geen update */
 STEALTH_GLOBAL(
   extern int cab_now;                   // gedefinieerd in myhall.cpp buiten deze routine anders wordt deze iedere loop opnieuw gereset
   void updateLocoScreen() {
@@ -113,6 +114,7 @@ AUTOSTART SEQUENCE(40)
     )
     DELAY(2500) // Wacht 5 seconden voor de volgende snelle check
 FOLLOW(40)
+
 HAL(UserAddin,updateLocoScreen,2000)
 
 

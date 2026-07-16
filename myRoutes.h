@@ -15,36 +15,42 @@
         SPEED(target_speed)                           \
     ENDIF
 
-// Geluids mogelijkheden per loc
- #define LOCO_SOUND_BELL          \
-  IFLOCO(17) FON(2)               \
-  ELSE IFLOCO(13) FON(15)         \
-  ELSE IFLOCO(10) FON(3)          \
-  ELSE IFLOCO(9)  FON(4)          \
-  ELSE                            \
-  IFLOCO(4,7,8,18)  /*Diesels*/   \
-    PRINT("Diesel geluiden hier") \
-  ELSE  /* Rest is stoom */       \
-    PRINT("Stoom geluiden hier")  \
+/* Sound Bell mogelijkheden en register per loc, bv functie 3 (FON(3)) 
+   op de Pico OBB loc is de bell, terwijl dat op de V60 functie 15 is.
+*/
+ #define LOCO_SOUND_BELL                         \
+  IFLOCO(17) FON(3)  DELAY (2000) FOFF(3)  ENDIF \
+  IFLOCO(13) FON(15) DELAY (2000) FOFF(15) ENDIF \
+  IFLOCO(10) FON(3)  DELAY (2000) FOFF(3)  ENDIF \
+  IFLOCO(9)  FON(4)  DELAY (2000) FOFF(4)  ENDIF \
+  IFLOCO(4,7,8,18)                 /*Diesels*/   \
+    PRINT("Diesel geluiden hier")                \
+  ELSE                      /* Rest is stoom */  \
+    PRINT("Stoom geluiden hier")                 \
   ENDIF
-
-
+// aha probleempje, de if loco (diesel enzo) komt naar de else dus ook locs met sound komen in else aan..
+/* Sound Long Horn mogelijkheden en register per loc, bv functie 15 (FON(15)) 
+   op de Pico OBB loc is de long horn, terwijl dat op de V60 functie 8 is.
+*/
+ #define LOCO_SOUND_HORN                         \
+  IFLOCO(17) FON(15) DELAY (2000) FOFF(15) ENDIF \
+  IFLOCO(13) FON(8)  DELAY (2000) FOFF(8)  ENDIF \
+  IFLOCO(10) FON(2)  DELAY (2000) FOFF(2)  ENDIF \
+  IFLOCO(9)  FON(2)  DELAY (2000) FOFF(2)  ENDIF \
+  IFLOCO(4,7,8,18)                 /*Diesels*/   \
+    PRINT("Diesel geluiden hier")                \
+  ELSE                      /* Rest is stoom */  \
+    PRINT("Stoom geluiden hier")                 \
+  ENDIF  
 /* ====================================================================
                           AUTOMATISCHE RIT
    ==================================================================== */
 
 AUTOMATION(1650, "AutoRoute: Start dal CCW")
-// hier bepalen of het een soundloc is of niet, dus via een macro en het zetten van een latch. Kan verderop gebruikt 
-// worden door random sounds via loc of via DFplayer
-  IFROUTE_ACTIVE(1650) 
-    ROUTE_INACTIVE(1650)
-    ROUTE_CAPTION(1650,"Start")
-  ELSE  
-    ROUTE_ACTIVE(1650)
-    ROUTE_CAPTION(1650,"Stop")
-  ENDIF
     // 1. OPSTARTEN
+    FWD(10)
     SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
+    DELAY(1000)
     FON(0)                     // Lichten aan (F0)
     FON(1)                     // Interne verlichting aan of sound aan (F1)
     LOCO_SOUND_BELL            // testje ********************
@@ -87,13 +93,8 @@ DONE  // nu even done, als ik ga werken met calls ipv follow dan iets anders ver
    ROUTE ROUTE_1 (Alias voor 1660): Hoofdspoor #1 (CCW) 
    ==================================================================== */
 ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
-  IFROUTE_ACTIVE(ROUTE_1) 
-    ROUTE_INACTIVE(ROUTE_1)
-    ROUTE_CAPTION(ROUTE_1,"Start")
-  ELSE  
-    ROUTE_ACTIVE(ROUTE_1)
-    ROUTE_CAPTION(ROUTE_1,"Stop")
-  ENDIF
+  ROUTE_ACTIVE(ROUTE_1)
+  ROUTE_CAPTION(ROUTE_1,"Active")
   PRINT("AutoRit: Route #1 CCW Hoofdspoor #1")
   CLOSE(1040)   // S25 main #1 / main #2
   // 1. Hoofdspoor #1 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR (nog niet geplaatst)
@@ -139,22 +140,23 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
   DELAY(6000) // Geef remtijd
   PRINT ("Einde automation")
 ROUTE_INACTIVE(ROUTE_1) 
+ROUTE_CAPTION(ROUTE_1,"Stop")
 RETURN
 
 /* ====================================================================
    ROUTE ROUTE_2 (1661): Hoofdspoor #2 (CCW)
    ==================================================================== */
 ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
-  IFROUTE_ACTIVE(ROUTE_2) 
-    ROUTE_INACTIVE(ROUTE_2)
-    ROUTE_CAPTION(ROUTE_2,"Start")
-  ELSE  
-    ROUTE_ACTIVE(ROUTE_2)
-    ROUTE_CAPTION(ROUTE_2,"Stop")
-  ENDIF
+  IFROUTE_ACTIVE(ROUTE_1) // Later controleren of er een andere automation rijdt
+    ROUTE_INACTIVE(ROUTE_1)
+    ROUTE_CAPTION(ROUTE_1,"Active")
+  ENDIF  
+  ROUTE_ACTIVE(ROUTE_2)
+  ROUTE_CAPTION(ROUTE_2,"Active")
   PRINT("AutoRit: Route #2 CCW Hoofdspoor #2")
   // hmmm, moet ik hier eerst kijken waar de trein vandaan komt?, soms dus op verkeerde binnenkomst en dan is throw niet goed
-  //IFTHROWN( turnout_id ) Test if turnout is thrown
+  // 
+  //IFCLOSED(1039) Test if turnout is closed
   THROW(1040)   // S25 main #1 / main #2
   // 4. Hoofdspoor #2 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR
   //WAIT_WHILE_RED(102)
@@ -187,7 +189,8 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
   SPEED(0)  // remmen
   DELAY(6000) // Geef remtijd
   PRINT ("Einde automation")
-  ROUTE_INACTIVE(ROUTE_2)       
+  ROUTE_INACTIVE(ROUTE_2)  
+  ROUTE_CAPTION(ROUTE_2,"Stop")     
 DONE
     
     // Voor nu nog geen keuzes, vanuit dal naaar dorp - station - keerlus / dal - hoofdspoor 2 / dal - schaduwstation
@@ -202,13 +205,12 @@ DONE
   // Deze moet herschreven worden, de keuze om route_3 te volgen moet eerder (in de helix) genomen worden anders
   // worden de wissels niet op tijd gezet.
 SEQUENCE(ROUTE_3)
-  IFROUTE_ACTIVE(ROUTE_3) 
-    ROUTE_INACTIVE(ROUTE_3)
-    ROUTE_CAPTION(ROUTE_3,"Start")
-  ELSE  
-    ROUTE_ACTIVE(ROUTE_3)
-    ROUTE_CAPTION(ROUTE_3,"Stop")
-  ENDIF
+  IFROUTE_ACTIVE(ROUTE_1) 
+    ROUTE_INACTIVE(ROUTE_1)
+    ROUTE_CAPTION(ROUTE_1,"Active")
+  ENDIF  
+  ROUTE_ACTIVE(ROUTE_3)
+  ROUTE_CAPTION(ROUTE_3,"Active")
   PRINT("AutoRit: Route #3 CW Dorp-Station-Haven")
   // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
     THROW (1007) // S08 Branchlijn hoofdstation / Haven-dorp
@@ -220,20 +222,22 @@ SEQUENCE(ROUTE_3)
   SPEED(0)  // remmen
   DELAY(6000) // Geef remtijd
   PRINT ("Einde automation")
-  ROUTE_INACTIVE(ROUTE_3)  
+  ROUTE_INACTIVE(ROUTE_3)
+  ROUTE_CAPTION(ROUTE_3,"Stop")
 DONE
 
+
+// let op nu anderte routes inactief maken anders lijkt het op 2 routes 
   /* ====================================================================
   ROUTE ROUTE_4 (1663): Dorp - haven dorp - Station (wachten) (CCW) 
   ==================================================================== */
 SEQUENCE(ROUTE_4)
-  IFROUTE_ACTIVE(ROUTE_4) 
-    ROUTE_INACTIVE(ROUTE_4)
-    ROUTE_CAPTION(ROUTE_4,"Start")
-  ELSE  
-    ROUTE_ACTIVE(ROUTE_4)
-    ROUTE_CAPTION(ROUTE_4,"Stop")
-  ENDIF
+  IFROUTE_ACTIVE(ROUTE_1) // Kan alleen hier komen vanuit route #1
+    ROUTE_INACTIVE(ROUTE_1)
+    ROUTE_CAPTION(ROUTE_1,"Active")
+  ENDIF  
+  ROUTE_ACTIVE(ROUTE_4)
+  ROUTE_CAPTION(ROUTE_4,"Active")
   PRINT("AutoRit: Route #4 CCW Dorp-Haven-Station")
   // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
   DELAY(4000)
@@ -250,8 +254,7 @@ SEQUENCE(ROUTE_4)
     SPEED(0)  // Remmen
     FON(2)    // Horn/Whistle en later bij geen sound locs iets via de DFplayer  
     DELAYRANDOM(5000,10000) // Wachten tussen 5 en 10s
-    LOCO_SOUND_BELL
-    //FON(2)    // Later vervangen door vertrek bel via macro
+    LOCO_SOUND_BELL // Bell
     RESTORE_SPEED
   // 2. Dorpbranch CW: Helix buitenring naar berg
     // hier nog checks of de helix vrij is, later ook met seinen if_red enzo
@@ -268,6 +271,9 @@ SEQUENCE(ROUTE_4)
       DELAY(10000)  // tijdelijk, nog de route afmaken geen zin meer
       /* ***********************************************************/
 
+        // Let op: komen nu beneden aan dus wanneer je op blok 4 zit aan havendorp hoogte de 3-weg wissel omzetten voor de juiste keuze
+      CALL(92) // tijdelijk, buitenring naar boven
+
       /* ***********************************************************/
       /*
         Wat gaan we doen, we rijden nu dus clockwise en zullen uiteindelijk moeten stoppen en (handmatig) de loc moeten keren.
@@ -283,4 +289,5 @@ SEQUENCE(ROUTE_4)
   DELAY(6000) // Geef remtijd
   PRINT ("Einde automation")
   ROUTE_INACTIVE(ROUTE_4)  
+    ROUTE_CAPTION(ROUTE_4,"Stop")
 DONE
