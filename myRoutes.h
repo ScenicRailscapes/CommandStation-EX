@@ -16,23 +16,21 @@
     ENDIF
 
 // Geluids mogelijkheden per loc
-// #define SET_LOCO_SOUND_BELL(sound)                         \
-//     IFLOCO(17)
-//       hier iets met dat loc 17 nummer 3 (dus FON(3)) gebruikt voor bell
-//     ELSE
-//     IFLOCO(10)
-//       hier iets met dat loc 10 nummer 3 (dus FON(3)) gebruikt voor bell
-//     ELSE    
-//     IFLOCO(13)
-//       hier iets met dat loc 13 nummer 15 (dus FON(15)) gebruikt voor bell
-//     ELSE
-//      IFLOCO(9)
-//       hier iets met dat loc 9 nummer 4 (dus FON(4)) gebruikt voor bell  
-//     ENDIF
+ #define LOCO_SOUND_BELL          \
+  IFLOCO(17) FON(2)               \
+  ELSE IFLOCO(13) FON(15)         \
+  ELSE IFLOCO(10) FON(3)          \
+  ELSE IFLOCO(9)  FON(4)          \
+  ELSE                            \
+  IFLOCO(4,7,8,18)  /*Diesels*/   \
+    PRINT("Diesel geluiden hier") \
+  ELSE  /* Rest is stoom */       \
+    PRINT("Stoom geluiden hier")  \
+  ENDIF
 
 
 /* ====================================================================
-   AUTOMATISCHE RIT: RONDE 1 (Volledig conform EX-RAIL Instructieset)
+                          AUTOMATISCHE RIT
    ==================================================================== */
 
 AUTOMATION(1650, "AutoRoute: Start dal CCW")
@@ -49,6 +47,7 @@ AUTOMATION(1650, "AutoRoute: Start dal CCW")
     SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
     FON(0)                     // Lichten aan (F0)
     FON(1)                     // Interne verlichting aan of sound aan (F1)
+    LOCO_SOUND_BELL            // testje ********************
     PRINT("AutoRit: Gestart vanaf Rangeerterrein, richting BD_D_4")
     //LOCO_HANDOVER(cab_now, 1660)
 
@@ -251,7 +250,8 @@ SEQUENCE(ROUTE_4)
     SPEED(0)  // Remmen
     FON(2)    // Horn/Whistle en later bij geen sound locs iets via de DFplayer  
     DELAYRANDOM(5000,10000) // Wachten tussen 5 en 10s
-    FON(2)    // Later vervangen door vertrek bel via macro
+    LOCO_SOUND_BELL
+    //FON(2)    // Later vervangen door vertrek bel via macro
     RESTORE_SPEED
   // 2. Dorpbranch CW: Helix buitenring naar berg
     // hier nog checks of de helix vrij is, later ook met seinen if_red enzo
