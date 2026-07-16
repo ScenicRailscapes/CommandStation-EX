@@ -87,12 +87,14 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
     // Wissels omzetten om de helix halverwege te verlaten richting het dorp
     THROW(1006)   // S06 Helix buitenring / dorp
     CLOSE(1007)   // S08 Branchlijn hoofdstation / Haven-dorp
+    LOCO_SOUND_HORN // Whistle / horn voor binnenrijden
   // 3a. Helix Berg sensor 
   AT (IR_H_3_BEZET)
     PRINT("AutoRit: Helix buitenring")
   // 3b. Helix Midden sensor 
   AFTER(IR_H_2_BEZET)
     PRINT("AutoRit: Helix verlaten")
+    LOCO_SOUND_HORN // Whistle / horn voor verlaten
   // 4. BINNENKOMST DORP (Blok BD_D_5)
     SAVE_SPEED
     IFRED(108) PRINT("Sein op rood, wacht")
@@ -141,21 +143,25 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
     PRINT("AutoRit: IR_D_3_1 berg geraakt")
     RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
     PRINT("AutoRit: Verlaat Hoofdspoor #2, rijdt Helix Binnenring (BD_HBI_1) binnen")
-  
+    LOCO_SOUND_HORN // Whistle / horn voor binnenrijden
+
     AFTER(BD_HBI_1_BEZET)  
   // 3a. Helix Berg sensor 
     AT(IR_D_3_2_BEZET)
       PRINT("AutoRit: IR_D_3_2 dal geraakt, snelheid naar 25")
       SAVE_SPEED
       SLOWDOWN(5)
+      LOCO_SOUND_HORN // Whistle / horn voor naar buitenrijden
     AT (IR_H_3_BEZET)
       PRINT("AutoRit: Helix binnenring")
     // 3b. Helix Midden sensor 
     AT(IR_H_2_BEZET)
       PRINT("AutoRit: Helix midden")
+      LOCO_SOUND_HORN // Whistle / horn voor in de berg
   // 3c. Helix Dal sensor 
-  AFTER(IR_H_2_BEZET)
-    PRINT("AutoRit: Helix verlaten")    
+  AFTER(IR_H_1_BEZET)
+    PRINT("AutoRit: Helix verlaten")
+    LOCO_SOUND_HORN // Whistle / horn voor verlaten
 
   // Keuzes maken: Nog een rondje of hoofdspoor #1    
       RANDOM_FOLLOW(ROUTE_1,ROUTE_2)
