@@ -149,7 +149,6 @@ ALIAS(BRANCH_DORP_WEST_OOST,1601)   // Branchlijn dorp van west naar oost automa
 ALIAS(KEERLUS_NORMAAL,1900)         // Sequence to set reverse loop to normaal dcc signal
 ALIAS(KEERLUS_REVERSE,1901)         // Sequence to set reverse loop to reverse dcc signal
 
-
 // Relais: Let op: deze zijn inverted signal. Aanzetten met 'RESET' en uit met 'SET' commandp
 ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais, draait de fase van het DCC signal om in een keerlus
 
@@ -158,9 +157,9 @@ ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais,
 
 // Motors
 
-// Oud, van kerstbaan, hergebruiken voor iets anders
-// Virtual (Latches), de pennen boven de 40 bestaan niet op de ESP. Let op: WEL op de STM32
-
+// Algemene bitmaps en latches
+HAL(Bitmap,2060,5) // create flags 2060..2065 // General purpose latches
+ALIAS(BIT_DIESEL, 2060)            // Flag voor bepalen dat er een DIESEL loco actief is
 
 ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus LATCH maken            
 

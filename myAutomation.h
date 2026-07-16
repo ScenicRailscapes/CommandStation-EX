@@ -9,8 +9,8 @@
 #include "myLedsandLights.h"
 #include "myBlocksAndSignals.h"
 #include "myReverseLoopAutomation.h"
+#include "mySounds.h"
 #include "myRoutes.h"
-#include "mySounds_stm32.h"
 #include "mySwitches.h"
 #include "myServosAndMotors.h"
 #include "myTestExrailKladboek.h"
@@ -58,23 +58,56 @@ DONE
 /*                 * * * * * Automation hier staan algemene routines * * * * * *    */
 
 /* Shows current locos running and direction on screen 2 */ 
-/* Deze ook zo maken dat als er geen verandering is, dan geen update */
 STEALTH_GLOBAL(
-  extern int cab_now;                   // gedefinieerd in myhall.cpp buiten deze routine anders wordt deze iedere loop opnieuw gereset
+  extern int cab_now;                   // gedefinieerd in myhall.cpp
+  
   void updateLocoScreen() {
-
-    byte row=1;
-    const byte maxRows=3;
-    for (auto loco=LocoSlot::getFirst();loco && row<maxRows;loco=loco->getNext(),row++) {
+    byte row = 1;
+    const byte maxRows = 3;
+    
+    // We onthouden de status van maximaal 2 locomotieven (voor rij 1 en rij 2 op het scherm)
+    // We slaan op: [loco_address, target_speed_with_direction_bit]
+    static int last_loco_id[3] = {0, 0, 0};
+    static byte last_raw_speed[3] = {0, 0, 0};
+    
+    bool change_detected = false;
+    
+    // Eerste ronde: We lopen door de actieve locs om te controleren of er IETS veranderd is
+    byte check_row = 0;
+    for (auto loco = LocoSlot::getFirst(); loco && check_row < (maxRows - 1); loco = loco->getNext(), check_row++) {
+      int current_loco = loco->getLoco();
+      byte current_raw = loco->getTargetSpeed(); // Bevat zowel snelheid als de 0x80 richting-bit
+      
+      // Als de loc op deze positie is veranderd, OF zijn snelheid/richting is veranderd:
+      if (last_loco_id[check_row] != current_loco || last_raw_speed[check_row] != current_raw) {
+        change_detected = true;
+        
+        // Sla de nieuwe status direct op in ons geheugen
+        last_loco_id[check_row] = current_loco;
+        last_raw_speed[check_row] = current_raw;
+      }
+    }
+    
+    // Als er absoluut geen verandering is gedetecteerd, breken we hier direct af.
+    // Geen LCD-output, dus ook geen terminal-ruis!
+    if (!change_detected) {
+      return;
+    }
+    
+    // Tweede ronde: Er is een verandering gedetecteerd, dus we schrijven het scherm opnieuw
+    for (auto loco = LocoSlot::getFirst(); loco && row < maxRows; loco = loco->getNext(), row++) {
       auto speed = loco->getTargetSpeed();
       auto direction = (speed & 0x80) ? 'V' : 'A';
-      speed &=0x7F;
-      if (speed > 0) speed --;
+      speed &= 0x7F;
+      if (speed > 0) speed--;
+      
+      // Update het LCD scherm
       StringFormatter::lcd2(1, row, F("Loco: %2d %3d %c"), loco->getLoco(), speed, direction);
       cab_now = loco->getLoco();
     }
   }  
 )
+
 /* Shows status of pre-defined routes on screen 2, only on state change */
 AUTOSTART SEQUENCE(40)
     STEALTH(

@@ -15,33 +15,7 @@
         SPEED(target_speed)                           \
     ENDIF
 
-/* Sound Bell mogelijkheden en register per loc, bv functie 3 (FON(3)) 
-   op de Pico OBB loc is de bell, terwijl dat op de V60 functie 15 is.
-*/
- #define LOCO_SOUND_BELL                         \
-  IFLOCO(17) FON(3)  DELAY (2000) FOFF(3)  ENDIF \
-  IFLOCO(13) FON(15) DELAY (2000) FOFF(15) ENDIF \
-  IFLOCO(10) FON(3)  DELAY (2000) FOFF(3)  ENDIF \
-  IFLOCO(9)  FON(4)  DELAY (2000) FOFF(4)  ENDIF \
-  IFLOCO(4,7,8,18)                 /*Diesels*/   \
-    PRINT("Diesel geluiden hier")                \
-  ELSE                      /* Rest is stoom */  \
-    PRINT("Stoom geluiden hier")                 \
-  ENDIF
-// aha probleempje, de if loco (diesel enzo) komt naar de else dus ook locs met sound komen in else aan..
-/* Sound Long Horn mogelijkheden en register per loc, bv functie 15 (FON(15)) 
-   op de Pico OBB loc is de long horn, terwijl dat op de V60 functie 8 is.
-*/
- #define LOCO_SOUND_HORN                         \
-  IFLOCO(17) FON(15) DELAY (2000) FOFF(15) ENDIF \
-  IFLOCO(13) FON(8)  DELAY (2000) FOFF(8)  ENDIF \
-  IFLOCO(10) FON(2)  DELAY (2000) FOFF(2)  ENDIF \
-  IFLOCO(9)  FON(2)  DELAY (2000) FOFF(2)  ENDIF \
-  IFLOCO(4,7,8,18)                 /*Diesels*/   \
-    PRINT("Diesel geluiden hier")                \
-  ELSE                      /* Rest is stoom */  \
-    PRINT("Stoom geluiden hier")                 \
-  ENDIF  
+
 /* ====================================================================
                           AUTOMATISCHE RIT
    ==================================================================== */
