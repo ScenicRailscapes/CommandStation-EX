@@ -209,7 +209,7 @@
 
 #define LOOP_ENTRY_EAST \
     RESET(REVERSE_SIGNAL_ACTIVE) \
-    DELAY(5000) /* even wachten tot de trein het keerlusdeel heeft verlaten */ \
+    DELAY(8000) /* even wachten tot de trein het keerlusdeel heeft verlaten */ \
     SET(RELAIS_DCC_REVERSE) \
     RESET(600)
 

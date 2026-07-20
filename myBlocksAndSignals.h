@@ -117,7 +117,7 @@ SETUP_IR_SENSOR(IR_D_3_1, IR_D_3_1_BEZET, 2000, "IR_D_3_1:Hoofdspoor #2 Berg")
 SETUP_IR_SENSOR(IR_D_3_2, IR_D_3_2_BEZET, 2000, "IR_D_3_2:Hoofdspoor #2 Dorp")
 
 // --- Dorp / Haven Verbindings-sensoren ---
-SETUP_IR_SENSOR(IR_D_1_3, IR_D_1_3_BEZET, 2000, "IR_D_1_3:Hoofdspoor dorp - haven")
+SETUP_IR_SENSOR(IR_D_1_3, IR_D_1_3_BEZET, 3000, "IR_D_1_3:Hoofdspoor dorp - haven")
 SETUP_IR_SENSOR(IR_D_1_4, IR_D_1_4_BEZET, 2000, "IR_D_1_4:Haven - dorp hoofdspoor")
 SETUP_IR_SENSOR(IR_D_1_5, IR_D_1_5_BEZET, 2000, "IR_D_1_5:Visserdorp - dorp hoofdspoor")
 

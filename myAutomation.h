@@ -8,6 +8,7 @@
 #include "myMacros.h"
 #include "myLedsandLights.h"
 #include "myBlocksAndSignals.h"
+//#include "mySignals.h"
 #include "myReverseLoopAutomation.h"
 #include "mySounds.h"
 #include "myRoutes.h"
@@ -25,7 +26,6 @@ AUTOSTART SEQUENCE(1)
   LCD(0, " SilberBachTalBahn")
   LCD(1,"")
   LCD(2,"")
-  LCD(3,"BR78 Rit:1 76V")
   PARSE("<C WIFI ON>")
   //PARSE("<C WIFI \"Nijlstroom_24\" \"52694646\">")
   //PARSE("<C WIFI HOSTNAME \"SilberBachTalBahn\">")
@@ -44,15 +44,18 @@ AUTOSTART SEQUENCE(1)
   SET_TRACK(B,MAIN)
   POWERON
   HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)  // Init de TM1683 LED/Key matrix hier ivm blokkeren init.
-  DELAY(10000)
+  DELAY(2000)
   GREEN(101)  // Sein BD_D_2 op groen zetten
   GREEN(102)  // Sein BD_D_3 op groen zetten
   GREEN(105)  // Sein BD_D_4 op groen zetten
   GREEN(108)  // Sein BD_D_5 op groen zetten
+
+  DELAY(5000)
   ROUTE_HIDDEN(ROUTE_1)
   ROUTE_HIDDEN(ROUTE_2)
   ROUTE_HIDDEN(ROUTE_3)
   ROUTE_HIDDEN(ROUTE_4)
+  ROUTE_HIDDEN(ROUTE_5)
 DONE
 
 /*                 * * * * * Automation hier staan algemene routines * * * * * *    */
@@ -102,11 +105,21 @@ STEALTH_GLOBAL(
       if (speed > 0) speed--;
       
       // Update het LCD scherm
-      StringFormatter::lcd2(1, row, F("Loco: %2d %3d %c"), loco->getLoco(), speed, direction);
+      //StringFormatter::lcd2(1, row, F("Loco: %2d %3d %c"), loco->getLoco(), speed, direction);
+      StringFormatter::lcd2(1, row, F("%8S %3d %c"), RMFT2::getRosterName(loco->getLoco()), speed, direction);
       cab_now = loco->getLoco();
     }
   }  
 )
+
+// loco-getLoco(), speed, direction, getFunctions()); (Wat zou de getFunctions() zijn?)
+// auto name=RMFT2::getRosterName(locoId); geeft de naam van de loc
+
+//LCD(3,"OBB 2060 Rit:1 076V") = ongeveer deze stringformatter
+// speed, direction is goed
+// loconummer moet uit rooster komen
+// en rit: uit routestate en dan bij de juiste loc
+//StringFormatter::lcd2(1, row, F("%8s Rit:%c %3d%c"), loco->getLoco(), speed, direction);
 
 /* Shows status of pre-defined routes on screen 2, only on state change */
 AUTOSTART SEQUENCE(40)
@@ -117,6 +130,14 @@ AUTOSTART SEQUENCE(40)
       static bool last_state_2 = false;
       static bool last_state_3 = false;
       static bool last_state_4 = false;
+
+      // Testje als ik echt route 3 en 4 niet krijg, dan kijken wat de laatste status was
+          // StringFormatter::lcd2(1, 0, F("Route 1:%1s 2:%1s 3:%1s 4:%1s"),
+          //     last_state_1 ? F("*") : F("-"),
+          //     last_state_2 ? F("*") : F("-"),
+          //     last_state_3 ? F("*") : F("-"),
+          //     last_state_4 ? F("*") : F("-")
+          // );      
 
       // 2. Haal de huidige status op (true = actief, false = inactief)
       bool current_state_1 = RMFT2::ifRouteState(ROUTE_1, 1);

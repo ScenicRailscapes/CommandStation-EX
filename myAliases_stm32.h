@@ -18,6 +18,7 @@ ROSTER(14,"BR 86 LichtensteinBahn","////Shunting")
 ROSTER(15,"Kittel Steam tram","Lights/Cabine//Shunting")
 ROSTER(17,"OBB 691","Lights/Sound/*Horn/Bell/Fire/*Coupler//Shunting/DownLights/Whistle/Pump/Station #1/Station #2/Language/Volume/TunnelMode/Steam Release/Long Whistle/Airpump/Waterpump/Sanding/Firebox Feed//Brakes/Emergency Brakes")
 ROSTER(18,"OBB 2060","Lights///Shunting")
+ROSTER(19,"BR 78","Lights/Sound/*Whistle/Smoke/Coupler/Lights Off F/Lights Off R/Cab Lights/Shunting/Announcement #1/Fire/Cylinder Smoke/Brakes sound/3rd Headlight/Heavy Load/DownLights/Conductor Whistle/Waterpump slow/Bochten geluid/Steam Release/Hand Brakes/Airpump/Injector/Announcement #2/Announcement #3/Braking/Water vullen/Idling/Tunnelmodus/Announcement #4/High pressure steam off/Security Valve")
 // Aliassen - LET OP: De aliassen werken het beste met echte vPin, niet de ID's, wissels werken wel goed met ID's
 // Sensors
 /*
@@ -142,6 +143,7 @@ ALIAS(ROUTE_1,1660)                 // Alias voor route 1660
 ALIAS(ROUTE_2,1661)                 // Alias voor route 1661
 ALIAS(ROUTE_3,1662)                 // Alias voor route 1662
 ALIAS(ROUTE_4,1663)                 // Alias voor route 1663
+ALIAS(ROUTE_5,1664)                 // Alias voor route 1664
 
 // Sequences en routes 
 ALIAS(BRANCH_DORP_KEERLUS,1600)     // Branchlijn dorp van oost naar west automation
@@ -160,6 +162,7 @@ ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais,
 // Algemene bitmaps en latches
 HAL(Bitmap,2060,5) // create flags 2060..2065 // General purpose latches
 ALIAS(BIT_DIESEL, 2060)            // Flag voor bepalen dat er een DIESEL loco actief is
+ALIAS(BIT_SOUNDLOC,2061)           // Flag voor bepalen dat er een SOUNDLOC actief is
 
 ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus LATCH maken            
 

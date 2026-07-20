@@ -100,3 +100,33 @@ HAL(PCF8575,340, 16, 0x22)
 HAL(DFPlayer,10000, 1, 0x48)
 HAL(DFPlayer,10001, 1, 0x49)
 HAL(DFPlayer,10002, 1, 0x4C)
+
+/* =======================================================================
+  The following directive defines an ADS1115 4-port I2C Analog module.
+  =======================================================================
+  ADS1115 address selectie   
+  ADDR + GND: 0x48 (Default)
+  ADDR + VDD (or VCC): 0x49
+  ADDR + SDA: 0x4
+  ADDR + ASCL: 0x4B
+*/
+
+//HAL(ADS111x,380, 4, 0x48)  // four-input ADS1115 on pins 300..303
+
+/* =======================================================================
+  The following directive defines an ADS1115 4-port I2C Analog module.
+  =======================================================================
+
+      HAL(neoPixel, firstVpin, numberOfPixels [, mode [, i2caddress])
+      Where mode is selected from the various pixel string types which have varying
+      colour order or refresh frequency. For MOST strings this mode will be NEO_GRB but for others refer to the comments in IO_NeoPixel.h
+      If omitted the node and i2caddress default to NEO_GRB, 0x60
+
+      <o vpin>   switches pixel on  (same as <z vpin>) e.g. <o 1005>
+      Helderheid: De aansturing staat standaard op volle brightness. Het beste is een kleur te defineren en dan
+      de kleur value delen door 4. Dus bv rood = 255,0,0 dat is te fel, maak dat 63,0,0 
+      Orange is bv 255, 120, 4 maak dat 63, 30, 1 
+      NEOPIXEL(11020 ,63, 30, 1, 10) zet 10 pixels op goed zichtbaar oranje
+*/  
+    // Let op de vPin nummer en de aantallen pixels dat deze niet een andere vPin overschrijven. 160 pixels per meter 
+   //HAL(NeoPixel,11000,160,NEO_GRB,0x60)

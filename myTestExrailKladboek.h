@@ -3,7 +3,37 @@
 */
 
 
+// Test met ADS1115 Analog - I2C detector als vervanger van ESP32 blockdetector
+// Lastige, zou eigenlijk een calibratie moeten komen bij start want aarde fluctueert
+// helaas is er geen ANIN EXRAIL command, zou er een C++ versie zijn en het in een STEALTH code stoppen?
+/* int IODevice::readAnalogue(VPIN vpin) {
+   for (IODevice *dev = _firstDevice; dev != 0; dev = dev->_nextDevice) {
+     if (dev->owns(vpin)) 
+       return dev->_readAnalogue(vpin);
+   }
+#ifdef DIAG_IO
+*/
+// iets als.. new van alle ANIN sensors de start waarde en de treshold bij bezet is bv +200
 
+//HAL(ADS111x,380, 4, 0x48)  // four-input ADS1115 on pins 380..383 (let op, zelfe adres als een DFPlayer Serial interface)
+
+// AUTOSTART SEQUENCE(999)
+//   IFGTE(380,1000) // wait intil vpin 300 reaches 1000 or greater
+//     IFNOT(BD_HBI_1_BEZET)
+//       SET(BD_HBI_1_BEZET)
+//       PRINT("Block Bezet")
+//       RED(150)
+//     ENDIF
+//   ENDIF
+//   IFLT(380,800) // wait until it drops back below 950
+//     IF(BD_HBI_1_BEZET)
+//       RESET(BD_HBI_1_BEZET)
+//       PRINT("Block Vrij")
+//       GREEN(150)
+//     ENDIF
+//   ENDIF
+// DELAY(100)
+// FOLLOW(999) // continue monitoring
 
 
 /* ====================================================================
