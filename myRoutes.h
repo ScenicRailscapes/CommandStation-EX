@@ -1,20 +1,18 @@
 /* ====================================================================
                      AUTOMATISCHE RIJDEN ROUTES
    ==================================================================== */
-
-// Snelheidscompensatie macro per loc
+// Snelheidscompensatie macro op basis van procentuele schaling per loc
 #define SET_LOCO_SPEED(target_speed)                  \
-    IFLOCO (13)                                       \
-        IF(target_speed == 30)                        \
-            SPEED(60)                                 \
-        ENDIF                                         \
-        IF(target_speed == 25)                        \
-            SPEED(50)                                 \
-        ENDIF                                         \
-    ELSE                                              \
-        SPEED(target_speed)                           \
+    SPEED(target_speed)                               \
+    IFLOCO(13) /* V60 */                              \
+        SPEED_REL(200) /* 200% van snelheid */        \
+    ENDIF                                             \
+    IFLOCO(15) /* kittel steam tram */                \
+        SPEED_REL(90)  /* 80% van snelheid */         \
+    ENDIF                                             \
+    IFLOCO(2200)                                      \
+        SPEED_REL(115) /* 115% van snelheid */        \
     ENDIF
-
 
 /* ====================================================================
                           AUTOMATISCHE RIT
@@ -24,9 +22,10 @@ AUTOMATION(1650, "AutoRoute: Start dal CCW")
     // 1. OPSTARTEN
     FON(0)                     // Lichten aan (F0)
     FON(1)                     // Interne verlichting aan of sound aan (F1)
-    LOCO_SPECIAL_SET           // Zet wat speciale functies aan
-    LOCO_SOUND_BELL            // Vertrek
-    DELAY(1000)
+    LOCO_SPECIAL_STARTUP       // Zet wat speciale functies aan
+    SOUND_BELL                 // Vertrek
+    DELAY(3000)
+    SOUND_OPTREKKEN            // Optrekken
     FWD(10)
     DELAY(2500)
     SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
@@ -49,6 +48,7 @@ AUTOMATION(1650, "AutoRoute: Start dal CCW")
         PRINT("Debug: IR 4 1 voorbij")
         DELAY(3000)
         PRINT("Debug: IR 4 1 wacht voorbij")
+        SET(BD_D_4_UITRIT)
 
     // 3. WISSELS GOED ZETTEN NA VERLATEN BD_D_4
     // Rit eerst over hoofdspoor #1, dan naar dorp
@@ -69,14 +69,19 @@ DONE  // nu even done, als ik ga werken met calls ipv follow dan iets anders ver
    ROUTE ROUTE_1 (Alias voor 1660): Hoofdspoor #1 (CCW) 
    ==================================================================== */
 ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
+
   ROUTE_ACTIVE(ROUTE_1)
   ROUTE_CAPTION(ROUTE_1,"Active")
   PRINT("AutoRit: Route #1 CCW Hoofdspoor #1")
-  CLOSE(1040)   // S25 main #1 / main #2
+  // Waar komen we vandaan?, BD_D_4 of BD_D_5
+  IFTHROWN(1038) CLOSE(1038) ENDIF
+  IFTHROWN(1039) CLOSE(1039) ENDIF
+  // Kruisen van Hoofdspoor #2 naar #1
+  THROW(1040)   // S25 main #1 / main #2
   // 1. Hoofdspoor #1 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR (nog niet geplaatst)
   //WAIT_WHILE_RED(102) // Is er nu nog niet als sein
 
-  // AT wacht tot de sensor actief (1) wordt
+  // 1. Rijden Hoofdspoor #1 op
   AT(IR_D_2_2_BEZET)
     PRINT("AutoRit: IR_D_2_2 dal geraakt, snelheid naar 25")
     SAVE_SPEED
@@ -88,18 +93,19 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
     // Wissels omzetten om de helix halverwege te verlaten richting het dorp
     THROW(1006)   // S06 Helix buitenring / dorp
     CLOSE(1007)   // S08 Branchlijn hoofdstation / Haven-dorp
-    DELAY(4500)   // Even wachten voor Whistle/Horn
-    LOCO_SOUND_HORN // Whistle / horn voor binnenrijden
+    RESTORE_SPEED
+    DELAYRANDOM(3000, 6000)    // Even wachten voor Whistle/Horn
+    SOUND_HORN   // Whistle / horn voor binnenrijden
 
   // 3a. Helix Berg sensor
   AT (IR_H_3_BEZET)
     PRINT("AutoRit: Helix buitenring")
 
   // 3b. Helix Midden sensor 
-  AFTER(IR_H_2_BEZET)
+  AT(IR_H_2_BEZET)
     PRINT("AutoRit: Helix verlaten")
-    DELAY(3000)   // Even wachten voor Whistle/Horn
-    LOCO_SOUND_HORN // Whistle / horn voor verlaten
+    DELAYRANDOM(2000, 5000)    // Even wachten voor Whistle/Horn
+    SOUND_HORN_LONG // Whistle / horn voor verlaten
 
   // 4. BINNENKOMST DORP (Blok BD_D_5)
     SAVE_SPEED
@@ -113,7 +119,9 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
   AT(BD_D_5_BEZET)
     PRINT("AutoRit: Blok BD_D_5 bereikt. Snelheid terug naar 30")
     DELAY(5000)
+    SOUND_RIJDEN        // Rijgeluiden 
     CLOSE(1006)         // S06 Helix buitenring / dorp
+    SET(BD_D_5_UITRIT)  // flag dat we op de BD_D_5 rijden
     PRINT("AutoRit: Wissel S06 omgezet naar Helix buitenring")
   
   // 6. Keuzes maken: Nog een rondje, of hoofdspoor #2 of via keerlus 
@@ -138,40 +146,46 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
   ROUTE_ACTIVE(ROUTE_2)
   ROUTE_CAPTION(ROUTE_2,"Active")
   PRINT("AutoRit: Route #2 CCW Hoofdspoor #2")
-  // hmmm, moet ik hier eerst kijken waar de trein vandaan komt?, soms dus op verkeerde binnenkomst en dan is throw niet goed
-  // 
-  //IFCLOSED(1039) Test if turnout is closed
-  THROW(1039)   // Havendorp / main #2
-  THROW(1040)   // S25 main #1 / main #2
+  IFCLOSED(1038) THROW(1038) ENDIF
+  IFCLOSED(1035) THROW(1035) ENDIF
+  // Eventueel vanuit de BD_D_5 komende 
+  IF(BD_D_5_UITRIT)
+    IFTHROWN(1039) CLOSE(1039) ENDIF
+    CLOSE(1040)
+  ELSE
+    THROW(1040)   // S25 main #1 / main #2
+  ENDIF
   // 4. Hoofdspoor #2 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR
   //WAIT_WHILE_RED(102)
   // AT wacht tot de sensor actief (1) wordt
 
-  // 2. Hoofdspoor #2 : BINNENKOMST HELIX (Blok BD_HBI_1)
+// 1. Rijden Hoofdspoor #2 op
+  AT(IR_D_3_2_BEZET)
+  PRINT("AutoRit: IR_D_3_2 dal geraakt, snelheid naar 25")
+  SAVE_SPEED
+  SLOWDOWN(5)
+
+  // 2a. Helix Berg sensor 
   AT(IR_D_3_1_BEZET)
     PRINT("AutoRit: IR_D_3_1 berg geraakt")
     RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
     PRINT("AutoRit: Verlaat Hoofdspoor #2, rijdt Helix Binnenring (BD_HBI_1) binnen")
-    LOCO_SOUND_HORN // Whistle / horn voor binnenrijden
+    DELAYRANDOM(3000, 6000)    // Even wachten voor Whistle/Horn
+    SOUND_HORN // Whistle / horn voor binnenrijden
 
-    AFTER(BD_HBI_1_BEZET)  
-  // 3a. Helix Berg sensor 
-    AT(IR_D_3_2_BEZET)
-      PRINT("AutoRit: IR_D_3_2 dal geraakt, snelheid naar 25")
-      SAVE_SPEED
-      SLOWDOWN(5)
-      LOCO_SOUND_HORN // Whistle / horn voor naar buitenrijden
+    AT(BD_HBI_1_BEZET)
+      PRINT("AutoRit: Rijden in helix")
     AT (IR_H_3_BEZET)
       PRINT("AutoRit: Helix binnenring")
     // 3b. Helix Midden sensor 
     AT(IR_H_2_BEZET)
       PRINT("AutoRit: Helix midden")
-      LOCO_SOUND_HORN // Whistle / horn voor in de berg
+      SOUND_HORN_LONG // Whistle / horn voor in de berg
   // 3c. Helix Dal sensor 
   AFTER(IR_H_1_BEZET)
     PRINT("AutoRit: Helix verlaten")
-    DELAY(3000)   // Even wachten voor Whistle/Horn
-    LOCO_SOUND_HORN // Whistle / horn voor verlaten
+    DELAYRANDOM(3000, 6000)    // Even wachten voor Whistle/Horn
+    SOUND_HORN // Whistle / horn voor verlaten
 
   // 4. Keuzes maken: Nog een rondje of hoofdspoor #1    
     RANDOM_FOLLOW(ROUTE_1,ROUTE_2)
@@ -240,13 +254,17 @@ ROUTE(ROUTE_4,"Dorp - haven dorp - Station")
   CLOSE (1024) // S13 -> hoofdstation
   // 1. Dorpbranch CW: Hoofdstation nadert
   AT(IR_D_1_2_BEZET)
-    DELAY(5000) // uitrijden
+    SPEED_REL(50)
+    SOUND_AFREMMEN
+    DELAY(5000) // uitrijden // maak dit snelheid afhankelijk
     PRINT("AutoRit: Station - wachten")
     SAVE_SPEED
     SPEED(0)  // Remmen
     FON(2)    // Horn/Whistle en later bij geen sound locs iets via de DFplayer  
     DELAYRANDOM(10000,20000) // Wachten tussen 5 en 10s
-    LOCO_SOUND_BELL // Bell
+    SOUND_BELL      // Bell
+    DELAY(3000)
+    SOUND_OPTREKKEN // Optrekken
     SPEED(12)
     DELAY(3000)    
     RESTORE_SPEED
@@ -266,7 +284,7 @@ ROUTE(ROUTE_4,"Dorp - haven dorp - Station")
       PRINT("AutoRit: verlaten hoofdspoor #1")
       // controleren of BD_4 vrij is..
   AFTER(IR_D_4_2_BEZET)
-      CALL (92) 
+      CALL (92) // route naar helix, later nog aanpassen met keuzes
       /* ***********************************************************/
       DELAY(15000)  // tijdelijk, nog de route afmaken geen zin meer
       /* ***********************************************************/

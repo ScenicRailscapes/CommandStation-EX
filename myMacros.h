@@ -213,10 +213,22 @@
     SET(RELAIS_DCC_REVERSE) \
     RESET(600)
 
-// // moet nog iets maken wat het actieve loco address oppikt..
+// // moet nog iets maken wat het actieve loco address oppikt.. Kan met een STEALTH en locoAddr
 #define LOCO_HANDOVER(loconum, sequencenum) \
   SENDLOCO(loconum,sequencenum)             \
   DONE
+
+
+/* =========================================================================
+   Geen sound maar wat speciale functies bij locs (downlights, baangeluiden)
+   ========================================================================= */
+  
+ #define LOCO_SPECIAL_STARTUP                         \
+  IFLOCO(17,13,19)                                    \
+    IFLOCO(17) FON(8)  FON(4)  ENDIF                  \
+    IFLOCO(13) FON(10) FON(14) FON(22) FON(23) ENDIF  \
+    IFLOCO(19) FON(7)  FON(10) FON(15) FON(18) ENDIF  \
+  ENDIF  
 
 #endif // MY_MACROS_H
 

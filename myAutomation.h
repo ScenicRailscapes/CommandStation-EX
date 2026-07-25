@@ -104,22 +104,14 @@ STEALTH_GLOBAL(
       speed &= 0x7F;
       if (speed > 0) speed--;
       
-      // Update het LCD scherm
+      // Update het LCD scherm (nu met rostername en maximaal 8 characters)
       //StringFormatter::lcd2(1, row, F("Loco: %2d %3d %c"), loco->getLoco(), speed, direction);
-      StringFormatter::lcd2(1, row, F("%8S %3d %c"), RMFT2::getRosterName(loco->getLoco()), speed, direction);
-      cab_now = loco->getLoco();
+      StringFormatter::lcd2(1, row, F("%s %3d %c"), 
+        String(RMFT2::getRosterName(loco->getLoco())).substring(0, 8).c_str(), 
+        speed, direction);      
     }
   }  
 )
-
-// loco-getLoco(), speed, direction, getFunctions()); (Wat zou de getFunctions() zijn?)
-// auto name=RMFT2::getRosterName(locoId); geeft de naam van de loc
-
-//LCD(3,"OBB 2060 Rit:1 076V") = ongeveer deze stringformatter
-// speed, direction is goed
-// loconummer moet uit rooster komen
-// en rit: uit routestate en dan bij de juiste loc
-//StringFormatter::lcd2(1, row, F("%8s Rit:%c %3d%c"), loco->getLoco(), speed, direction);
 
 /* Shows status of pre-defined routes on screen 2, only on state change */
 AUTOSTART SEQUENCE(40)
@@ -130,14 +122,6 @@ AUTOSTART SEQUENCE(40)
       static bool last_state_2 = false;
       static bool last_state_3 = false;
       static bool last_state_4 = false;
-
-      // Testje als ik echt route 3 en 4 niet krijg, dan kijken wat de laatste status was
-          // StringFormatter::lcd2(1, 0, F("Route 1:%1s 2:%1s 3:%1s 4:%1s"),
-          //     last_state_1 ? F("*") : F("-"),
-          //     last_state_2 ? F("*") : F("-"),
-          //     last_state_3 ? F("*") : F("-"),
-          //     last_state_4 ? F("*") : F("-")
-          // );      
 
       // 2. Haal de huidige status op (true = actief, false = inactief)
       bool current_state_1 = RMFT2::ifRouteState(ROUTE_1, 1);
@@ -171,58 +155,6 @@ FOLLOW(40)
 
 HAL(UserAddin,updateLocoScreen,2000)
 
-
-
-// OLED Info Screen Sequence; Cabs, Track Power, sound On/Off en welke routes 
-// LCD Macro kan alleen statische teksten, met stealth directe C++ code ingrijpend op de onderliggende DCC-EX code
-// AUTOSTART SEQUENCE(10)
-//   STEALTH(  // Vervang lijn 3, de Power status
-//         extern int cab_now;                   // gedefinieerd in myhall.cpp buiten deze routine anders wordt deze iedere loop opnieuw gereset
-//         bool sound = flags[255] & LATCH_FLAG; // 99 = Sound on/off latch in myAliases.h
-//         bool elec  = flags[224] & LATCH_FLAG; // 65 = Manual select Elec train vanuit 3e systeem (ESPHome)           
-//         bool steam = flags[225] & LATCH_FLAG; // 66 = Manual select Steam train vanuit 3e systeem (ESPHome)
-//         bool dies  = flags[226] & LATCH_FLAG; // 67 = Manual select Dies 'BR290 DB' train vanuit 3e systeem (ESPHome)   
-//         // bij meer treinen misschien de DCC nummers gebruiken in plaats van steam, elec en diesel        
-//         bool main=TrackManager::getMainPower()==POWERMODE::ON;  // Status Main track power
-//         bool prog=TrackManager::getProgPower()==POWERMODE::ON;  // Status Prog track power
-//         bool dfplayer_busy= IODevice::read(10000);              // Status (* achter Snd) van DFPlayer #1
-//         //bool dfplayer_busy= IODevice::read(10010);              // Status (* achter Snd) van DFPlayer #2
-//         const char* const locname[]= {                         // CAB tabel
-//           "DCC0", "DCC1", "DCC2", "DCC3", // DCC 0-3 (leeg)
-//           "E32 ",                         // DCC 4 - E32 elec loc
-//           "4800",                         // DCC 5 - 4800 steam loc
-//           "290 "                          // DCC 6 - BR290 diesel loc
-//         };
-//         // Uitleg: Via directe calls wordt de status van de track power opgevraagd en de status van de sound latch (99). Met wat slimme test en replace wordt dit op 1 lijn geregeld
-//         // Met ? en : wordt getest op een true of false, dus de bewering main == 1 wordt true of false. In true:false kan dan een replacement voor de bool gezet worden
-//         StringFormatter::lcd2(0,2,F("%S %S%c Loc:%S"),main==true && prog ==false ?F("Main"): main==false && prog ==true ?F("Prog") : (main==true && prog ==true ?F("Join") : F("Off ") ), sound ?F("Snd") : F("   "), dfplayer_busy ? '*' : ' ',
-//         elec==true && steam==false && dies==false ?F("E32-103"): elec==false && steam==true && dies==false ?F("4800") : elec==false && steam==false && dies==true ?F("BR190") : F("-"));         
-
-//         for (int cab = 4; cab<=6; cab++){             // welke loc is aan het rijden? (loc DCC #4-6)  
-//             if(DCC::getThrottleSpeed(cab) > 0){       // snelheid >0 ?
-//               cab_now = cab;                          // sla deze extern op
-//             }
-//         }    
-//         StringFormatter::lcd2(0,6,F("Loc:%4S Speed:%2d %S"), locname[cab_now], DCC::getThrottleSpeed(cab_now), DCC::getThrottleDirection(cab_now) ? F("Fw") : F("Rv") );                     
-//         // Gelijk Latch 298 (Poweron status) zetten voor gebruik in EXRail
-//         if (main) {
-//           setFlag(254, LATCH_FLAG);  // latch 254 (Power_On = true)
-//         } else{
-//           setFlag(254,0,LATCH_FLAG); // Unlatch 254 (Power_on = false
-//         }        
-//     ) // end stealth
-
-//   IF (AUTOROUTE_1) // autoroute info
-//     STEALTH(  // Route bepalen en tonen
-//       bool wacht = flags[212] & LATCH_FLAG;   // 52 = Wacht bij station latch
-//       bool trace = flags[213] & LATCH_FLAG;   // 53 = Binnen of buitenroute latch
-//       bool yard  = flags[214] & LATCH_FLAG;   // 54 = Yard route, dan moet BINNEN_ROUTE uit staan      
-//       StringFormatter::lcd2(0,7,F("Trace:%S Station:%S"), trace==true && yard ==false ?F("1"): trace==false && yard ==false ?F("2") : (trace==false && yard ==true ?F("3") : F("??? ") ), wacht ==true ? F("Stop") : F("Pass") );
-//     )
-//   ENDIF // autoroute
-// DELAY (500) // niet teveel updates naar LCD, de LCD heeft tijd nodig om scherm op te bouwen
-// FOLLOW(10)
-// DONE
 
 // /*
 //   Timed events
