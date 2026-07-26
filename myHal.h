@@ -30,7 +30,7 @@ HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
   //   I2C address=0x68
   //   SDA pin=PC4
   //   SCL pin=PC3
-  //   Set clock with <D ANOUT 630 hh mm ss> for example <D ANOUT 630 21 55 00> of <D ANOUT 20 17>
+  //   Set clock with (example) <z 630 14 29 30>
   //   bij melding <* DS1307 clock in standby *> is de klok niet goed ingesteld
   //HAL(DS1307,630, {I2CMux_1, SubBus_1, 0x68})
   HAL(DS1307,630, 0x68)

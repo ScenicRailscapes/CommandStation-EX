@@ -45,7 +45,7 @@ ONBUTTON(604) // Testing, play some sounds
   DONE 
 
 ONBUTTON(607)
-  SOUND_KERKKLOKKEN_1
+  SOUND_KERKKLOKKEN_DISTANT
 DONE
   // hoe de status van power on/off uit te lezen?
 // ONBUTTON(607) //  Track power on/off MAIN A

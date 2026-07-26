@@ -156,16 +156,15 @@ FOLLOW(40)
 HAL(UserAddin,updateLocoScreen,2000)
 
 
-// /*
-//   Timed events
-// */ 
-// // Hour chimes
-// ONCLOCKTIME(25,0) // hh: 25 is ieder uur, mm: 0 is iedere 0 minuut
-//   PLAYSND(1,1,2,15) // Play sound (player 1, folder 1, track 2, volume 18) // chapel church bell
-//   PLAYSND(2,1,5,11) // Play sound (player 2, folder 1, track 5, volume 12) // distant church bell
-// DONE
+/*
+  Timed events
+*/ 
+// Hour chimes
+ONCLOCKTIME(25,0) // hh: 25 is ieder uur, mm: 0 is iedere 0 minuut
+  SOUND_KERKKLOKKEN_DISTANT
+  SOUND_KERKKLOKKEN_NEAR
+DONE
 
-// ONCLOCKTIME(25,30) // hh: 25 is ieder uur, mm: 0 is iedere 0 minuut
-//   PLAYSND(1,1,3,15) // Play sound (player 1, folder 1, track 2, volume 18)
-// DONE
-
+ONCLOCKTIME(25,30) // hh: 25 is ieder uur, mm: 0 is iedere 0 minuut
+  SOUND_KERKKLOKKEN_TING
+DONE

@@ -18,6 +18,8 @@
 #define FX_DECEL          10
 #define FX_BRAKE          11
 #define FX_CHURCHBELLS_1  5
+#define FX_CHURCHBELLS_2  1
+#define FX_CHURCHBELLS_3  3
 
   // Effects voor soundlocs 
 #define SOUND_EFFECT(effect_id, duration_ms, volume, dfplayervpin) \
@@ -35,11 +37,14 @@
 #define SOUND_CONDUCTOR_WHISTLE_2   SOUND_EFFECT(FX_CON_WHISTLE_2, 0,    25, 10000)
 #define SOUND_OPTREKKEN             SOUND_EFFECT(FX_ACCEL,         0,    25, 10000)
 #define SOUND_RIJDEN                SOUND_EFFECT(FX_CRUISE,        0,    25, 10000)
-#define SOUND_AFREMMEN              SOUND_EFFECT(FX_DECEL,         0,    20, 10000)
+#define SOUND_AFREMMEN              SOUND_EFFECT(FX_DECEL,         0,    11, 10000)
 #define SOUND_REMMEN                SOUND_EFFECT(FX_BRAKE,         0,    20, 10000)
 
-// Effects voor dorpen en andere geluiden
-#define SOUND_KERKKLOKKEN_1         SOUND_EFFECT(FX_CHURCHBELLS_1, 0,    25, 10001)
+// Effects voor dorpen en andere geluiden   Player#, folder, effect, volume
+#define SOUND_KERKKLOKKEN_DISTANT   PLAYSND(1, 1, FX_CHURCHBELLS_1, 18)
+#define SOUND_KERKKLOKKEN_NEAR      PLAYSND(2, 1, FX_CHURCHBELLS_2, 20)
+#define SOUND_KERKKLOKKEN_TING      PLAYSND(1 , 1, FX_CHURCHBELLS_3, 15)
+
 
 /* -------------------------------------------------------------
                       Centrale Sound-Engine
