@@ -30,8 +30,8 @@ ROUTE (90,"Schaduwstation")
 ROUTE (91,"Helix binnenring")
     THROW (1000) // links af deel 3-weg wissel
     CLOSE (1001) // rechts af deel 3-weg wissel
-    DONE
-    //RETURN
+    //DONE
+    RETURN
 
 ROUTE (92,"Helix buitenring")
     CLOSE (1000) // links af deel 3-weg wissel

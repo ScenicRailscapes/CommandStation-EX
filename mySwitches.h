@@ -44,21 +44,23 @@ ONBUTTON(604) // Testing, play some sounds
   ENDIF
   DONE 
 
-
+ONBUTTON(607)
+  SOUND_KERKKLOKKEN_1
+DONE
   // hoe de status van power on/off uit te lezen?
-ONBUTTON(607) //  Track power on/off MAIN A
-  IFNOT(POWER_ON) 
-    POWERON                   // turn track power on
-    SET(607)                  // light the seventh led
-    SEG7(600,"ON"_s7,4R) SEG7(604,"A "_s7,4R) // write Track to the display (start Vpin 600, split over 2 segments
-    SET(POWER_ON)
-  ELSE
-    POWEROFF                  // turn track power off
-    RESET(607)                // off the seventh led
-    CLEARSEG7(600)            // clear the display
-    RESET(POWER_ON)
-  ENDIF
-  DONE
+// ONBUTTON(607) //  Track power on/off MAIN A
+//   IFNOT(POWER_ON) 
+//     POWERON                   // turn track power on
+//     SET(607)                  // light the seventh led
+//     SEG7(600,"ON"_s7,4R) SEG7(604,"A "_s7,4R) // write Track to the display (start Vpin 600, split over 2 segments
+//     SET(POWER_ON)
+//   ELSE
+//     POWEROFF                  // turn track power off
+//     RESET(607)                // off the seventh led
+//     CLEARSEG7(600)            // clear the display
+//     RESET(POWER_ON)
+//   ENDIF
+//   DONE
 
 
 // ONBUTTON(602)

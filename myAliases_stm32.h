@@ -163,12 +163,5 @@ ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais,
 
 // Algemene bitmaps en latches
 HAL(Bitmap,2060,5) // create flags 2060..2065 // General purpose latches
-ALIAS(BIT_DIESEL, 2060)            // Flag voor bepalen dat er een DIESEL loco actief is
-ALIAS(BIT_SOUNDLOC,2061)           // Flag voor bepalen dat er een SOUNDLOC actief is
 
 ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus LATCH maken            
-
-// temp
-VIRTUAL_TURNOUT( 9102,"Sound")
-VIRTUAL_TURNOUT( 9103,"Sound")
-VIRTUAL_TURNOUT( 9104,"Sound")

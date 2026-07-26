@@ -17,32 +17,36 @@
 #define FX_CRUISE         9
 #define FX_DECEL          10
 #define FX_BRAKE          11
+#define FX_CHURCHBELLS_1  5
 
   // Effects voor soundlocs 
-#define SOUND_EFFECT(effect_id, duration_ms, volume) \
-    STEALTH( playLocoSound(loco, effect_id, duration_ms, volume); )
+#define SOUND_EFFECT(effect_id, duration_ms, volume, dfplayervpin) \
+    STEALTH( playSoundEffect(loco, effect_id, duration_ms, volume, dfplayervpin); )
 
-//      Effectnaam (EXRAIL Commando)          Effect ID   FON-FOFF delay DFPlayer volume    
-#define SOUND_BELL                  SOUND_EFFECT(FX_BELL,      2000,     20)
-#define SOUND_HORN                  SOUND_EFFECT(FX_WHISTLE_1, 2000,     25)
-#define SOUND_BRAKE                 SOUND_EFFECT(FX_BRAKE,     0,        20)
-#define SOUND_BLOWOUT               SOUND_EFFECT(FX_BLOWOUT,   1500,     20)
+//      Effectnaam (EXRAIL Commando)          Effect ID   FON-FOFF delay DFPlayer volume, DFPlayervPIN   
+#define SOUND_BELL                  SOUND_EFFECT(FX_BELL,      2000,     20, 10000)
+#define SOUND_HORN                  SOUND_EFFECT(FX_WHISTLE_1, 2000,     25, 10000)
+#define SOUND_BRAKE                 SOUND_EFFECT(FX_BRAKE,     0,        20, 10000)
+#define SOUND_BLOWOUT               SOUND_EFFECT(FX_BLOWOUT,   1500,     20, 10000)
 
 // Effects extra voor DFPlayer loc sounds. Bv een 2e whistle die via RANDOM opgeroepen kan worden
-#define SOUND_HORN_LONG             SOUND_EFFECT(FX_WHISTLE_2, 4000,     25)
-#define SOUND_CONDUCTOR_WHISTLE_1   SOUND_EFFECT(FX_CON_WHISTLE_1, 0,    25)
-#define SOUND_CONDUCTOR_WHISTLE_2   SOUND_EFFECT(FX_CON_WHISTLE_2, 0,    25)
-#define SOUND_OPTREKKEN             SOUND_EFFECT(FX_ACCEL,         0,    25)
-#define SOUND_RIJDEN                SOUND_EFFECT(FX_CRUISE,        0,    25)
-#define SOUND_AFREMMEN              SOUND_EFFECT(FX_DECEL,         0,    20)
-#define SOUND_REMMEN                SOUND_EFFECT(FX_BRAKE,         0,    20)
+#define SOUND_HORN_LONG             SOUND_EFFECT(FX_WHISTLE_2, 4000,     25, 10000)
+#define SOUND_CONDUCTOR_WHISTLE_1   SOUND_EFFECT(FX_CON_WHISTLE_1, 0,    25, 10000)
+#define SOUND_CONDUCTOR_WHISTLE_2   SOUND_EFFECT(FX_CON_WHISTLE_2, 0,    25, 10000)
+#define SOUND_OPTREKKEN             SOUND_EFFECT(FX_ACCEL,         0,    25, 10000)
+#define SOUND_RIJDEN                SOUND_EFFECT(FX_CRUISE,        0,    25, 10000)
+#define SOUND_AFREMMEN              SOUND_EFFECT(FX_DECEL,         0,    20, 10000)
+#define SOUND_REMMEN                SOUND_EFFECT(FX_BRAKE,         0,    20, 10000)
+
+// Effects voor dorpen en andere geluiden
+#define SOUND_KERKKLOKKEN_1         SOUND_EFFECT(FX_CHURCHBELLS_1, 0,    25, 10001)
 
 /* -------------------------------------------------------------
                       Centrale Sound-Engine
    ------------------------------------------------------------- */
 STEALTH_GLOBAL(
-  void playLocoSound(uint16_t locoAddr, int effectId, int durationMs, int volume) {
-     if (locoAddr == 0) return; // Veiligheidscheck: geen loc actief
+  void playSoundEffect(uint16_t locoAddr, int effectId, int durationMs, int volume, int dfPlayerVpin) {
+    if (locoAddr == 0) return; // Veiligheidscheck: geen loc actief
 
     // -------------------------------------------------------------
     // 1. CONTROLEREN OF HET EEN DCC SOUND-LOC IS (Functie mapping)
@@ -91,7 +95,7 @@ STEALTH_GLOBAL(
       // Het is GEEN sound-loc: Gebruik de DFPlayer via IODevice
       // SD-Kaart structuur: Folder = LocAdres (/04, /05, /11 etc.), Track = /001.mp3, /002.mp3
       int track = effectId;
-      VPIN dfPlayerVpin = 10000; // VPin van de eerste DFPlayer
+      //VPIN dfPlayerVpin; //= 10000; // VPin van de eerste DFPlayer
 
       // 1. Stel eerst de folder in: Folder = locoAddr
       IODevice::writeAnalogue(dfPlayerVpin, 0, locoAddr, DFPlayerBase::DF_FOLDER);
