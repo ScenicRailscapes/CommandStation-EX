@@ -129,4 +129,4 @@ HAL(DFPlayer,10002, 1, 0x4C)
       NEOPIXEL(11020 ,63, 30, 1, 10) zet 10 pixels op goed zichtbaar oranje
 */  
     // Let op de vPin nummer en de aantallen pixels dat deze niet een andere vPin overschrijven. 160 pixels per meter 
-   //HAL(NeoPixel,11000,160,NEO_GRB,0x60)
+   HAL(NeoPixel,11000,160,NEO_GRB,0x60)

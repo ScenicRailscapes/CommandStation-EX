@@ -13,8 +13,10 @@
 #include "mySounds.h"
 #include "myRoutes.h"
 #include "mySwitches.h"
+#include "myMimicPanel.h"
 #include "myServosAndMotors.h"
 #include "myTestExrailKladboek.h"
+
 
 AUTOSTART
 
@@ -26,11 +28,14 @@ AUTOSTART SEQUENCE(1)
   LCD(0, " SilberBachTalBahn")
   LCD(1,"")
   LCD(2,"")
+  SCREEN(1, 1, "Status Display")
   PARSE("<C WIFI ON>")
   //PARSE("<C WIFI \"Nijlstroom_24\" \"52694646\">")
   //PARSE("<C WIFI HOSTNAME \"SilberBachTalBahn\">")
   PRINT("Alles goed zetten")
   UNLATCH(POWER_ON) // Unlatch power on
+  RESET(2000,50)  // Geen idee of dit nodig is of werkt, de bezetmelders resetten voor het mimicpanel
+
   DELAY(1000) // even wachten
   RESET(300, 16) // Reset I2C I/O #1 expander
   RESET(320, 16) // Reset I2C I/O #2 expander
@@ -38,8 +43,7 @@ AUTOSTART SEQUENCE(1)
 
   SET(455)  // Lichtenstein dorp leds aan
   SET(454)  // locoshed verlichting aan
-  THROW(1023) // Wissel bergdorp naar binnenbaan
-
+  
   SET_TRACK(A,MAIN)
   SET_TRACK(B,MAIN)
   POWERON
@@ -50,12 +54,50 @@ AUTOSTART SEQUENCE(1)
   GREEN(105)  // Sein BD_D_4 op groen zetten
   GREEN(108)  // Sein BD_D_5 op groen zetten
 
-  DELAY(5000)
+  NEOPIXEL(11000,30,30,30,200)
+  DELAY(1000)
   ROUTE_HIDDEN(ROUTE_1)
   ROUTE_HIDDEN(ROUTE_2)
   ROUTE_HIDDEN(ROUTE_3)
   ROUTE_HIDDEN(ROUTE_4)
   ROUTE_HIDDEN(ROUTE_5)
+  CLOSE(1002)
+  CLOSE(1003)
+  CLOSE(1004)
+  CLOSE(1005)
+  CLOSE(1006)
+  CLOSE(1007)
+  CLOSE(1020)
+  CLOSE(1021)
+  CLOSE(1022)
+  THROW(1023) // Wissel bergdorp naar binnenbaan
+  CLOSE(1024)
+  CLOSE(1030)
+  CLOSE(1031)
+  CLOSE(1032)
+  CLOSE(1033)
+  CLOSE(1034)
+  CLOSE(1035)
+  CLOSE(1036)
+  CLOSE(1037)
+  CLOSE(1038)
+  CLOSE(1039)
+  CLOSE(1040)
+  CALL(92) // 3-weg wissel op route buitenring helix 
+  IFNOT(BD_HBI_1) SET (BD_HBI_1_BEZET) RESET (BD_HBI_1_BEZET) ENDIF
+  IFNOT(BD_HBU_1) SET (BD_HBU_1_BEZET) RESET (BD_HBU_1_BEZET) ENDIF
+  IF(BD_D_1)   RESET (BD_D_1_BEZET)   ENDIF // probeersel met if ipx ifnot
+  IF(BD_D_2)   RESET (BD_D_2_BEZET)   ENDIF
+  IF(BD_D_3)   RESET (BD_D_3_BEZET)   ENDIF
+  IF(BD_D_4)   RESET (BD_D_4_BEZET)   ENDIF
+  IFNOT(BD_D_5)   RESET (BD_D_5_BEZET)   ENDIF
+  IFNOT(BD_S_1)   RESET (BD_S_1_BEZET)   ENDIF
+  IFNOT(BD_S_2)   RESET (BD_S_2_BEZET)   ENDIF
+  IFNOT(BD_S_3)   RESET (BD_S_3_BEZET)   ENDIF
+  IFNOT(BD_S_4)   RESET (BD_S_4_BEZET)   ENDIF
+  IFNOT(BD_S_5)   RESET (BD_S_5_BEZET)   ENDIF
+  IFNOT(BD_S_RIJ) RESET (BD_S_RIJ_BEZET) ENDIF
+
 DONE
 
 /*                 * * * * * Automation hier staan algemene routines * * * * * *    */

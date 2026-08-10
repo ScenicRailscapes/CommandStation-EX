@@ -26,14 +26,14 @@
     STEALTH( playSoundEffect(loco, effect_id, duration_ms, volume, dfplayervpin); )
 
 //      Effectnaam (EXRAIL Commando)          Effect ID   FON-FOFF delay DFPlayer volume, DFPlayervPIN   
-#define SOUND_BELL                  SOUND_EFFECT(FX_BELL,      2000,     20, 10000)
+#define SOUND_BELL                  SOUND_EFFECT(FX_BELL,      3000,     20, 10000)
 #define SOUND_HORN                  SOUND_EFFECT(FX_WHISTLE_1, 2000,     25, 10000)
 #define SOUND_BRAKE                 SOUND_EFFECT(FX_BRAKE,     0,        20, 10000)
 #define SOUND_BLOWOUT               SOUND_EFFECT(FX_BLOWOUT,   1500,     20, 10000)
 
 // Effects extra voor DFPlayer loc sounds. Bv een 2e whistle die via RANDOM opgeroepen kan worden
-#define SOUND_HORN_LONG             SOUND_EFFECT(FX_WHISTLE_2, 4000,     25, 10000)
-#define SOUND_CONDUCTOR_WHISTLE_1   SOUND_EFFECT(FX_CON_WHISTLE_1, 0,    25, 10000)
+#define SOUND_HORN_LONG             SOUND_EFFECT(FX_WHISTLE_2, 5000,     25, 10000)
+#define SOUND_CONDUCTOR_WHISTLE_1   SOUND_EFFECT(FX_CON_WHISTLE_1, 2000, 25, 10000)
 #define SOUND_CONDUCTOR_WHISTLE_2   SOUND_EFFECT(FX_CON_WHISTLE_2, 0,    25, 10000)
 #define SOUND_OPTREKKEN             SOUND_EFFECT(FX_ACCEL,         0,    25, 10000)
 #define SOUND_RIJDEN                SOUND_EFFECT(FX_CRUISE,        0,    25, 10000)
@@ -61,10 +61,17 @@ STEALTH_GLOBAL(
     int soundFunc = -1; // -1 betekent: Geen DCC sound, gebruik DFPlayer
 
     switch (locoAddr) {
+      case 19:
+        if (effectId == FX_BELL)          soundFunc = 9;
+        if (effectId == FX_WHISTLE_1)     soundFunc = 2;
+        if (effectId == FX_WHISTLE_2)     soundFunc = 2;
+        if (effectId == FX_CON_WHISTLE_1) soundFunc = 16;
+        break;      
       case 17:
-        if (effectId == FX_BELL)      soundFunc = 3;
-        if (effectId == FX_WHISTLE_1) soundFunc = 17;
-        if (effectId == FX_WHISTLE_2) soundFunc = 17;
+        if (effectId == FX_BELL)          soundFunc = 3;
+        if (effectId == FX_WHISTLE_1)     soundFunc = 2;
+        if (effectId == FX_WHISTLE_2)     soundFunc = 17;
+        if (effectId == FX_CON_WHISTLE_1) soundFunc = 9;
         break;
       case 13:
         if (effectId == FX_BELL)      soundFunc = 15;
@@ -100,8 +107,7 @@ STEALTH_GLOBAL(
       // Het is GEEN sound-loc: Gebruik de DFPlayer via IODevice
       // SD-Kaart structuur: Folder = LocAdres (/04, /05, /11 etc.), Track = /001.mp3, /002.mp3
       int track = effectId;
-      //VPIN dfPlayerVpin; //= 10000; // VPin van de eerste DFPlayer
-
+  
       // 1. Stel eerst de folder in: Folder = locoAddr
       IODevice::writeAnalogue(dfPlayerVpin, 0, locoAddr, DFPlayerBase::DF_FOLDER);
 

@@ -48,9 +48,9 @@ ALIAS(OFF, 0)    // Off
 */
 // FORMAT: SETUP_IR_BLOCK_WITH_AMBER(BLOK_ID, STROOM, IR1, IR2, VLAG_BEZET, VLAG_CW, VLAG_CCW, DEBOUNCE, BACKUP, AMBER_TIMEOUT, ROOD_ACTIE, AMBER_ACTIE, GROEN_ACTIE)
 
-// Blok 1 (Keerlus): 
-// Als de trein via West (IR_D_1_1) binnenkomt (CW), activeert hij LOOP_ENTRY_WEST.
-// Als de trein via Oost (IR_D_1_2) binnenkomt (CCW), activeert hij LOOP_ENTRY_EAST.
+/* Blok 1 (Keerlus): 
+   Als de trein via West (IR_D_1_1) binnenkomt (CW), activeert hij LOOP_ENTRY_WEST.
+   Als de trein via Oost (IR_D_1_2) binnenkomt (CCW), activeert hij LOOP_ENTRY_EAST. */
 SETUP_IR_BLOCK_WITH_AMBER(1, BD_D_1, IR_D_1_2_BEZET, IR_D_1_1_BEZET, BD_D_1_BEZET, BD_D_1_CW, BD_D_1_CCW, 2000, 500, 7000, LOOP_ENTRY_WEST, NO_SIGNAL(0), LOOP_ENTRY_EAST)
 // Blok BD2: Hoofdspoor #1 Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
 SETUP_IR_BLOCK_WITH_AMBER(2, BD_D_2, IR_D_2_1_BEZET, IR_D_2_2_BEZET, BD_D_2_BEZET, BD_D_2_CW, BD_D_2_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
@@ -59,13 +59,13 @@ SETUP_IR_BLOCK_WITH_AMBER(3, BD_D_3, IR_D_3_2_BEZET, IR_D_3_1_BEZET, BD_D_3_BEZE
 // Blok BD4: Connectie dorp Simpel 2-aspect sein (Geen Amber aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0)
 SETUP_IR_BLOCK_WITH_AMBER(4, BD_D_4, IR_D_4_2_BEZET, IR_D_4_1_BEZET, BD_D_4_BEZET, BD_D_4_CW, BD_D_4_CCW, 2000, 500, 0, SIGNAL_3A_RED(105), NO_SIGNAL(0), SIGNAL_3A_GREEN(105))
 // Blok BD5: Branchlijn yard - dorp Lang block (3-aspect sein op 108). Na het passeren van de IR-sluis duurt het 5000ms (5 seconden) voor het sein op Geel springt.
-SETUP_IR_BLOCK_WITH_AMBER(5, BD_D_5, IR_D_1_5_BEZET, IR_D_1_1_BEZET, BD_D_5_BEZET, BD_D_5_CW, BD_D_5_CCW, 2000, 500, 5000, SIGNAL_3A_RED(108), SIGNAL_3A_AMBER(108), SIGNAL_3A_GREEN(108))
+SETUP_IR_BLOCK_WITH_AMBER(5, BD_D_5, IR_D_1_5_BEZET, IR_D_1_3_BEZET, BD_D_5_BEZET, BD_D_5_CW, BD_D_5_CCW, 2000, 500, 5000, SIGNAL_3A_RED(108), SIGNAL_3A_AMBER(108), SIGNAL_3A_GREEN(108))
 // Blok HBI: Helix binnenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
 SETUP_IR_BLOCK_WITH_AMBER(6, BD_HBI_1, IR_H_1_BEZET, IR_H_3_BEZET, BD_HBI_1_BEZET, BD_HBI_1_CW, BD_HBI_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
 // Blok HBU: Helix buitenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
 SETUP_IR_BLOCK_WITH_AMBER(7, BD_HBU_1, IR_H_2_BEZET, IR_H_3_BEZET, BD_HBU_1_BEZET, BD_HBU_1_CW, BD_HBU_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
 
-
+// Aha even kijken naar BD_D_5, denk dat ik de verkeerde IR sensoren gebruik, D_1_1 zit op branchlijn station, aangepast naar D_1_3 maar waar is IR D 1 4 ?
 /* ====================================================================
    CONFIGURATIE PARKEERSPOREN SCHADUWSTATION
    ==================================================================== */

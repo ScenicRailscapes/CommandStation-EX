@@ -22,28 +22,50 @@ SERVO_TURNOUT(1007, 407, 410, 310, Fast, "S08 Branchlijn hoofdstation / Haven-do
 */
 
 // moeten deze een return krijgen ipv done zodat ze opgeroepen kunnen worden?
-ROUTE (90,"Schaduwstation")
+ROUTE(90,"Schaduwstation")
     THROW (1000) // links af deel 3-weg wissel
     THROW (1001) // rechts af deel 3-weg wissel
-    DONE
-
-ROUTE (91,"Helix binnenring")
-    THROW (1000) // links af deel 3-weg wissel
-    CLOSE (1001) // rechts af deel 3-weg wissel
+    ROUTE_INACTIVE(91) 
+    ROUTE_INACTIVE(92)
+    MIMIC_ROUTE_90_ACTIVE
+    MIMIC_ROUTE_91_INACTIVE
+    MIMIC_ROUTE_92_INACTIVE 
     //DONE
     RETURN
 
-ROUTE (92,"Helix buitenring")
+ROUTE(91,"Helix binnenring")
+    THROW (1000) // links af deel 3-weg wissel
+    CLOSE (1001) // rechts af deel 3-weg wissel
+    ROUTE_INACTIVE(90)
+    ROUTE_INACTIVE(92)   
+    MIMIC_ROUTE_90_INACTIVE
+    MIMIC_ROUTE_91_ACTIVE
+    MIMIC_ROUTE_92_INACTIVE      
+    //DONE
+    RETURN
+
+ROUTE(92,"Helix buitenring")
     CLOSE (1000) // links af deel 3-weg wissel
     CLOSE (1001) // rechts af deel 3-weg wissel
     THROW (1002) // Helix buitenring
+    ROUTE_INACTIVE(90)
+    ROUTE_INACTIVE(91)
+    MIMIC_ROUTE_90_INACTIVE
+    MIMIC_ROUTE_91_INACTIVE
+    MIMIC_ROUTE_92_ACTIVE    
     //DONE
     RETURN
 
 ROUTE(93, "Yard dal")
     CLOSE (1000) // links af deel 3-weg wissel
     CLOSE (1001) // rechts af deel 3-weg wissel
-    CLOSE (1002) // Yard dal 
+    CLOSE (1002) // Yard dal
+    ROUTE_INACTIVE(90)
+    ROUTE_INACTIVE(91)
+    ROUTE_INACTIVE(92)    
+    MIMIC_ROUTE_90_INACTIVE
+    MIMIC_ROUTE_91_INACTIVE
+    MIMIC_ROUTE_92_ACTIVE           
     DONE
 
 ROUTE(94, "Rangeer op yard")
