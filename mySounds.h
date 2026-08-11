@@ -5,6 +5,9 @@
 
    Gebruik: in EXRAIL de effectnaam oproepen eg: 'SOUND_BELL' 
    In de centrale sound engine wordt dan bekeken of het een soundloc is of DFPlayer.
+
+   ToDO: de DCC::setFn(19, 2, true); werkt niet, heel vreemd want de console log geeft
+   exact dezelfde output <l 19 0 128 4> als dat je het via FON(19 2 1) geeft of via een throttle. Waarom werkt dit niet?
 */
   //    Effect ID's       Filenaam (.mp3)
 #define FX_WHISTLE_1      1
@@ -44,77 +47,3 @@
 #define SOUND_KERKKLOKKEN_DISTANT   PLAYSND(1, 1, FX_CHURCHBELLS_1, 18)
 #define SOUND_KERKKLOKKEN_NEAR      PLAYSND(2, 1, FX_CHURCHBELLS_2, 20)
 #define SOUND_KERKKLOKKEN_TING      PLAYSND(1 , 1, FX_CHURCHBELLS_3, 15)
-
-
-/* -------------------------------------------------------------
-                      Centrale Sound-Engine
-   ------------------------------------------------------------- */
-STEALTH_GLOBAL(
-  void playSoundEffect(uint16_t locoAddr, int effectId, int durationMs, int volume, int dfPlayerVpin) {
-    if (locoAddr == 0) return; // Veiligheidscheck: geen loc actief
-
-    // -------------------------------------------------------------
-    // 1. CONTROLEREN OF HET EEN DCC SOUND-LOC IS (Functie mapping)
-    //    Bij LOC #17 is dus een BELL functie 3 ->FON(3) 
-    //    en bij LOC #13 Functie 15 =>FON(15)
-    // -------------------------------------------------------------
-    int soundFunc = -1; // -1 betekent: Geen DCC sound, gebruik DFPlayer
-
-    switch (locoAddr) {
-      case 19:
-        if (effectId == FX_BELL)          soundFunc = 9;
-        if (effectId == FX_WHISTLE_1)     soundFunc = 2;
-        if (effectId == FX_WHISTLE_2)     soundFunc = 2;
-        if (effectId == FX_CON_WHISTLE_1) soundFunc = 16;
-        break;      
-      case 17:
-        if (effectId == FX_BELL)          soundFunc = 3;
-        if (effectId == FX_WHISTLE_1)     soundFunc = 2;
-        if (effectId == FX_WHISTLE_2)     soundFunc = 17;
-        if (effectId == FX_CON_WHISTLE_1) soundFunc = 9;
-        break;
-      case 13:
-        if (effectId == FX_BELL)      soundFunc = 15;
-        if (effectId == FX_WHISTLE_1) soundFunc = 8;
-        if (effectId == FX_WHISTLE_2) soundFunc = 8;
-        break;
-      case 10:
-        if (effectId == FX_BELL)      soundFunc = 3;
-        if (effectId == FX_WHISTLE_1) soundFunc = 2;
-        if (effectId == FX_WHISTLE_2) soundFunc = 2;
-        break;
-      case 9:
-        if (effectId == FX_BELL)      soundFunc = 4;
-        if (effectId == FX_WHISTLE_1) soundFunc = 2;
-        if (effectId == FX_WHISTLE_2) soundFunc = 2;
-        break;
-    }
-
-    // -------------------------------------------------------------
-    // 2. UITVOEREN: Fysieke Sound-loc OF DFPlayer
-    // -------------------------------------------------------------
-    if (soundFunc != -1) {
-      // Het is een Sound-loc: Stuur DCC functie AAN (FON(#))
-      DCC::setFn(locoAddr, soundFunc, true);
-
-      // Als er een tijdsduur is opgegeven, na de delay weer UITzetten (FOFF(#))
-      if (durationMs > 0) {
-        delay(durationMs);
-        DCC::setFn(locoAddr, soundFunc, false);
-      }
-    } 
-    else {
-      // Het is GEEN sound-loc: Gebruik de DFPlayer via IODevice
-      // SD-Kaart structuur: Folder = LocAdres (/04, /05, /11 etc.), Track = /001.mp3, /002.mp3
-      int track = effectId;
-  
-      // 1. Stel eerst de folder in: Folder = locoAddr
-      IODevice::writeAnalogue(dfPlayerVpin, 0, locoAddr, DFPlayerBase::DF_FOLDER);
-
-      // 2. Speel het geluid af: Track = track
-      IODevice::writeAnalogue(dfPlayerVpin, track, volume, DFPlayerBase::DF_PLAY);
-      // even controleren weer wat er zou moeten gebeuren, later verwijderen.
-      //StringFormatter::lcd2(1, 6, F("Play: %3d Fol: %3d"), track, locoAddr); // debug
-    }
-  }
-)

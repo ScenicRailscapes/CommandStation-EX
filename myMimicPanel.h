@@ -1,3 +1,19 @@
+/* ToDo: de dorpbranchlijn west klopt eigenlijk niet, het 2 pixel deel is dat kleine
+   stuk (west) na de 1006 Wissel tot aan de 1007 wissel 
+   even nadenken, sensoren zijn onzin, het west deel is in principe niet 
+   te gebruiken als er op de buitenring gereden wordt en de wissel 1006 naar dorp staat
+   maar ook niet als BD_D_5 bezet is. Kortom oplossen in code   
+   
+   ToDo: zou leuk zijn als ik de CW of CCW visueel kan maken. Dus via een running light ofzo
+   de richting?. Zal via Stealth moeten en dus vinden hoe neopixels via Stealth aangestuurd kunnen worden
+   
+   */
+
+// waar is het stuk tussen S19 en dorp geplaatst? aan DB_D_1_1??
+
+
+
+
 /* ====================================================================
    MIMIC PANEL NEOPIXEL: PERCENTAGE OMREKENING & HELDERHEID
    ==================================================================== */
@@ -18,6 +34,24 @@
   ONCLOSE(TURNOUT_ID) \
     NEOPIXEL(VPIN_NEO, 0, PCT(BRIGHTNESS), 0, COUNT) /* Groen */ \
   DONE
+  
+#define BIND_TURNOUT_MIMIC_REVERSE(TURNOUT_ID, VPIN_NEO, COUNT) \
+  ONCLOSE(TURNOUT_ID) \
+    NEOPIXEL(VPIN_NEO, PCT(BRIGHTNESS), 0, 0, COUNT) /* Rood */ \
+  DONE \
+  ONTHROW(TURNOUT_ID) \
+    NEOPIXEL(VPIN_NEO, 0, PCT(BRIGHTNESS), 0, COUNT) /* Groen */ \
+  DONE
+
+// IR Sensor / Bezetmelder op 1 VPIN-reeks
+#define BIND_SENSOR_MIMIC_IR(SENSOR_ID, VPIN_NEO, COUNT) \
+  ONSENSOR(SENSOR_ID) \
+    IF(SENSOR_ID) \
+      NEOPIXEL(VPIN_NEO, PCT(BRIGHTNESS), 0, 0, COUNT) /* Rood */ \
+    ELSE \
+      NEOPIXEL(VPIN_NEO, 0, PCT(BRIGHTNESS), 0, COUNT) /* Groen */ \
+    ENDIF \
+  DONE
 
 // IR Sensor / Bezetmelder op 1 VPIN-reeks
 #define BIND_SENSOR_MIMIC(SENSOR_ID, VPIN_NEO, COUNT) \
@@ -29,7 +63,7 @@
       NEOPIXEL(VPIN_NEO, 0, PCT(BRIGHTNESS), 0, COUNT) /* Groen */ \
       SET(VPIN_NEO) \
     ENDIF \
-  DONE
+  DONE  
 
 // Sensor met Neoplixels niet aansluitend op verschillende VPINs
 #define BIND_SENSOR_MIMIC_DUAL(SENSOR_ID, VPIN_1, COUNT1, VPIN_2, COUNT2) \
@@ -51,18 +85,18 @@
    1. WISSELS (ONTHROW = Rood, ONCLOSE = Groen)
    -------------------------------------------------------------------- */
 BIND_TURNOUT_MIMIC(1002, 11137, 1)
-BIND_TURNOUT_MIMIC(1003, 11136, 1)
-BIND_TURNOUT_MIMIC(1006, 11060, 4)
+BIND_TURNOUT_MIMIC_REVERSE(1003, 11136, 1)
+BIND_TURNOUT_MIMIC_REVERSE(1006, 11060, 4)
 BIND_TURNOUT_MIMIC(1007, 11106, 4)
 BIND_TURNOUT_MIMIC(1023, 11030, 4)
-BIND_TURNOUT_MIMIC(1024, 11124, 4)
-BIND_TURNOUT_MIMIC(1033, 11081, 3)
+BIND_TURNOUT_MIMIC_REVERSE(1024, 11124, 4)
+BIND_TURNOUT_MIMIC_REVERSE(1033, 11081, 3)
 BIND_TURNOUT_MIMIC(1034, 11079, 2)
 BIND_TURNOUT_MIMIC(1035, 11066, 4)
-BIND_TURNOUT_MIMIC(1036, 11074, 2)
-BIND_TURNOUT_MIMIC(1037, 11092, 4)
+BIND_TURNOUT_MIMIC_REVERSE(1036, 11074, 2)
+BIND_TURNOUT_MIMIC_REVERSE(1037, 11092, 4)
 BIND_TURNOUT_MIMIC(1038, 11072, 2)
-BIND_TURNOUT_MIMIC(1039, 11076, 3)
+BIND_TURNOUT_MIMIC_REVERSE(1039, 11076, 3)
 
 // Speciale wissel 1040
 ONCLOSE(1040)
@@ -103,37 +137,28 @@ ONSENSOR(BD_HBU_1_BEZET)
   ENDIF
 DONE
 
-
 /* --------------------------------------------------------------------
    3. INFRA ROOD (IR) SENSOREN
    -------------------------------------------------------------------- */
-BIND_SENSOR_MIMIC(IR_D_1_1_BEZET, 11112, 1)
-BIND_SENSOR_MIMIC(IR_D_1_2_BEZET, 11119, 1)
-BIND_SENSOR_MIMIC(IR_D_1_3_BEZET, 11106, 1)
-BIND_SENSOR_MIMIC(IR_D_1_4_BEZET, 11077, 1)
-BIND_SENSOR_MIMIC(IR_D_1_5_BEZET, 11043, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_1_1_BEZET, 11112, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_1_2_BEZET, 11119, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_1_3_BEZET, 11106, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_1_4_BEZET, 11077, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_1_5_BEZET, 11043, 1)
 
-BIND_SENSOR_MIMIC(IR_D_2_1_BEZET, 11058, 1)
-BIND_SENSOR_MIMIC(IR_D_2_2_BEZET, 11052, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_2_1_BEZET, 11058, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_2_2_BEZET, 11052, 1)
 
-BIND_SENSOR_MIMIC(IR_D_3_1_BEZET, 11027, 1)
-BIND_SENSOR_MIMIC(IR_D_3_2_BEZET, 11022, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_3_1_BEZET, 11027, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_3_2_BEZET, 11022, 1)
 
-BIND_SENSOR_MIMIC(IR_D_4_1_BEZET, 11006, 1)
-BIND_SENSOR_MIMIC(IR_D_4_2_BEZET, 11011, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_4_1_BEZET, 11006, 1)
+BIND_SENSOR_MIMIC_IR(IR_D_4_2_BEZET, 11011, 1)
 
 
 /* --------------------------------------------------------------------
    4. SPECIALE VRIJ/BEZET INDICATIES
    -------------------------------------------------------------------- */
-/* ToDo: de dorpbranchlijn west klopt eigenlijk niet, het 2 pixel deel is dat kleine
-   stuk (west) na de 1006 Wissel tot aan de 1007 wissel 
-   even nadenken, sensoren zijn onzin, het west deel is in principe niet 
-   te gebruiken als er op de buitenring gereden wordt en de wissel 1006 naar dorp staat
-   maar ook niet als BD_D_5 bezet is. Kortom oplossen in code   */
-
-// waar is het stuk tussen S19 en dorp geplaatst? aan DB_D_1_1??
-
 #define HAVEN_VRIJ                    NEOPIXEL(11084, 0, PCT(BRIGHTNESS), 0, 2) /* Groen */
 #define HAVEN_BEZET                   NEOPIXEL(11084, PCT(BRIGHTNESS), 0, 0, 2)  /* Rood */
 #define LOKLOODS_VRIJ                 NEOPIXEL(11086, 0, PCT(BRIGHTNESS), 0, 2) /* Groen */

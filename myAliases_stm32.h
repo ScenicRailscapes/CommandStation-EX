@@ -41,9 +41,9 @@ ALIAS (IR_D_1_3, 310)               // IR Sensor hoofdspoor dorp - haven
 ALIAS (IR_D_2_1, 312)               // IR Sensor Hoofdspoor #1 Berg
 ALIAS (IR_D_3_1, 311)               // IR Sensor Hoofdspoor #2 Berg
 // Block detectors (negatief voor block occupied)
-ALIAS(BD_HBU_1, -304)               // Block #1 Helix buitenring op vPin 304 (pin 4 I2C I/O #1)
-ALIAS(BD_HBI_1, -305)               // Block #2 Helix binnenring op vPin 305 (pin 5 I2C I/O #1)
-ALIAS(BD_D_1, -306)                 // Block #3 Branchlijn / dorpspoor 
+//ALIAS(BD_HBU_1, -304)               // Block #1 Helix buitenring op vPin 304 (pin 4 I2C I/O #1)
+//ALIAS(BD_HBI_1, -305)               // Block #2 Helix binnenring op vPin 305 (pin 5 I2C I/O #1)
+//ALIAS(BD_D_1, -306)                 // Block #3 Branchlijn / dorpspoor 
 
 // Aangesloten op I2C I/O #2 expander 320-335
 // IR Sensors (infrarood) voor blok detectie
@@ -129,7 +129,8 @@ ALIAS(IR_S_RIJ_BEZET, 2043)         // IR Stop sensor doorrij spoor bezet latch
 ALIAS(BD_HBI_1_CW, 2044)            // Trein rijdt Clockwise door blok HBI
 ALIAS(BD_HBI_1_CCW, 2045)           // Trein rijdt Counter Clockwise door blok HBI
 ALIAS(BD_HBU_1_CW, 2046)            // Trein rijdt Clockwise door blok HBU
-ALIAS(BD_HBU_1_CCW, 2047)           // Trein rijdt Counter Clockwise door blok HBU  
+ALIAS(BD_HBU_1_CCW, 2047)           // Trein rijdt Counter Clockwise door blok HBU
+ALIAS(IR_DUMMY,2028)                // Dummy IR sensor
 
 
 // Branchelijn dorp - reverse loop
@@ -137,6 +138,12 @@ HAL(Bitmap,2050,5) // create flags 2050..2055 // General purpose latches
 ALIAS(REVERSE_SIGNAL_ACTIVE, 2050)  // Flag to indicate reverse signal is active on DCC track keerlus
 ALIAS(DORP_STATION_DETECT, 2051)    // Flag to indicate dorp station sensor detected train
 ALIAS(DORP_WEST_DETECT, 2052)       // Flag to indicate dorp west sensor detected train
+
+// Analoge blockdetectors via ADS115
+HAL(Bitmap,2060,19)                 // create flags 2060..2065 // blockdetect latches
+ALIAS(BD_HBU, 2060)                 // Flag to indicate Helix Buitenring is occupied
+ALIAS(BD_HBI, 2061)                 // Helix binnenring
+ALIAS(BD_DORP_STATION, 2062)        // Branchlijn dorp-station
 
 // Routes
 ALIAS(ROUTE_1,1660)                 // Alias voor route 1660 
@@ -162,6 +169,6 @@ ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais,
 // Motors
 
 // Algemene bitmaps en latches
-HAL(Bitmap,2060,5) // create flags 2060..2065 // General purpose latches
+HAL(Bitmap,2090,5) // create flags 2090..2095 // General purpose latches
 
 ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus LATCH maken            

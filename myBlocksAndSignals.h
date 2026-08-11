@@ -51,9 +51,9 @@ ALIAS(OFF, 0)    // Off
 /* Blok 1 (Keerlus): 
    Als de trein via West (IR_D_1_1) binnenkomt (CW), activeert hij LOOP_ENTRY_WEST.
    Als de trein via Oost (IR_D_1_2) binnenkomt (CCW), activeert hij LOOP_ENTRY_EAST. */
-SETUP_IR_BLOCK_WITH_AMBER(1, BD_D_1, IR_D_1_2_BEZET, IR_D_1_1_BEZET, BD_D_1_BEZET, BD_D_1_CW, BD_D_1_CCW, 2000, 500, 7000, LOOP_ENTRY_WEST, NO_SIGNAL(0), LOOP_ENTRY_EAST)
+SETUP_IR_BLOCK_WITH_AMBER(1, BD_DORP_STATION, IR_D_1_2_BEZET, IR_D_1_1_BEZET, BD_D_1_BEZET, BD_D_1_CW, BD_D_1_CCW, 2000, 500, 7000, LOOP_ENTRY_WEST, NO_SIGNAL(0), LOOP_ENTRY_EAST)
 // Blok BD2: Hoofdspoor #1 Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
-SETUP_IR_BLOCK_WITH_AMBER(2, BD_D_2, IR_D_2_1_BEZET, IR_D_2_2_BEZET, BD_D_2_BEZET, BD_D_2_CW, BD_D_2_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
+SETUP_IR_BLOCK_WITH_AMBER(2, BD_D_2, IR_D_2_2_BEZET, IR_D_2_1_BEZET, BD_D_2_BEZET, BD_D_2_CW, BD_D_2_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
 // Blok BD3: Hoofdspoor #2 Simpel 2-aspect sein Lang block (3-aspect sein op 108). Na het passeren van de IR-sluis duurt het 5000ms (5 seconden) voor het sein op Geel springt.
 SETUP_IR_BLOCK_WITH_AMBER(3, BD_D_3, IR_D_3_2_BEZET, IR_D_3_1_BEZET, BD_D_3_BEZET, BD_D_3_CW, BD_D_3_CCW, 2000, 500, 5000, SIGNAL_3A_RED(101), SIGNAL_3A_AMBER(101), SIGNAL_3A_GREEN(101))
 // Blok BD4: Connectie dorp Simpel 2-aspect sein (Geen Amber aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0)
@@ -61,9 +61,9 @@ SETUP_IR_BLOCK_WITH_AMBER(4, BD_D_4, IR_D_4_2_BEZET, IR_D_4_1_BEZET, BD_D_4_BEZE
 // Blok BD5: Branchlijn yard - dorp Lang block (3-aspect sein op 108). Na het passeren van de IR-sluis duurt het 5000ms (5 seconden) voor het sein op Geel springt.
 SETUP_IR_BLOCK_WITH_AMBER(5, BD_D_5, IR_D_1_5_BEZET, IR_D_1_3_BEZET, BD_D_5_BEZET, BD_D_5_CW, BD_D_5_CCW, 2000, 500, 5000, SIGNAL_3A_RED(108), SIGNAL_3A_AMBER(108), SIGNAL_3A_GREEN(108))
 // Blok HBI: Helix binnenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
-SETUP_IR_BLOCK_WITH_AMBER(6, BD_HBI_1, IR_H_1_BEZET, IR_H_3_BEZET, BD_HBI_1_BEZET, BD_HBI_1_CW, BD_HBI_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
+//SETUP_IR_BLOCK_WITH_AMBER(6, BD_HBI_1, IR_H_1_BEZET, IR_H_3_BEZET, BD_HBI_1_BEZET, BD_HBI_1_CW, BD_HBI_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
 // Blok HBU: Helix buitenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
-SETUP_IR_BLOCK_WITH_AMBER(7, BD_HBU_1, IR_H_2_BEZET, IR_H_3_BEZET, BD_HBU_1_BEZET, BD_HBU_1_CW, BD_HBU_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
+//SETUP_IR_BLOCK_WITH_AMBER(7, BD_HBU_1, IR_H_2_BEZET, IR_H_3_BEZET, BD_HBU_1_BEZET, BD_HBU_1_CW, BD_HBU_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
 
 // Aha even kijken naar BD_D_5, denk dat ik de verkeerde IR sensoren gebruik, D_1_1 zit op branchlijn station, aangepast naar D_1_3 maar waar is IR D 1 4 ?
 /* ====================================================================
@@ -79,6 +79,12 @@ SETUP_YARD_BLOCK(3, BD_S_3, IR_S_3_BEZET, BD_S_3_BEZET, 4000, 500)
 SETUP_YARD_BLOCK(4, BD_S_4, IR_S_4_BEZET, BD_S_4_BEZET, 4000, 500)
 SETUP_YARD_BLOCK(5, BD_S_5, IR_S_5_BEZET, BD_S_5_BEZET, 4000, 500)
 SETUP_YARD_BLOCK(6, BD_S_RIJ, IR_S_RIJ_BEZET, BD_S_RIJ_BEZET, 4000, 500)
+// Tijdelijk omdat de IR sensoren van de helix niet optimaal werken
+SETUP_YARD_BLOCK(10, BD_HBU, IR_DUMMY, BD_HBU_1_BEZET, 1000, 500)  // temp, testen van ADS1115 blockdetect
+SETUP_YARD_BLOCK(11, BD_HBI, IR_DUMMY, BD_HBI_1_BEZET, 4000, 500)  // temp, testen van ADS1115 blockdetect 
+
+
+
 
 
 /* ====================================================================
@@ -110,11 +116,11 @@ SETUP_IR_SENSOR(IR_D_4_2, IR_D_4_2_BEZET, 2000, "IR_D_4_2:Connectie spoor #1 Dor
 
 // --- Hoofdspoor #1 Sensoren ---
 SETUP_IR_SENSOR(IR_D_2_1, IR_D_2_1_BEZET, 2000, "IR_D_2_1:Hoofdspoor #1 Berg")
-SETUP_IR_SENSOR(IR_D_2_2, IR_D_2_2_BEZET, 2000, "IR_D_2_2:Hoofdspoor #1 Dorp")
+SETUP_IR_SENSOR(IR_D_2_2, IR_D_2_2_BEZET, 3000, "IR_D_2_2:Hoofdspoor #1 Dorp")
 
 // --- Hoofdspoor #2 Sensoren ---
 SETUP_IR_SENSOR(IR_D_3_1, IR_D_3_1_BEZET, 2000, "IR_D_3_1:Hoofdspoor #2 Berg")
-SETUP_IR_SENSOR(IR_D_3_2, IR_D_3_2_BEZET, 2000, "IR_D_3_2:Hoofdspoor #2 Dorp")
+SETUP_IR_SENSOR(IR_D_3_2, IR_D_3_2_BEZET, 3000, "IR_D_3_2:Hoofdspoor #2 Dorp")
 
 // --- Dorp / Haven Verbindings-sensoren ---
 SETUP_IR_SENSOR(IR_D_1_3, IR_D_1_3_BEZET, 3000, "IR_D_1_3:Hoofdspoor dorp - haven")
@@ -124,3 +130,35 @@ SETUP_IR_SENSOR(IR_D_1_5, IR_D_1_5_BEZET, 2000, "IR_D_1_5:Visserdorp - dorp hoof
 // --- Dorp - Hoofdstation Sensoren ---
 SETUP_IR_SENSOR(IR_D_1_1, IR_D_1_1_BEZET, 2000, "IR_D_1_1:Dorp branchlijn west (berg)")
 SETUP_IR_SENSOR(IR_D_1_2, IR_D_1_2_BEZET, 2000, "IR_D_1_2:Dorp branchlijn station")
+
+
+// --- Continue loop voor uitlezen blockdetectors analoge ports
+AUTOSTART SEQUENCE(2)
+  // 2. Verwerk alle analoge ingangen in C++ (supersnel)
+  PROCESS_ADS1115()
+  DELAY(1000) 
+FOLLOW(2)
+
+// --- Synchroniseer de status van bezet flags met MIMIC panel leds
+SEQUENCE(45)
+  PRINT("EXRAIL: Bezetmelders en Mimic Panel synchroniseren...")
+  // Helix
+  SYNC_SENSOR_EXPLICIT(BD_HBI, BD_HBI_1_BEZET)  // veranderd van HBU_1 en HBI_1 naar HBU en HBI
+  SYNC_SENSOR_EXPLICIT(BD_HBU, BD_HBU_1_BEZET)
+
+  // Dorp / Hoofdspoor
+  SYNC_SENSOR_EXPLICIT(BD_DORP_STATION,  BD_D_1_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_2,   BD_D_2_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_3,   BD_D_3_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_4,   BD_D_4_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_5,   BD_D_5_BEZET)
+
+  // Schaduwstation
+  SYNC_SENSOR_EXPLICIT(BD_S_1,   BD_S_1_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_2,   BD_S_2_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_3,   BD_S_3_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_4,   BD_S_4_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_5,   BD_S_5_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_RIJ, BD_S_RIJ_BEZET)
+
+RETURN

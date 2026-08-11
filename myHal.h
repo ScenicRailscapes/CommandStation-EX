@@ -97,7 +97,7 @@ HAL(PCF8575,340, 16, 0x22)
   //                1st vPin for UART 0
   // I2C Address  : I2C address of the serial controller, in 0x format
 
-HAL(DFPlayer,10000, 1, 0x48)
+HAL(DFPlayer,10000, 1, 0x54)
 HAL(DFPlayer,10001, 1, 0x49)
 HAL(DFPlayer,10002, 1, 0x4C)
 
@@ -111,7 +111,7 @@ HAL(DFPlayer,10002, 1, 0x4C)
   ADDR + ASCL: 0x4B
 */
 
-//HAL(ADS111x,380, 4, 0x48)  // four-input ADS1115 on pins 300..303
+HAL(ADS111x,380, 4, 0x48)  // four-input ADS1115 on pins 300..303
 
 /* =======================================================================
   The following directive defines an ADS1115 4-port I2C Analog module.

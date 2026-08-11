@@ -1,7 +1,7 @@
-/* 
+/* =======================================================================================
    Dit bestand bevat de (EXRAIL) setups voor de schakelaars, relais en track statusdisplay
    Ook de schakelaars van bv de TM1638 decoder en LED display worden hier geconfigureerd
-*/
+  ======================================================================================== */
 #include "myMacros.h"
 
 /* TM1638 Button and LED module setup */
@@ -17,35 +17,39 @@ ONBUTTON(600)   // Reverse loop toggle switch
     ENDIF
   DONE
 
-ONBUTTON(604) // Testing, play some sounds
-  BLINK(604,500,500)  // blink the second led
+ONBUTTON(606) // Testing, play some sounds
+  BLINK(606,500,500)  // blink the second led
   SEG7(600,"Soun"_s7,4R) SEG7(604,"d"_s7,4R) // write Sound to the display (start Vpin 600, split over 2 segments
   PLAYSND(2,1,7,20)  // Set folder to 01 player 1, play 007 (Pass 3 Steam loco) 
   PLAYSND(0,1,3,18)  // Play 003 (Arrival Elec loco) 
   PLAYSND(1,1,3,18)  // Play 003 (Arrival Steam loco)
   DELAY(10000)
-  RESET(604)
+  RESET(606)
   CLEARSEG7(600)         // clear the display
   DONE
 
- ONBUTTON(606) //  Track power on/off MAIN A + MAIN B
+ ONBUTTON(601) //  Track power on/off MAIN A + MAIN B
   IFNOT(POWER_ON)
     SET_TRACK(A,MAIN)
     SET_TRACK(B,MAIN) 
     POWERON             // turn track power on
-    SET(606)            // light the seventh led
+    SET(601)            // light the seventh led
     SEG7(600,"ON"_s7,4R) SEG7(604,"AB"_s7,4R) // write Track to the display (start Vpin 600, split over 2 segments
     SET(POWER_ON) // tijdelijk, uitzoeken hoe poweron status opgevraagd kan worden
   ELSE 
     POWEROFF                  // turn track power off
-    RESET(606)                // off the seventh led
+    RESET(601)                // off the seventh led
     CLEARSEG7(600)            // clear the display
     RESET(POWER_ON)
   ENDIF
   DONE 
 
 ONBUTTON(607)
-  SOUND_KERKKLOKKEN_DISTANT
+  STEALTH(
+    DCC::setFn(19, 2, true);
+    delay(2000);
+    DCC::setFn(19, 2, false);
+  )
 DONE
   // hoe de status van power on/off uit te lezen?
 // ONBUTTON(607) //  Track power on/off MAIN A

@@ -230,5 +230,40 @@
     IFLOCO(19) FON(7)  FON(10) FON(15) FON(18) ENDIF  \
   ENDIF  
 
-#endif // MY_MACROS_H
 
+/* ====================================================================
+   MACRO VOOR HET SYNCHRONISEREN / SYNCEN VAN SENSOREN
+   fysieke SENSOR vergelijken met zijn virtuele _BEZET vlag of andere naam
+   ==================================================================== */
+#define SYNC_SENSOR_EXPLICIT(SENSOR, BEZET_FLAG) \
+  IF(SENSOR) \
+    RESET(BEZET_FLAG) \
+    DELAY(100) \
+    SET(BEZET_FLAG) \
+  ELSE \
+    SET(BEZET_FLAG) \
+    DELAY(100) \
+    RESET(BEZET_FLAG) \
+  ENDIF
+
+/* ====================================================================
+   EXRAIL MACRO'S VOOR ANALOGE BLOKDETECTIE
+   ==================================================================== */
+
+// Macro om kalibratie uit te voeren
+#define CALIBRATE_ADS1115() STEALTH( calibrateAnalogSensors(); )
+
+// Macro om alle sensoren 1 keer uit te lezen
+#define PROCESS_ADS1115()   STEALTH( processAnalogSensors(); )
+
+/* ====================================================================
+   EXRAIL ANALOGE BLOKDETECTIE DIAGNOSE MACRO'S
+   ==================================================================== */
+
+// Print eenmalig de status van alle analoge poorten naar de Seriële Monitor
+#define DIAG_ADS1115()        STEALTH( printADS1115Diagnostics(); )
+
+// Herkalibreer alle sensoren handmatig (bijv. als er geen treinen op de baan staan)
+#define RECALIBRATE_ADS1115() STEALTH( recalibrateADS1115(); )
+
+#endif // MY_MACROS_H
