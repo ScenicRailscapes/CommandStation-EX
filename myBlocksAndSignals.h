@@ -13,30 +13,23 @@
 /* Alle gebruikte macros zijn gedefinieerd in myMacros.h */
 #include "myMacros.h"
 
-/* 
-  Block Aspects (signals) via DCC Accessory decoder configureren
-*/
-DCCX_SIGNAL(100,0,2,1)  // Test: Aspect address 100, color 0 = Red, 2= Amber, 1 = Green. Can be called using RED(100), AMBER(100), GREEN(100)
-DCCX_SIGNAL(101,0,2,1)  // Test: Aspect address 101, color 0 = Red, 2= Amber, 1 = Green. Can be called using RED(101), AMBER(101), GREEN(101)
-DCCX_SIGNAL(102,0,2,1)  // Test: Aspect address 102, color 0 = Red, 2= Amber, 1 = Green. Can be called using RED(102), AMBER(102), GREEN(102)
-//Entry aspects 
-DCCX_SIGNAL(105,0,0,1)  // Test: Aspect address 105, color 0 = Red, no amber, 1 = Green. Can be called using RED(105), GREEN(105)
-DCCX_SIGNAL(106,0,0,1)  // Test: Aspect address 106, color 0 = Red, no amber, 1 = Green. Can be called using RED(165), GREEN(106)
-//Exit aspects
-DCCX_SIGNAL(108,0,2,1)  // Test: Aspect address 108, color 0 = Red, 2= Amber, 1 = Green. It has a forth color, that is controlled using something different
+/* --------------------------------------------------------------------
+   SEIN DECLARATIES (Maakt automatisch alle VIRTUAL_SIGNALs aan)
+   -------------------------------------------------------------------- */
 
-/*
-  Crossing signals via DCC Accesory decoder: (Alles boven de ADEM+5 of BLINK+5 is het aantal keer fade of blink)
-  Example: ASPECT(CROSSING_1,ADEM+FAST)   // fade fast, ASPECT(CROSSING_1,KNIPPER+5)   // blink 5x
-*/
-// Alissen nog verplaatsen naar myAliases_stm32.h
-ALIAS(CROSSING_1, 110)  // Crossing signals
-ALIAS(CROSSING_2, 111)  // Crossing signals
-ALIAS(ADEM, 10)  // Fade
-ALIAS(KNIPPER,0) // Blink
-ALIAS(SLOW, 1)   // Slow 
-ALIAS(FAST, 2)   // Fast 
-ALIAS(OFF, 0)    // Off
+// Blokseinen (3 pinnen)
+DEFINE_BLOCK_SIGNAL(100, SIG_100_J4, SIG_100_J3, SIG_100_J1)
+DEFINE_BLOCK_SIGNAL(101, SIG_101_J4, SIG_101_J3, SIG_101_J1)
+//DEFINE_BLOCK_SIGNAL(102, SIG_102_J4, SIG_102_J3, SIG_102_J1)
+//DEFINE_BLOCK_SIGNAL(103, SIG_103_J4, SIG_103_J3, SIG_103_J1)
+
+// Inrijsein (2 pinnen)
+DEFINE_ENTRY_SIGNAL(110, SIG_110_J4, SIG_110_J3)
+DEFINE_ENTRY_SIGNAL(111, SIG_111_J4, SIG_111_J3)
+DEFINE_ENTRY_SIGNAL(112, SIG_112_J4, SIG_112_J3)
+
+// Uitrijsein (4 pinnen)
+DEFINE_EXIT_SIGNAL(120, SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1)
 
 
 /* ====================================================================
@@ -160,5 +153,5 @@ SEQUENCE(45)
   SYNC_SENSOR_EXPLICIT(BD_S_4,   BD_S_4_BEZET)
   SYNC_SENSOR_EXPLICIT(BD_S_5,   BD_S_5_BEZET)
   SYNC_SENSOR_EXPLICIT(BD_S_RIJ, BD_S_RIJ_BEZET)
-
 RETURN
+

@@ -264,6 +264,106 @@
 #define DIAG_ADS1115()        STEALTH( printADS1115Diagnostics(); )
 
 // Herkalibreer alle sensoren handmatig (bijv. als er geen treinen op de baan staan)
-#define RECALIBRATE_ADS1115() STEALTH( recalibrateADS1115(); )
+#define RECALIBRATE_ADS1115() STEALTH( calibrateAnalogSensors(); )
 
+/* ====================================================================
+   CENTRALE MACRO VOOR SEINLOGICA EN ASPECTEN
+   ==================================================================== */
+#define NO_SIGNAL(pin)        DELAY(0)
+#define SIGNAL_2A_RED(pin)    RED(pin)
+#define SIGNAL_2A_GREEN(pin)  GREEN(pin)
+#define SIGNAL_3A_RED(pin)    RED(pin)
+#define SIGNAL_3A_AMBER(pin)  AMBER(pin)
+#define SIGNAL_3A_GREEN(pin)  GREEN(pin)    
+
+/* ====================================================================
+   CENTRALE MACRO MATRIX SEIN VIA IO EXTENDER
+   ==================================================================== */
+
+// --------------------------------------------------------------------
+// 1. BLOCK SIGNAL (3 draden/pinnen: J4, J3, J1)
+// Matrix:
+// - Rood (color0)  : J4=HIGH, J3=HIGH, J1=LOW
+// - Groen (color1) : J4=LOW,  J3=LOW,  J1=HIGH
+// - Geel (color2)  : J4=LOW,  J3=HIGH, J1=HIGH
+// --------------------------------------------------------------------
+#define DEFINE_BLOCK_SIGNAL(SIG_ID, PIN_J4, PIN_J3, PIN_J1) \
+  VIRTUAL_SIGNAL(SIG_ID) \
+    ONRED(SIG_ID) \
+      SET(PIN_J4) \
+      SET(PIN_J3) \
+      RESET(PIN_J1) \
+    DONE \
+    ONGREEN(SIG_ID) \
+      RESET(PIN_J4) \
+      RESET(PIN_J3) \
+      SET(PIN_J1) \
+    DONE \
+    ONAMBER(SIG_ID) \
+      RESET(PIN_J4) \
+      SET(PIN_J3) \
+      SET(PIN_J1) \
+    DONE
+
+// --------------------------------------------------------------------
+// 2. ENTRY SIGNAL (Inrijsein - 2 draden/pinnen: J4, J3)
+// Matrix:
+// - Rood (color0)  : J4=HIGH, J3=LOW
+// - Groen (color1) : J4=LOW,  J3=HIGH
+// --------------------------------------------------------------------
+#define DEFINE_ENTRY_SIGNAL(SIG_ID, PIN_J4, PIN_J3) \
+  VIRTUAL_SIGNAL(SIG_ID) \
+    ONRED(SIG_ID) \
+      SET(PIN_J4) \
+      RESET(PIN_J3) \
+    DONE \
+    ONGREEN(SIG_ID) \
+      RESET(PIN_J4) \
+      SET(PIN_J3) \
+    DONE
+
+// --------------------------------------------------------------------
+// 3. EXIT SIGNAL (Uitrijsein - 4 draden/pinnen: J4, J3, J2, J1)
+// Matrix:
+// - Dubbel Rood (color0)  : J4=HIGH, J3=LOW,  J2=LOW,  J1=HIGH
+// - Groen (color1)        : J4=LOW,  J3=LOW,  J2=HIGH, J1=LOW
+// - Geel + Groen (color2) : J4=LOW,  J3=HIGH, J2=HIGH, J1=LOW
+// - Rood + Wit (color3)   : J4=HIGH, J3=HIGH, J2=LOW,  J1=HIGH
+// --------------------------------------------------------------------
+#define DEFINE_EXIT_SIGNAL(SIG_ID, PIN_J4, PIN_J3, PIN_J2, PIN_J1) \
+  VIRTUAL_SIGNAL(SIG_ID) \
+    ONRED(SIG_ID) /* Color 0: Dubbel Rood */ \
+      SET(PIN_J4) \
+      RESET(PIN_J3) \
+      RESET(PIN_J2) \
+      SET(PIN_J1) \
+    DONE \
+    ONGREEN(SIG_ID) /* Color 1: Groen */ \
+      RESET(PIN_J4) \
+      RESET(PIN_J3) \
+      SET(PIN_J2) \
+      RESET(PIN_J1) \
+    DONE \
+    ONAMBER(SIG_ID) /* Color 2: Geel + Groen */ \
+      RESET(PIN_J4) \
+      SET(PIN_J3) \
+      SET(PIN_J2) \
+      RESET(PIN_J1) \
+    DONE 
+
+ /* ====================================================================
+   CUSTOM SEINBEELD MACRO'S VOOR AFWIJKENDE ASPECTEN (WIT / RANGEREN)
+   ==================================================================== */
+
+// Zet een ExitSignal expliciet op Rood + Wit (Color 3)
+#define SET_EXIT_SIGNAL_WHITE(PIN_J4, PIN_J3, PIN_J2, PIN_J1) \
+  SET(PIN_J4) \
+  SET(PIN_J3) \
+  RESET(PIN_J2) \
+  SET(PIN_J1)
+
+// Of gekoppeld aan het Sein ID via een custom macro:
+#define SET_SIG_170_WHITE() SET_EXIT_SIGNAL_WHITE(SIG_170_J4, SIG_170_J3, SIG_170_J2, SIG_170_J1)   
+
+/* ==================================================================== */
 #endif // MY_MACROS_H

@@ -116,9 +116,9 @@ STEALTH_GLOBAL(
   // Configuratie per sensor: 
   // { Analog VPIN, Digital VPIN, Threshold, Hysteresis, OnDelay(ms), OffDelay(ms), BaseLine, InitialState, RiseTime, DropTime }
   static AnalogBlockSensor analogSensors[] = {
-    {380, BD_HBU,           300, 150, 300, 2000, 0, false, 0, 0}, // 150ms inschakelfilter, 1.5s afvalvertraging
-    {381, BD_HBI,           300, 150, 300, 2000, 0, false, 0, 0}, // 200ms inschakelfilter (gevoelige lijn)
-    {382, BD_DORP_STATION,  300, 150, 300, 2000, 0, false, 0, 0}
+    {500, BD_HBU,           300, 150, 300, 2000, 0, false, 0, 0}, // 150ms inschakelfilter, 1.5s afvalvertraging
+    {501, BD_HBI,           300, 150, 300, 2000, 0, false, 0, 0}, // 200ms inschakelfilter (gevoelige lijn)
+    {502, BD_DORP_STATION,  300, 150, 300, 2000, 0, false, 0, 0}
   };
 
   const byte NUM_ANALOG_SENSORS = sizeof(analogSensors) / sizeof(analogSensors[0]);
@@ -142,9 +142,10 @@ STEALTH_GLOBAL(
       analogSensors[i].riseTimeMs = 0;
       analogSensors[i].dropTimeMs = 0;
       
-      DIAG(F("Sensor VPIN %d -> Baseline: %d | On-Delay: %d ms | Off-Delay: %d ms"), 
+      DIAG(F("Sensor VPIN %d -> Baseline: %d | Aanslag op: >= %d | On-Delay: %d ms | Off-Delay: %d ms"), 
            analogSensors[i].analogVpin, 
            analogSensors[i].baseLine,
+           analogSensors[i].baseLine + analogSensors[i].threshold,
            (int)analogSensors[i].onDelayMs,
            (int)analogSensors[i].offDelayMs);
     }
@@ -160,8 +161,8 @@ STEALTH_GLOBAL(
       uint16_t triggerLevel = analogSensors[i].baseLine + analogSensors[i].threshold;
       uint16_t releaseLevel = triggerLevel - analogSensors[i].hysteresis;
 
-      // SITUATIE 1: Signaal meet BOVEN de inschakeldrempel
-      if (currentVal >= triggerLevel) {
+      // SITUATIE 1: Signaal meet BOVEN de inschakeldrempel maar kleiner dan foutwaarde
+      if (currentVal >= triggerLevel && currentVal < 65000) {
         analogSensors[i].dropTimeMs = 0; // Reset afvaltimer
 
         if (!analogSensors[i].isOccupied) {

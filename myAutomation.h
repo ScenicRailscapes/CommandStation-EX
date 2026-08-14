@@ -41,6 +41,7 @@ AUTOSTART SEQUENCE(1)
   RESET(300, 16) // Reset I2C I/O #1 expander
   RESET(320, 16) // Reset I2C I/O #2 expander
   RESET(340, 16) // Reset I2C I/O #3 expander
+  RESET(360, 16) // Reset I2C I/O #3 expander
 
   SET(455)  // Lichtenstein dorp leds aan
   SET(454)  // locoshed verlichting aan
@@ -48,12 +49,14 @@ AUTOSTART SEQUENCE(1)
   SET_TRACK(A,MAIN)
   SET_TRACK(B,MAIN)
   POWERON
-  HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)  // Init de TM1683 LED/Key matrix hier ivm blokkeren init.
+  //HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)  // Init de TM1683 LED/Key matrix hier ivm blokkeren init.
   DELAY(2000)
-  GREEN(101)  // Sein BD_D_2 op groen zetten
-  GREEN(102)  // Sein BD_D_3 op groen zetten
-  GREEN(105)  // Sein BD_D_4 op groen zetten
-  GREEN(108)  // Sein BD_D_5 op groen zetten
+  // Seinen
+  GREEN(100)
+  GREEN(101)
+  GREEN(102)
+  GREEN(110)
+  GREEN(120)
 
   // 1. Kalibreer de ADS1115 nul-waarden direct bij opstart
   DELAY(3000)
@@ -118,3 +121,9 @@ SEQUENCE(46)
   CALL(45)  // Sync bezetmelders met flag status
   DELAYMINS(2)
 FOLLOW(46)
+
+// Handmatige herkalibratie route
+ROUTE(990,"ReCalibrate Blockdetectors")
+  PRINT("Starten van handmatige herkalibratie...")
+  RECALIBRATE_ADS1115()
+DONE

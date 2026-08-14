@@ -32,19 +32,15 @@ ROSTER(19,"BR 78","Lights/Sound/*Whistle/Smoke/Coupler/Lights Off F/Lights Off R
 
 // Aangesloten op I2C I/O #1 expander 300-315
 // IR Sensors (infrarood) voor blok detectie
-ALIAS (IR_H_1, 300)                 // IR Sensor Helix dal niveau
-ALIAS (IR_H_2, 301)                 // IR Sensor Helix midden niveau
-ALIAS (IR_H_3, 302)                 // IR Sensor Helix berg niveau
+// vPIN 300 - 303 voor Exit Signal Yard
 ALIAS (IR_D_1_1, 308)               // IR Sensor Dorp branchlijn west (berg)
 ALIAS (IR_D_1_2, 309)               // IR Sensor Dorp branchlijn station
 ALIAS (IR_D_1_3, 310)               // IR Sensor hoofdspoor dorp - haven
 ALIAS (IR_D_2_1, 312)               // IR Sensor Hoofdspoor #1 Berg
 ALIAS (IR_D_3_1, 311)               // IR Sensor Hoofdspoor #2 Berg
-// Block detectors (negatief voor block occupied)
-//ALIAS(BD_HBU_1, -304)               // Block #1 Helix buitenring op vPin 304 (pin 4 I2C I/O #1)
-//ALIAS(BD_HBI_1, -305)               // Block #2 Helix binnenring op vPin 305 (pin 5 I2C I/O #1)
-//ALIAS(BD_D_1, -306)                 // Block #3 Branchlijn / dorpspoor 
-
+ALIAS (IR_H_1, 313)                 // IR Sensor Helix dal niveau
+ALIAS (IR_H_2, 314)                 // IR Sensor Helix midden niveau
+ALIAS (IR_H_3, 315)                 // IR Sensor Helix berg niveau
 // Aangesloten op I2C I/O #2 expander 320-335
 // IR Sensors (infrarood) voor blok detectie
 ALIAS (IR_S_1, 330)                 // IR Stop sensor parkeerspoor #1
@@ -79,6 +75,54 @@ ALIAS (IR_D_2_2, 351)               // IR Sensor Hoofdspoor #1 Dorp
 ALIAS (IR_D_1_4, 352)               // IR Sensor Haven - dorp hoofdspoor
 // Block detectors (negatief voor block occupied)
 
+/* ====================================================================
+   SEIN CONFIGURATIE (EXRAIL)
+   ==================================================================== */
+
+// --------------------------------------------------------------------
+// ALIAS DEFINITIES VOOR I2C GPIO EXPANDER VPINs 
+// --------------------------------------------------------------------
+
+// Aangesloten op I2C I/O #4 expander 360-375
+// BlockSignal 100 (Pool 100)
+ALIAS(SIG_100_J4, 360)
+ALIAS(SIG_100_J3, 361)
+ALIAS(SIG_100_J1, 362)
+
+// BlockSignal 101 (Pool 101)
+ALIAS(SIG_101_J4, 363)
+ALIAS(SIG_101_J3, 364)
+ALIAS(SIG_101_J1, 365)
+
+// EntrySignal 110
+ALIAS(SIG_110_J4, 366)
+ALIAS(SIG_110_J3, 367)
+
+// EntrySignal 111
+ALIAS(SIG_111_J4, 372)
+ALIAS(SIG_111_J3, 373)
+
+// EntrySignal 112
+ALIAS(SIG_112_J4, 374)
+ALIAS(SIG_112_J3, 375)
+
+// ExitSignal 120 
+ALIAS(SIG_120_J4, 368)
+ALIAS(SIG_120_J3, 369)
+ALIAS(SIG_120_J2, 370)
+ALIAS(SIG_120_J1, 371)
+
+// Aangesloten op I2C I/O #5 expander 380-395
+
+// BlockSignal 102 (Pool 102)
+// ALIAS(SIG_102_J4, 368)
+// ALIAS(SIG_102_J3, 369)
+// ALIAS(SIG_102_J1, 370)
+
+// BlockSignal 103 (Pool 103)
+// ALIAS(SIG_103_J4, 368)
+// ALIAS(SIG_103_J3, 369)
+// ALIAS(SIG_103_J1, 370)
 
 // Bitmaps (Latches )voor bezet / vrij 
 HAL(Bitmap,2000,50) // create flags 2000..2029 // Block bezet flags/latches

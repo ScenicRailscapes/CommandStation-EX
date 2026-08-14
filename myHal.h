@@ -77,10 +77,11 @@ HAL(PCA9685,440, 16, 0x42)
 //   Number of VPINs=16 (numbered 200-215)
 //   I2C address of module=0x23
 
-HAL(PCF8575,300, 16, 0x20)
-HAL(PCF8575,320, 16, 0x21)
-HAL(PCF8575,340, 16, 0x22)
-//HAL(PCF8575,360, 16, 0x23}) toekomstig
+HAL(PCF8575,300, 16, 0x20) // #1
+HAL(PCF8575,320, 16, 0x21) // #2
+HAL(PCF8575,340, 16, 0x22) // #3
+HAL(PCF8575,360, 16, 0x26) // #4
+//HAL(PCF8575,380, 16, 0x23) // #5
 
 //=======================================================================
 // Play mp3 player DFPlayer Mini
@@ -111,7 +112,10 @@ HAL(DFPlayer,10002, 1, 0x4C)
   ADDR + ASCL: 0x4B
 */
 
-HAL(ADS111x,380, 4, 0x48)  // four-input ADS1115 on pins 300..303
+HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
+//HAL(ADS111x,505, 4, 0x49)  // #2 four-input ADS1115 on pins 505..508
+//HAL(ADS111x,510, 4, 0x4A)  // #3 four-input ADS1115 on pins 510..513
+//HAL(ADS111x,515, 4, 0x4B)  // #4 four-input ADS1115 on pins 515..518
 
 /* =======================================================================
   The following directive defines an ADS1115 4-port I2C Analog module.
@@ -129,4 +133,4 @@ HAL(ADS111x,380, 4, 0x48)  // four-input ADS1115 on pins 300..303
       NEOPIXEL(11020 ,63, 30, 1, 10) zet 10 pixels op goed zichtbaar oranje
 */  
     // Let op de vPin nummer en de aantallen pixels dat deze niet een andere vPin overschrijven. 160 pixels per meter 
-   HAL(NeoPixel,11000,160,NEO_GRB,0x60)
+HAL(NeoPixel,11000,160,NEO_GRB,0x60)
