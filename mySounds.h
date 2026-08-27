@@ -24,24 +24,33 @@
 #define FX_CHURCHBELLS_2  1
 #define FX_CHURCHBELLS_3  3
 
-  // Effects voor soundlocs 
 #define SOUND_EFFECT(effect_id, duration_ms, volume, dfplayervpin) \
-    STEALTH( playSoundEffect(loco, effect_id, duration_ms, volume, dfplayervpin); )
+    STEALTH( playSoundEffect(loco, effect_id, volume, dfplayervpin, true); ) \
+    DELAY(duration_ms) \
+    STEALTH( playSoundEffect(loco, effect_id, volume, dfplayervpin, false); )
+
 
 //      Effectnaam (EXRAIL Commando)          Effect ID   FON-FOFF delay DFPlayer volume, DFPlayervPIN   
-#define SOUND_BELL                  SOUND_EFFECT(FX_BELL,      3000,     20, 10000)
-#define SOUND_HORN                  SOUND_EFFECT(FX_WHISTLE_1, 2000,     25, 10000)
-#define SOUND_BRAKE                 SOUND_EFFECT(FX_BRAKE,     0,        20, 10000)
-#define SOUND_BLOWOUT               SOUND_EFFECT(FX_BLOWOUT,   1500,     20, 10000)
+#define SOUND_BELL                  SOUND_EFFECT(FX_BELL,           5000, 20, 10000)
+#define SOUND_HORN                  SOUND_EFFECT(FX_WHISTLE_1,      2000, 25, 10000)
+#define SOUND_BRAKE                 SOUND_EFFECT(FX_BRAKE,          5000, 20, 10000)
+#define SOUND_BLOWOUT               SOUND_EFFECT(FX_BLOWOUT,        1500, 20, 10000)
+#define SOUND_HORN_LONG             SOUND_EFFECT(FX_WHISTLE_2,      5000, 25, 10000)
+#define SOUND_CONDUCTOR_WHISTLE_1   SOUND_EFFECT(FX_CON_WHISTLE_1,  2000, 25, 10000)
+#define SOUND_CONDUCTOR_WHISTLE_2   SOUND_EFFECT(FX_CON_WHISTLE_2,  2000, 25, 10000)
 
 // Effects extra voor DFPlayer loc sounds. Bv een 2e whistle die via RANDOM opgeroepen kan worden
-#define SOUND_HORN_LONG             SOUND_EFFECT(FX_WHISTLE_2, 5000,     25, 10000)
-#define SOUND_CONDUCTOR_WHISTLE_1   SOUND_EFFECT(FX_CON_WHISTLE_1, 2000, 25, 10000)
-#define SOUND_CONDUCTOR_WHISTLE_2   SOUND_EFFECT(FX_CON_WHISTLE_2, 0,    25, 10000)
-#define SOUND_OPTREKKEN             SOUND_EFFECT(FX_ACCEL,         0,    25, 10000)
-#define SOUND_RIJDEN                SOUND_EFFECT(FX_CRUISE,        0,    25, 10000)
-#define SOUND_AFREMMEN              SOUND_EFFECT(FX_DECEL,         0,    11, 10000)
-#define SOUND_REMMEN                SOUND_EFFECT(FX_BRAKE,         0,    20, 10000)
+// Voor effecten die continu moeten spelen of geen auto-off nodig hebben
+#define SOUND_START(effect_id, volume, dfplayervpin) \
+    STEALTH( playSoundEffect(loco, effect_id, volume, dfplayervpin, true); )
+
+#define SOUND_STOP(effect_id, dfplayervpin) \
+    STEALTH( playSoundEffect(loco, effect_id, 0, dfplayervpin, false); )
+
+#define SOUND_OPTREKKEN             SOUND_START(FX_ACCEL, 25, 10000)
+#define SOUND_RIJDEN                SOUND_START(FX_CRUISE, 25, 10000)
+#define SOUND_AFREMMEN              SOUND_START(FX_DECEL, 11, 10000)
+#define SOUND_REMMEN                SOUND_START(FX_BRAKE, 20, 10000)
 
 // Effects voor dorpen en andere geluiden   Player#, folder, effect, volume
 #define SOUND_KERKKLOKKEN_DISTANT   PLAYSND(1, 1, FX_CHURCHBELLS_1, 18)

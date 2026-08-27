@@ -57,6 +57,7 @@ HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
 HAL(PCA9685,400, 16, 0x40)
 HAL(PCA9685,420, 16, 0x41)
 HAL(PCA9685,440, 16, 0x42)
+HAL(PCA9685,360, 16, 0x45) // #1 Seinen set 1
 
 //=======================================================================
 // The following directive defines an PCF8574 8-port I2C GPIO Extender module.
@@ -77,11 +78,12 @@ HAL(PCA9685,440, 16, 0x42)
 //   Number of VPINs=16 (numbered 200-215)
 //   I2C address of module=0x23
 
-HAL(PCF8575,300, 16, 0x20) // #1
+HAL(PCF8575,300, 16, 0x26) // #1
 HAL(PCF8575,320, 16, 0x21) // #2
 HAL(PCF8575,340, 16, 0x22) // #3
-HAL(PCF8575,360, 16, 0x26) // #4
-//HAL(PCF8575,380, 16, 0x23) // #5
+//HAL(PCF8575,360, 16, 0x23) // #4 MIMIC PANEL
+
+
 
 //=======================================================================
 // Play mp3 player DFPlayer Mini
@@ -134,3 +136,25 @@ HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
 */  
     // Let op de vPin nummer en de aantallen pixels dat deze niet een andere vPin overschrijven. 160 pixels per meter 
 HAL(NeoPixel,11000,160,NEO_GRB,0x60)
+
+/* =======================================================================
+  The following directive defines an IO_EXIOExpander.h device driver
+  =======================================================================
+
+      De EX-IOExpander is een STM32 F411RE BlackPill device met 28 I/O ports
+      Communicatie over I/2, het address is te configureren in de 
+      EX-IOXpander code (standaard 0X65)
+      Vervolgens worden de vPins aangemaakt in de volgorde van de 
+      pinnen in de definitie file (arduino_nucleo_411re.h)
+
+      let op, laatste 2 vpins niet gebruiken is Oscilator en een 
+      3mAh interne led. Deze is wel vanuit DCC-Ex aan te sturen
+      voor een visuele check dat er communicatie was (z -laatste vpin)
+      bv <z -387>
+
+      De EX-IOExpander kan aangesloten worden via de USB
+      CLI commando's: <Z> Reboot, <V>Display vPin table
+      <D> Enable/Disable diagnostics
+
+*/
+//HAL(EXIOExpander,5000,28,0x65)

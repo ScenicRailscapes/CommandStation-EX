@@ -213,6 +213,9 @@
     SET(RELAIS_DCC_REVERSE) \
     RESET(600)
 
+    // hier kan misschien de SEIN aansturing tussen, dus bij de loops een RED(101) ??, maar hoe krijgen we groen?
+
+
 // // moet nog iets maken wat het actieve loco address oppikt.. Kan met een STEALTH en locoAddr
 #define LOCO_HANDOVER(loconum, sequencenum) \
   SENDLOCO(loconum,sequencenum)             \
@@ -251,10 +254,13 @@
    ==================================================================== */
 
 // Macro om kalibratie uit te voeren
-#define CALIBRATE_ADS1115() STEALTH( calibrateAnalogSensors(); )
+#define CALIBRATE_ADS1115() \
+  PRINT("Starten van handmatige herkalibratie...") \
+  STEALTH( calibrateAnalogSensors(); )
 
 // Macro om alle sensoren 1 keer uit te lezen
-#define PROCESS_ADS1115()   STEALTH( processAnalogSensors(); )
+#define PROCESS_ADS1115() \
+STEALTH( processAnalogSensors(); )
 
 /* ====================================================================
    EXRAIL ANALOGE BLOKDETECTIE DIAGNOSE MACRO'S
@@ -262,9 +268,6 @@
 
 // Print eenmalig de status van alle analoge poorten naar de Seriële Monitor
 #define DIAG_ADS1115()        STEALTH( printADS1115Diagnostics(); )
-
-// Herkalibreer alle sensoren handmatig (bijv. als er geen treinen op de baan staan)
-#define RECALIBRATE_ADS1115() STEALTH( calibrateAnalogSensors(); )
 
 /* ====================================================================
    CENTRALE MACRO VOOR SEINLOGICA EN ASPECTEN
@@ -277,7 +280,7 @@
 #define SIGNAL_3A_GREEN(pin)  GREEN(pin)    
 
 /* ====================================================================
-   CENTRALE MACRO MATRIX SEIN VIA IO EXTENDER
+   CENTRALE MACRO MATRIX SEIN VIA I2C PCA9586 PWM controller
    ==================================================================== */
 
 // --------------------------------------------------------------------
@@ -355,15 +358,17 @@
    CUSTOM SEINBEELD MACRO'S VOOR AFWIJKENDE ASPECTEN (WIT / RANGEREN)
    ==================================================================== */
 
-// Zet een ExitSignal expliciet op Rood + Wit (Color 3)
+// Zet een ExitSignal expliciet op Rood + Wit (Color 3) (zit foutje in, zou normaal ook SET(J1) moetem zijn)
 #define SET_EXIT_SIGNAL_WHITE(PIN_J4, PIN_J3, PIN_J2, PIN_J1) \
   SET(PIN_J4) \
   SET(PIN_J3) \
   RESET(PIN_J2) \
-  SET(PIN_J1)
+  RESET(PIN_J1)
+  // dubbel rood: SET J2, RES J3, RES J2, SET J1
+
 
 // Of gekoppeld aan het Sein ID via een custom macro:
-#define SET_SIG_170_WHITE() SET_EXIT_SIGNAL_WHITE(SIG_170_J4, SIG_170_J3, SIG_170_J2, SIG_170_J1)   
+#define SET_SIG_120_WHITE() SET_EXIT_SIGNAL_WHITE(SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1)   
 
 /* ==================================================================== */
 #endif // MY_MACROS_H

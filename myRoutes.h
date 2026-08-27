@@ -1,3 +1,9 @@
+// ToDo: Seinen op juiste plekken
+// Slimme sein acties, bij IFRED stoppen maar bij IFAMBER snelheid met 50% verlagen en doorrijden
+// en IFGREEN NA IFAMBER restore snelheid
+// Bij buiten ring, en bij CCW rijden, als dan de 2e sensor geraakt is dan kan sein 110 op groen, als buiten ring vrij is, dan 11? (dal sein) ook op groen. 
+// die blijft op amber staan
+
 /* ====================================================================
                      AUTOMATISCHE RIJDEN ROUTES
    ==================================================================== */
@@ -27,7 +33,7 @@ AUTOMATION(1650, "AutoRoute: Start dal CCW")
     SOUND_BELL                 // Vertrek
     DELAY(3000)
     SOUND_OPTREKKEN            // Optrekken
-    DELAY(3000)
+    DELAY(6000)
     SET_LOCO_SPEED(10)         // Zet de gecorrigeerde start-snelheid
     DELAY(3500)
     SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
@@ -102,11 +108,11 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
   AT(BD_HBU_1_BEZET)
     PRINT("AutoRit: Rijden in helix")    
   // 3a. Helix Berg sensor
-  AT (IR_H_3_BEZET)
-    PRINT("AutoRit: Helix buitenring")
+  AT (IR_HBU_B_BEZET)
+    PRINT("AutoRit: Helix buitenring berg")
 
   // 3b. Helix Midden sensor 
-  AT(IR_H_2_BEZET)
+  AT(IR_HBU_M_BEZET)
     PRINT("AutoRit: Helix verlaten dorp")
     DELAYRANDOM(2000, 5000)    // Even wachten voor Whistle/Horn
     SOUND_HORN_LONG // Whistle / horn voor verlaten
@@ -129,7 +135,9 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
     PRINT("AutoRit: Wissel S06 omgezet naar Helix buitenring")
   
   // 6. Keuzes maken: Nog een rondje, of hoofdspoor #2 of via keerlus 
-    RANDOM_FOLLOW(ROUTE_2,ROUTE_1, ROUTE_1, ROUTE_4)
+  // Afhankelijk maken van soort trein. Diesel vaker via route 2
+  PRINT("AutoRit: Keuzes Route 2, 1 of 4")
+  RANDOM_FOLLOW(ROUTE_2,ROUTE_1, ROUTE_1, ROUTE_4)
 
   // Als we hier komen is de automatisering rit klaar
   SPEED(0)  // remmen
@@ -168,9 +176,7 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
   SAVE_SPEED
   SLOWDOWN(5)
 
-  AT(BD_HBI_1_BEZET)
-  PRINT("AutoRit: Rijden in helix") 
-  // 2a. Helix Berg sensor 
+  // 2. Berg sensor 
   AT(IR_D_3_1_BEZET)
     PRINT("AutoRit: IR_D_3_1 berg geraakt")
     RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
@@ -181,21 +187,27 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
     ELSE
       SOUND_HORN_LONG
     ENDIF
+  
+  // 3a. Helix
+  AT(BD_HBI_1_BEZET)
+    PRINT("AutoRit: Rijden in helix") 
+  AT (IR_HBI_B_BEZET)
+    PRINT("AutoRit: Helix binnenring berg")
 
-  AT (IR_H_3_BEZET)
-    PRINT("AutoRit: Helix binnenring")
   // 3b. Helix Midden sensor 
-  AT(IR_H_2_BEZET)
+  AT(IR_HBI_M_BEZET)
     PRINT("AutoRit: Helix midden")
     SOUND_HORN_LONG // Whistle / horn voor in de berg
+
   // 3c. Helix Dal sensor 
-  AT(IR_H_1_BEZET)
-    PRINT("AutoRit: Helix verlaten")
+  AT(IR_HBI_D_BEZET)
+    PRINT("AutoRit: Helix verlaten dal")
     DELAYRANDOM(3000, 6000)    // Even wachten voor Whistle/Horn
     SOUND_HORN // Whistle / horn voor verlaten
 
-    // 4. Keuzes maken: Nog een rondje of hoofdspoor #1    
-    RANDOM_FOLLOW(ROUTE_1,ROUTE_2)
+ // 4. Keuzes maken: Nog een rondje of hoofdspoor #1    
+  PRINT("AutoRit: Keuzes Route 1 of 2")
+  RANDOM_FOLLOW(ROUTE_1,ROUTE_2,ROUTE_1,ROUTE_2)
 
   // Als we hier komen is de automatisering rit klaar
   SPEED(0)  // remmen
@@ -282,7 +294,7 @@ ROUTE(ROUTE_4,"Dorp - haven dorp - Station")
   AT(IR_D_1_1_BEZET)
     PRINT("AutoRit: verlaten dorp, helix in")
   // 3. Helix berg nadert
-  AT(IR_H_3_BEZET)
+  AT(IR_HBI_B_BEZET)
       PRINT("AutoRit: verlaten helix, parade hoofdspoor #1")
   AT(IR_D_2_1_BEZET)
       SAVE_SPEED
@@ -372,5 +384,4 @@ ROUTE(ROUTE_5,"Keer om via keerlus dorp")
       SOUND_HORN
       FOLLOW(ROUTE_1) // we gaan verder met route_1
 DONE
-
 

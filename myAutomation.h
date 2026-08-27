@@ -56,6 +56,8 @@ AUTOSTART SEQUENCE(1)
   GREEN(101)
   GREEN(102)
   GREEN(110)
+  GREEN(111)
+  GREEN(112)
   GREEN(120)
 
   // 1. Kalibreer de ADS1115 nul-waarden direct bij opstart
@@ -96,7 +98,6 @@ AUTOSTART SEQUENCE(1)
   // Trigger status naar Mimic panel
   DELAY(1000)
   CALL(46)  // Schedule Sync bezetmelders met flag status
-  
 DONE
 
 /*                 * * * * * Automation hier staan algemene routines * * * * * *    */
@@ -119,11 +120,10 @@ DONE
 SEQUENCE(46)
   PRINT("Sync Bezetmelders met flag")
   CALL(45)  // Sync bezetmelders met flag status
-  DELAYMINS(2)
+  DELAYMINS(1)
 FOLLOW(46)
 
 // Handmatige herkalibratie route
 ROUTE(990,"ReCalibrate Blockdetectors")
-  PRINT("Starten van handmatige herkalibratie...")
-  RECALIBRATE_ADS1115()
+  CALIBRATE_ADS1115() // later hernoemen naar RECALIBRATE_BLOCKSENSORS
 DONE

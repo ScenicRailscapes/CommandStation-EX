@@ -18,10 +18,10 @@
    -------------------------------------------------------------------- */
 
 // Blokseinen (3 pinnen)
-DEFINE_BLOCK_SIGNAL(100, SIG_100_J4, SIG_100_J3, SIG_100_J1)
-DEFINE_BLOCK_SIGNAL(101, SIG_101_J4, SIG_101_J3, SIG_101_J1)
-//DEFINE_BLOCK_SIGNAL(102, SIG_102_J4, SIG_102_J3, SIG_102_J1)
-//DEFINE_BLOCK_SIGNAL(103, SIG_103_J4, SIG_103_J3, SIG_103_J1)
+DEFINE_BLOCK_SIGNAL(100, SIG_100_J4, SIG_100_J3, SIG_100_J1)   //  BD_D_5
+DEFINE_BLOCK_SIGNAL(101, SIG_101_J4, SIG_101_J3, SIG_101_J1)   //  BD_D_1 
+//DEFINE_BLOCK_SIGNAL(102, SIG_102_J4, SIG_102_J3, SIG_102_J1)   //
+//DEFINE_BLOCK_SIGNAL(103, SIG_103_J4, SIG_103_J3, SIG_103_J1)   // 
 
 // Inrijsein (2 pinnen)
 DEFINE_ENTRY_SIGNAL(110, SIG_110_J4, SIG_110_J3)
@@ -36,6 +36,9 @@ DEFINE_EXIT_SIGNAL(120, SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1)
    DE ACTUAL BLOKKEN MET HUN SPECIFIEKE SEINEN
    ==================================================================== */
 /* FORMAT: SETUP_IR_BLOCK_WITH_AMBER(BLOCKDETECT SENSOR ALIAS, IR1 BEZET DETECTOR, IR2 BEZET DETECTOR, FLAG_BEZET, FLAG_CW, FLAG_CCW, DEBOUNCE, BACKUP_TIMEOUT, AMBER_TIMEOUT, ROOD_ACTIE, AMBER_ACTIE, GROEN_ACTIE)
+   ROOD, AMBER en GROEN_ACTIE zijn de (Virtual)Signals die gedefinieerd zijn in myMacros.h. Bv #define SIGNAL_3A_RED(100)    RED(100)  wordt vertaald naar de virtual signal (100) die de juiste pinnen op de 
+   I2C GPIO aanstuurd.
+
    LET OP: We zetten de volgorde van sensoren alsof de trein in CW richting ze tegenkomt in de prompt.
    Doordat Amber geen specifieke IR detector heeft, wordt de AMBER actie getriggerd door een timer na het passeren van de IR sensor.
 */
@@ -44,21 +47,23 @@ DEFINE_EXIT_SIGNAL(120, SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1)
 /* Blok 1 (Keerlus): 
    Als de trein via West (IR_D_1_1) binnenkomt (CW), activeert hij LOOP_ENTRY_WEST.
    Als de trein via Oost (IR_D_1_2) binnenkomt (CCW), activeert hij LOOP_ENTRY_EAST. */
-SETUP_IR_BLOCK_WITH_AMBER(1, BD_DORP_STATION, IR_D_1_2_BEZET, IR_D_1_1_BEZET, BD_D_1_BEZET, BD_D_1_CW, BD_D_1_CCW, 2000, 500, 7000, LOOP_ENTRY_WEST, NO_SIGNAL(0), LOOP_ENTRY_EAST)
+SETUP_IR_BLOCK_WITH_AMBER(1, BD_DORP_STATION, IR_D_1_2_BEZET, IR_D_1_1_BEZET, BD_D_1_BEZET, BD_D_1_CW, BD_D_1_CCW, 2000, 500, 7000, LOOP_ENTRY_WEST, SIGNAL_3A_AMBER(101), LOOP_ENTRY_EAST)
 // Blok BD2: Hoofdspoor #1 Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
 SETUP_IR_BLOCK_WITH_AMBER(2, BD_D_2, IR_D_2_2_BEZET, IR_D_2_1_BEZET, BD_D_2_BEZET, BD_D_2_CW, BD_D_2_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
 // Blok BD3: Hoofdspoor #2 Simpel 2-aspect sein Lang block (3-aspect sein op 108). Na het passeren van de IR-sluis duurt het 5000ms (5 seconden) voor het sein op Geel springt.
 SETUP_IR_BLOCK_WITH_AMBER(3, BD_D_3, IR_D_3_2_BEZET, IR_D_3_1_BEZET, BD_D_3_BEZET, BD_D_3_CW, BD_D_3_CCW, 2000, 500, 5000, SIGNAL_3A_RED(101), SIGNAL_3A_AMBER(101), SIGNAL_3A_GREEN(101))
 // Blok BD4: Connectie dorp Simpel 2-aspect sein (Geen Amber aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0)
-SETUP_IR_BLOCK_WITH_AMBER(4, BD_D_4, IR_D_4_2_BEZET, IR_D_4_1_BEZET, BD_D_4_BEZET, BD_D_4_CW, BD_D_4_CCW, 2000, 500, 0, SIGNAL_3A_RED(105), NO_SIGNAL(0), SIGNAL_3A_GREEN(105))
+SETUP_IR_BLOCK_WITH_AMBER(4, BD_D_4, IR_D_4_2_BEZET, IR_D_4_1_BEZET, BD_D_4_BEZET, BD_D_4_CW, BD_D_4_CCW, 2000, 500, 0, SIGNAL_3A_RED(111), NO_SIGNAL(0), SIGNAL_3A_GREEN(111))
 // Blok BD5: Branchlijn yard - dorp Lang block (3-aspect sein op 108). Na het passeren van de IR-sluis duurt het 5000ms (5 seconden) voor het sein op Geel springt.
-SETUP_IR_BLOCK_WITH_AMBER(5, BD_D_5, IR_D_1_5_BEZET, IR_D_1_3_BEZET, BD_D_5_BEZET, BD_D_5_CW, BD_D_5_CCW, 2000, 500, 5000, SIGNAL_3A_RED(108), SIGNAL_3A_AMBER(108), SIGNAL_3A_GREEN(108))
+SETUP_IR_BLOCK_WITH_AMBER(5, BD_D_5, IR_D_1_5_BEZET, IR_D_1_3_BEZET, BD_D_5_BEZET, BD_D_5_CW, BD_D_5_CCW, 2000, 500, 5000, SIGNAL_3A_RED(100), SIGNAL_3A_AMBER(100), SIGNAL_3A_GREEN(100))
 // Blok HBI: Helix binnenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
-//SETUP_IR_BLOCK_WITH_AMBER(6, BD_HBI_1, IR_H_1_BEZET, IR_H_3_BEZET, BD_HBI_1_BEZET, BD_HBI_1_CW, BD_HBI_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
+SETUP_IR_BLOCK_WITH_AMBER(6, BD_HBI, IR_HBI_D_BEZET, IR_HBI_B_BEZET, BD_HBI_1_BEZET, BD_HBI_1_CW, BD_HBI_1_CCW, 2000, 500, 0, SIGNAL_3A_RED(112), NO_SIGNAL(0), SIGNAL_3A_GREEN(112))  
 // Blok HBU: Helix buitenbaan Op dit moment geen signaal aanwezig, dus we gebruiken NO_SIGNAL(0) en zetten de delay op 0
-//SETUP_IR_BLOCK_WITH_AMBER(7, BD_HBU_1, IR_H_2_BEZET, IR_H_3_BEZET, BD_HBU_1_BEZET, BD_HBU_1_CW, BD_HBU_1_CCW, 2000, 500, 0, NO_SIGNAL(0), NO_SIGNAL(0), NO_SIGNAL(0))
+SETUP_IR_BLOCK_WITH_AMBER(7, BD_HBU, IR_HBU_D_BEZET, IR_HBU_B_BEZET, BD_HBU_1_BEZET, BD_HBU_1_CW, BD_HBU_1_CCW, 2000, 500, 5000, SIGNAL_3A_RED(120), SIGNAL_3A_AMBER(120), SIGNAL_3A_GREEN(120))
 
-// Aha even kijken naar BD_D_5, denk dat ik de verkeerde IR sensoren gebruik, D_1_1 zit op branchlijn station, aangepast naar D_1_3 maar waar is IR D 1 4 ?
+// ToDo: als de buitenring bezet is, moet ook het entry signal aan beging van de tunnel op rood komen, nu heb ik ruimte voor 1 signal ub de setup_ir_block
+
+
 /* ====================================================================
    CONFIGURATIE PARKEERSPOREN SCHADUWSTATION
    ==================================================================== */
@@ -72,12 +77,6 @@ SETUP_YARD_BLOCK(3, BD_S_3, IR_S_3_BEZET, BD_S_3_BEZET, 4000, 500)
 SETUP_YARD_BLOCK(4, BD_S_4, IR_S_4_BEZET, BD_S_4_BEZET, 4000, 500)
 SETUP_YARD_BLOCK(5, BD_S_5, IR_S_5_BEZET, BD_S_5_BEZET, 4000, 500)
 SETUP_YARD_BLOCK(6, BD_S_RIJ, IR_S_RIJ_BEZET, BD_S_RIJ_BEZET, 4000, 500)
-// Tijdelijk omdat de IR sensoren van de helix niet optimaal werken
-SETUP_YARD_BLOCK(10, BD_HBU, IR_DUMMY, BD_HBU_1_BEZET, 1000, 500)  // temp, testen van ADS1115 blockdetect
-SETUP_YARD_BLOCK(11, BD_HBI, IR_DUMMY, BD_HBI_1_BEZET, 4000, 500)  // temp, testen van ADS1115 blockdetect 
-
-
-
 
 
 /* ====================================================================
@@ -91,9 +90,12 @@ SETUP_YARD_BLOCK(11, BD_HBI, IR_DUMMY, BD_HBI_1_BEZET, 4000, 500)  // temp, test
 */
 
 // --- Helix Sensoren ---
-SETUP_IR_SENSOR(IR_H_1,   IR_H_1_BEZET,   4000, "Helix dal niveau")
-SETUP_IR_SENSOR(IR_H_2,   IR_H_2_BEZET,   2000, "Helix midden niveau")
-SETUP_IR_SENSOR(IR_H_3,   IR_H_3_BEZET,   4000, "Helix berg niveau")
+SETUP_IR_SENSOR(IR_HBI_D, IR_HBI_D_BEZET, 4000, "Helix dal niveau binnenring")
+SETUP_IR_SENSOR(IR_HBI_M, IR_HBI_M_BEZET, 2000, "Helix midden niveau binnenring")
+SETUP_IR_SENSOR(IR_HBI_B, IR_HBI_B_BEZET, 4000, "Helix berg niveau binnenring")
+SETUP_IR_SENSOR(IR_HBU_D, IR_HBU_D_BEZET, 4000, "Helix dal niveau buitenring")
+SETUP_IR_SENSOR(IR_HBU_M, IR_HBU_M_BEZET, 2000, "Helix midden niveau buitenring")
+SETUP_IR_SENSOR(IR_HBU_B, IR_HBU_B_BEZET, 4000, "Helix berg niveau buitenring")
 
 // --- Schaduwstation (Yard) Stop Sensoren ---
 SETUP_IR_SENSOR(IR_S_1,   IR_S_1_BEZET,   2000, "Parkeerspoor 1 stop")

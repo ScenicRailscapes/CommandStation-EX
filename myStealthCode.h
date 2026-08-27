@@ -116,16 +116,20 @@ STEALTH_GLOBAL(
   // Configuratie per sensor: 
   // { Analog VPIN, Digital VPIN, Threshold, Hysteresis, OnDelay(ms), OffDelay(ms), BaseLine, InitialState, RiseTime, DropTime }
   static AnalogBlockSensor analogSensors[] = {
-    {500, BD_HBU,           300, 150, 300, 2000, 0, false, 0, 0}, // 150ms inschakelfilter, 1.5s afvalvertraging
-    {501, BD_HBI,           300, 150, 300, 2000, 0, false, 0, 0}, // 200ms inschakelfilter (gevoelige lijn)
-    {502, BD_DORP_STATION,  300, 150, 300, 2000, 0, false, 0, 0}
+    {BD_HBU_SENSOR, BD_HBU,                   300, 150, 300, 2000, 0, false, 0, 0}, // schakelt in waarde 300 boven meting, moet 150ms hoog zijn
+    {BD_HBI_SENSOR, BD_HBI,                   300, 150, 300, 2000, 0, false, 0, 0},
+    {BD_DORP_STATION_SENSOR, BD_DORP_STATION, 300, 150, 300, 2000, 0, false, 0, 0}
   };
 
+
+  // Hier kan nog een error check, als de waarde op 0 is, dan is er waarschijnlijk een communicatie problem op de I2C
+  // lijn, dan een melding maken op het LCD1 scherm ofzo, misschien iets met een LED ?
+  
   const byte NUM_ANALOG_SENSORS = sizeof(analogSensors) / sizeof(analogSensors[0]);
 
   // Kalibratie bij start
   void calibrateAnalogSensors() {
-    DIAG(F("ADS1115: Starten met automatische kalibratie..."));
+    DIAG(F("BlockDetectSensors: Kalibratie start"));
     
     const byte SAMPLES = 50;
     uint32_t totals[NUM_ANALOG_SENSORS] = {0};
@@ -149,7 +153,7 @@ STEALTH_GLOBAL(
            (int)analogSensors[i].onDelayMs,
            (int)analogSensors[i].offDelayMs);
     }
-    DIAG(F("ADS1115: Kalibratie voltooid!"));
+    DIAG(F("BlockDetectSensors: Kalibratie voltooid!"));
   }
 
   // Continu verwerkingsproces met dubbele filtering
@@ -204,7 +208,7 @@ STEALTH_GLOBAL(
                       Centrale Sound-Engine
    ==================================================================== */
 STEALTH_GLOBAL(
-  void playSoundEffect(uint16_t locoAddr, int effectId, int durationMs, int volume, int dfPlayerVpin) {
+  void playSoundEffect(uint16_t locoAddr, int effectId, int volume, int dfPlayerVpin, bool start_stop) {
     if (locoAddr == 0) return; // Veiligheidscheck: geen loc actief
 
     // -------------------------------------------------------------
@@ -248,27 +252,23 @@ STEALTH_GLOBAL(
     // 2. UITVOEREN: Fysieke Sound-loc OF DFPlayer
     // -------------------------------------------------------------
     if (soundFunc != -1) {
-      // Het is een Sound-loc: Stuur DCC functie AAN (FON(#))
-      DCC::setFn(locoAddr, soundFunc, true);
-
-      // Als er een tijdsduur is opgegeven, na de delay weer UITzetten (FOFF(#))
-      if (durationMs > 0) {
-        delay(durationMs);
-        DCC::setFn(locoAddr, soundFunc, false);
-      }
+      // Het is een Sound-loc: Stuur DCC functie AAN (FON(#) of UIT)
+      DCC::setFn(locoAddr, soundFunc, start_stop);
     } 
     else {
       // Het is GEEN sound-loc: Gebruik de DFPlayer via IODevice
       // SD-Kaart structuur: Folder = LocAdres (/04, /05, /11 etc.), Track = /001.mp3, /002.mp3
-      int track = effectId;
+      if (start_stop) {
+        int track = effectId;
   
-      // 1. Stel eerst de folder in: Folder = locoAddr
-      IODevice::writeAnalogue(dfPlayerVpin, 0, locoAddr, DFPlayerBase::DF_FOLDER);
+        // 1. Stel eerst de folder in: Folder = locoAddr
+        IODevice::writeAnalogue(dfPlayerVpin, 0, locoAddr, DFPlayerBase::DF_FOLDER);
 
-      // 2. Speel het geluid af: Track = track
-      IODevice::writeAnalogue(dfPlayerVpin, track, volume, DFPlayerBase::DF_PLAY);
-      // even controleren weer wat er zou moeten gebeuren, later verwijderen.
-      //StringFormatter::lcd2(1, 6, F("Play: %3d Fol: %3d"), track, locoAddr); // debug
+        // 2. Speel het geluid af: Track = track
+        IODevice::writeAnalogue(dfPlayerVpin, track, volume, DFPlayerBase::DF_PLAY);
+        // even controleren weer wat er zou moeten gebeuren, later verwijderen.
+        //StringFormatter::lcd2(1, 6, F("Play: %3d Fol: %3d"), track, locoAddr); // debug
+      }
     }
   }
 )
