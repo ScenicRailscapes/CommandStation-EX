@@ -12,8 +12,6 @@
 // waar is het stuk tussen S19 en dorp geplaatst? aan DB_D_1_1??
 
 
-
-
 /* ====================================================================
    MIMIC PANEL NEOPIXEL: PERCENTAGE OMREKENING & HELDERHEID
    ==================================================================== */
@@ -130,12 +128,10 @@ ONSENSOR(BD_HBU_1_BEZET)
     NEOPIXEL(11058, PCT(BRIGHTNESS), 0, 0, 2)
     NEOPIXEL(11138, PCT(BRIGHTNESS), 0, 0, 3)
     NEOPIXEL(11110, PCT(BRIGHTNESS), 0, 0, 1)
-    RED(110)
   ELSE
     NEOPIXEL(11058, 0, PCT(BRIGHTNESS), 0, 2)
     NEOPIXEL(11138, 0, PCT(BRIGHTNESS), 0, 3)
     NEOPIXEL(11110, 0, PCT(BRIGHTNESS), 0, 1)
-    GREEN(110)
   ENDIF
 DONE
 

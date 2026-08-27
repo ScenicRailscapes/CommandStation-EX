@@ -3,7 +3,6 @@
 // en IFGREEN NA IFAMBER restore snelheid
 // Bij buiten ring, en bij CCW rijden, als dan de 2e sensor geraakt is dan kan sein 110 op groen, als buiten ring vrij is, dan 11? (dal sein) ook op groen. 
 // die blijft op amber staan
-
 /* ====================================================================
                      AUTOMATISCHE RIJDEN ROUTES
    ==================================================================== */
@@ -31,21 +30,21 @@ AUTOMATION(1650, "AutoRoute: Start dal CCW")
     FON(1)                     // Interne verlichting aan of sound aan (F1)
     LOCO_SPECIAL_STARTUP       // Zet wat speciale functies aan
     SOUND_BELL                 // Vertrek
-    DELAY(3000)
+    DELAY(1500)
     SOUND_OPTREKKEN            // Optrekken
-    DELAY(6000)
+    DELAY(5000)
     SET_LOCO_SPEED(10)         // Zet de gecorrigeerde start-snelheid
-    DELAY(3500)
+    DELAY(5500)
     SET_LOCO_SPEED(30)         // Zet de gecorrigeerde start-snelheid
     PRINT("AutoRit: Gestart vanaf Rangeerterrein, richting BD_D_4")
 
     // 2. BENADEREN BLOK BD_D_4
     SAVE_SPEED
-    IFRED(105) PRINT("Sein op rood, wacht")
+    IFRED(111) PRINT("Sein op rood, wacht")
     ELSE PRINT("Sein op groen, verder")
     ENDIF
-    WAIT_WHILE_RED(105) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
-    RESTORE_SPEED 
+    WAIT_WHILE_RED(111)
+    RESTORE_SPEED
     PRINT("AutoRit: Blok BD_D_4 binnen rijden")
 
     // Als we CCW binnenkomen, dan keuze maken voor wissel. 
@@ -119,10 +118,10 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
 
   // 4. BINNENKOMST DORP (Blok BD_D_5)
     SAVE_SPEED
-    IFRED(108) PRINT("Sein op rood, wacht")
+    IFRED(100) PRINT("Sein op rood, wacht")
     ELSE PRINT("Sein op groen, verder")
     ENDIF
-    WAIT_WHILE_RED(108) // Wacht tot het sein op groen staat (Blok BD_D_4 is bezet)
+    WAIT_WHILE_RED(100) // Wacht tot het sein op groen staat (Blok BD_D_5 is bezet)
     RESTORE_SPEED       // terug naar de snelheid die we hadden opgeslagen 
 
   // 5. Rijden nu op dorp branchlijn 
@@ -176,7 +175,7 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
   SAVE_SPEED
   SLOWDOWN(5)
 
-  // 2. Berg sensor 
+// 2. Berg sensor 
   AT(IR_D_3_1_BEZET)
     PRINT("AutoRit: IR_D_3_1 berg geraakt")
     RESTORE_SPEED // terug naar de snelheid die we hadden opgeslagen
@@ -187,7 +186,7 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
     ELSE
       SOUND_HORN_LONG
     ENDIF
-  
+
   // 3a. Helix
   AT(BD_HBI_1_BEZET)
     PRINT("AutoRit: Rijden in helix") 

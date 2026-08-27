@@ -8,8 +8,8 @@
 #include "myMacros.h"
 #include "myStealthCode.h"
 #include "myLedsandLights.h"
-#include "myBlocksAndSignals.h"
-//#include "mySignals.h"
+#include "myBlocks.h"
+#include "mySignals.h"
 #include "myReverseLoopAutomation.h"
 #include "mySounds.h"
 #include "myRoutes.h"
@@ -51,14 +51,14 @@ AUTOSTART SEQUENCE(1)
   POWERON
   //HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)  // Init de TM1683 LED/Key matrix hier ivm blokkeren init.
   DELAY(2000)
-  // Seinen
-  GREEN(100)
-  GREEN(101)
-  GREEN(102)
-  GREEN(110)
-  GREEN(111)
-  GREEN(112)
-  GREEN(120)
+  // Seinen nog nodig na een syn sensor ?
+  // GREEN(100)
+  // GREEN(101)
+  // GREEN(102)
+  // GREEN(110)
+  // GREEN(111)
+  // GREEN(112)
+  // GREEN(120)
 
   // 1. Kalibreer de ADS1115 nul-waarden direct bij opstart
   DELAY(3000)

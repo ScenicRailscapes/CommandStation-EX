@@ -13,106 +13,91 @@
   dan aanroepen met; SET_SHUNting_SIGNAL(SIG_152_J4, SIG_152_J3, SIG_152_J2, SIG_152_J1)
 */
 
-/* ====================================================================
-   MATRIX MACRO'S VOOR SEINEN OP GPIO EXPANDER
-   ==================================================================== */
+/* Alle gebruikte macros zijn gedefinieerd in myMacros.h */
+#include "myMacros.h"
 
-// 1. Block Signal (3 aspecten: Rood, Groen, Geel+Groen / 3 pinnen)
-#define SETUP_MATRIX_BLOCK_SIGNAL(SIG_ID, PIN_A, PIN_B, PIN_C) \
-    VIRTUAL_SIGNAL(SIG_ID)                                     \
-    ONRED(SIG_ID)                                              \
-        SET(PIN_A)                                             \
-        SET(PIN_B)                                             \
-        RESET(PIN_C)                                           \
-    DONE                                                       \
-    ONGREEN(SIG_ID)                                            \
-        RESET(PIN_A)                                           \
-        RESET(PIN_B)                                           \
-        SET(PIN_C)                                             \
-    DONE                                                       \
-    ONAMBER(SIG_ID)                                            \
-        RESET(PIN_A)                                           \
-        SET(PIN_B)                                             \
-        SET(PIN_C)                                             \
-    DONE
+/* --------------------------------------------------------------------
+   SEIN DECLARATIES (Maakt automatisch alle VIRTUAL_SIGNALs aan)
+   -------------------------------------------------------------------- */
 
-// 2. Entry Signal (2 aspecten: Rood, Groen / 2 pinnen)
-#define SETUP_MATRIX_ENTRY_SIGNAL(SIG_ID, PIN_A, PIN_B)        \
-    VIRTUAL_SIGNAL(SIG_ID)                                     \
-    ONRED(SIG_ID)                                              \
-        SET(PIN_A)                                             \
-        RESET(PIN_B)                                           \
-    DONE                                                       \
-    ONGREEN(SIG_ID)                                            \
-        RESET(PIN_A)                                           \
-        SET(PIN_B)                                             \
-    DONE
+// Blokseinen (3 pinnen)
+DEFINE_BLOCK_SIGNAL(100, SIG_100_J4, SIG_100_J3, SIG_100_J1)   //  BD_D_5
+DEFINE_BLOCK_SIGNAL(101, SIG_101_J4, SIG_101_J3, SIG_101_J1)   //  BD_D_1 
+//DEFINE_BLOCK_SIGNAL(102, SIG_102_J4, SIG_102_J3, SIG_102_J1)   //
+//DEFINE_BLOCK_SIGNAL(103, SIG_103_J4, SIG_103_J3, SIG_103_J1)   // 
 
-// 3. Exit Signal (4 aspecten / 4 pinnen)
-#define SETUP_MATRIX_EXIT_SIGNAL(SIG_ID, PIN_A, PIN_B, PIN_C, PIN_D) \
-    VIRTUAL_SIGNAL(SIG_ID)                                     \
-    ONRED(SIG_ID)                                              \
-        SET(PIN_A)                                             \
-        RESET(PIN_B)                                           \
-        RESET(PIN_C)                                           \
-        SET(PIN_D)                                             \
-    DONE                                                       \
-    ONGREEN(SIG_ID)                                            \
-        RESET(PIN_A)                                           \
-        RESET(PIN_B)                                           \
-        SET(PIN_C)                                             \
-        RESET(PIN_D)                                           \
-    DONE                                                       \
-    ONAMBER(SIG_ID)                                            \
-        RESET(PIN_A)                                           \
-        SET(PIN_B)                                             \
-        SET(PIN_C)                                             \
-        RESET(PIN_D)                                           \
-    DONE
+// Inrijsein (2 pinnen)
+DEFINE_ENTRY_SIGNAL(110, SIG_110_J4, SIG_110_J3)    // Entry/exit berg vanuit dorp
+DEFINE_ENTRY_SIGNAL(111, SIG_111_J4, SIG_111_J3)    // BD_D_4 dal
+DEFINE_ENTRY_SIGNAL(112, SIG_112_J4, SIG_112_J3)    // BD_HBI dal
 
-// 4. Losse inline actie om een Exit sein handmatig op Rood+Wit te dwingen
-#define SET_SHUNting_SIGNAL(PIN_A, PIN_B, PIN_C, PIN_D) \
-    SET(PIN_A)                                          \
-    SET(PIN_B)                                          \
-    RESET(PIN_C)                                        \
-    SET(PIN_D)
-
-// 1. DEFINIEER ALIASEN (GPIO Expander Vpins)
-// blockSignals // j4, j3, j1 on led board inside aspect pole 
-ALIAS(SIG_150_J4, 320)
-ALIAS(SIG_150_J3, 321)
-ALIAS(SIG_150_J1, 322)
-
-ALIAS(SIG_151_J4, 323)
-ALIAS(SIG_151_J3, 324)
-ALIAS(SIG_151_J1, 325)
-
-ALIAS(SIG_152_J4, 328)
-ALIAS(SIG_152_J3, 329)
-ALIAS(SIG_152_J1, 330)
-
-// entrySignals // j4, j3 on led board inside aspect pole 
-ALIAS(SIG_153_J4,  326)
-ALIAS(SIG_153_J3,  327)
-
-// exitSignals  // j4, j3, j2, j1 on led board inside aspect pole 
-ALIAS(SIG_154_J4,  331)
-ALIAS(SIG_154_J3,  332)
-ALIAS(SIG_154_J2,  333)
-ALIAS(SIG_154_J1,  334)
+// Uitrijsein (4 pinnen)
+DEFINE_EXIT_SIGNAL(120, SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1) // DB_HBU dal + rangeer sein yard dal
 
 
-// 2. MAAK DE SEINEN AAN VIA DE NIEUWE MACRO'S
+/* misschien macros met alleen een Sensor, maar wel met verschillende signalen die gezet kunnen worden en eventueel timeouts
+   voor bv amber en aansturing aan de hand van CCW of CW rijden zoiets als bv..
+   
+   #define BIND_SENSOR_SIGNALS(SENSOR_ID, SIG_1, SIG_2, SIG_3, AMBER_TIMEOUT, CCW)
+   als er een amber timeout is, dan is er dus een amber signal. Misschien later intelligenter maken zoals in het echt
+   dat as het volgende block bezet is, dan pas amber
+   BIND_SENSOR_SIGNALS(BD_D_1_BEZET,   100, 0, 0, 5000, 1) ??
+*/
 
-// Maak een Block Signal (ID 150)
-SETUP_MATRIX_BLOCK_SIGNAL(150, SIG_150_J4, SIG_150_J3, SIG_150_J1)
-// Maak een Block Signal (ID 151)
-SETUP_MATRIX_BLOCK_SIGNAL(151, SIG_151_J4, SIG_151_J3, SIG_151_J1)
-// Maak een Block Signal (ID 152)
-SETUP_MATRIX_BLOCK_SIGNAL(152, SIG_152_J4, SIG_152_J3, SIG_152_J1)
+// voor nu even testje en simpele if then zonder macros
 
-// Maak een Entry Signal (ID 153)
-SETUP_MATRIX_ENTRY_SIGNAL(153, SIG_153_J4, SIG_153_J3)
+// Sein 100
+ONSENSOR(BD_D_5_BEZET)
+    IF(BD_D_5_BEZET)
+        RED(100)
+        DELAY(5000)
+        AMBER(100)  
+    ELSE
+        GREEN(100)
+  ENDIF
+DONE
 
-// Maak een Exit Signal (ID 154)
-SETUP_MATRIX_EXIT_SIGNAL(154, SIG_154_J4, SIG_154_J3, SIG_154_J2, SIG_154_J1)    
+// Sein 101
+ONSENSOR(BD_D_1_BEZET)
+    IF(BD_D_1_BEZET)
+        RED(100)
+        AFTER(IR_D_1_2_BEZET) // station
+            AMBER(100)  
+    ELSE
+        GREEN(100)
+  ENDIF
+DONE
+
+// Sein 120 en 110
+ONSENSOR(BD_HBU_1_BEZET)
+    IF(BD_HBU_1_BEZET)
+        RED(120)
+        RED(110)
+        AFTER(IR_HBU_M_BEZET)
+            GREEN(110)      // entry dorp->berg vrij want voorbij dorp CCW of CW maakt niet uit
+            IF(BD_HBU_1_CW) // rijden ClockWise dus naar boven)
+                AMBER(120)  // dan mag er beneden verder gereden worden na passeren midden helix
+            ENDIF
+    ELSE
+        GREEN(120)
+        GREEN(110)
+  ENDIF
+DONE
+
+// Sein 111
+ONSENSOR(BD_D_4_BEZET)
+    IF(BD_D_4_BEZET)
+        RED(111)
+    ELSE
+        GREEN(111)
+  ENDIF
+DONE
+
+// Sein 112
+ONSENSOR(BD_HBI_1_BEZET)
+    IF(BD_HBI_1_BEZET)
+        RED(112)
+    ELSE
+        GREEN(112)
+  ENDIF
+DONE

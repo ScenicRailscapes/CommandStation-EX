@@ -269,15 +269,6 @@ STEALTH( processAnalogSensors(); )
 // Print eenmalig de status van alle analoge poorten naar de Seriële Monitor
 #define DIAG_ADS1115()        STEALTH( printADS1115Diagnostics(); )
 
-/* ====================================================================
-   CENTRALE MACRO VOOR SEINLOGICA EN ASPECTEN
-   ==================================================================== */
-#define NO_SIGNAL(pin)        DELAY(0)
-#define SIGNAL_2A_RED(pin)    RED(pin)
-#define SIGNAL_2A_GREEN(pin)  GREEN(pin)
-#define SIGNAL_3A_RED(pin)    RED(pin)
-#define SIGNAL_3A_AMBER(pin)  AMBER(pin)
-#define SIGNAL_3A_GREEN(pin)  GREEN(pin)    
 
 /* ====================================================================
    CENTRALE MACRO MATRIX SEIN VIA I2C PCA9586 PWM controller
