@@ -4,7 +4,7 @@
  Daarmee kan de code in de drivers generiek blijven, en kan de gebruiker zelf de vPin nummers aanpassen in config.m specifiek voor bv een ESP32 / Nucleo
  */
 /* 2nd OLED screen */
-HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
+//HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
 
 //#include "IO_PCA9555.h"     // 16-bit I/O expander (NXP & Texas Instruments).
   //=======================================================================
@@ -33,7 +33,7 @@ HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
   //   Set clock with (example) <z 630 14 29 30>
   //   bij melding <* DS1307 clock in standby *> is de klok niet goed ingesteld
   //HAL(DS1307,630, {I2CMux_1, SubBus_1, 0x68})
-  HAL(DS1307,630, 0x68)
+  //HAL(DS1307,630, 0x68)
   
   //=======================================================================
   // The following directive defines a VL53L0X distance sensor
@@ -54,10 +54,10 @@ HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
 //   Number of VPINs=16 (numbered 100-115)
 //   I2C address of module=0x40
 
-HAL(PCA9685,400, 16, 0x40)
-HAL(PCA9685,420, 16, 0x41)
-HAL(PCA9685,440, 16, 0x42)
-HAL(PCA9685,360, 16, 0x45) // #1 Seinen set 1
+// HAL(PCA9685,400, 16, 0x40)
+// HAL(PCA9685,420, 16, 0x41)
+// HAL(PCA9685,440, 16, 0x42)
+// HAL(PCA9685,360, 16, 0x45) // #1 Seinen set 1
 
 //=======================================================================
 // The following directive defines an PCF8574 8-port I2C GPIO Extender module.
@@ -78,9 +78,9 @@ HAL(PCA9685,360, 16, 0x45) // #1 Seinen set 1
 //   Number of VPINs=16 (numbered 200-215)
 //   I2C address of module=0x23
 
-HAL(PCF8575,300, 16, 0x26) // #1
-HAL(PCF8575,320, 16, 0x21) // #2
-HAL(PCF8575,340, 16, 0x22) // #3
+// HAL(PCF8575,300, 16, 0x26) // #1
+// HAL(PCF8575,320, 16, 0x21) // #2
+// HAL(PCF8575,340, 16, 0x22) // #3
 //HAL(PCF8575,360, 16, 0x23) // #4 MIMIC PANEL
 
 
@@ -100,9 +100,9 @@ HAL(PCF8575,340, 16, 0x22) // #3
   //                1st vPin for UART 0
   // I2C Address  : I2C address of the serial controller, in 0x format
 
-HAL(DFPlayer,10000, 1, 0x54)
-HAL(DFPlayer,10001, 1, 0x49)
-HAL(DFPlayer,10002, 1, 0x4C)
+// HAL(DFPlayer,10000, 1, 0x54)
+// HAL(DFPlayer,10001, 1, 0x49)
+// HAL(DFPlayer,10002, 1, 0x4C)
 
 /* =======================================================================
   The following directive defines an ADS1115 4-port I2C Analog module.
@@ -114,7 +114,7 @@ HAL(DFPlayer,10002, 1, 0x4C)
   ADDR + ASCL: 0x4B
 */
 
-HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
+//HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
 //HAL(ADS111x,505, 4, 0x49)  // #2 four-input ADS1115 on pins 505..508
 //HAL(ADS111x,510, 4, 0x4A)  // #3 four-input ADS1115 on pins 510..513
 //HAL(ADS111x,515, 4, 0x4B)  // #4 four-input ADS1115 on pins 515..518
@@ -135,7 +135,7 @@ HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
       NEOPIXEL(11020 ,63, 30, 1, 10) zet 10 pixels op goed zichtbaar oranje
 */  
     // Let op de vPin nummer en de aantallen pixels dat deze niet een andere vPin overschrijven. 160 pixels per meter 
-HAL(NeoPixel,11000,160,NEO_GRB,0x60)
+//HAL(NeoPixel,11000,160,NEO_GRB,0x60)
 
 /* =======================================================================
   The following directive defines an IO_EXIOExpander.h device driver
