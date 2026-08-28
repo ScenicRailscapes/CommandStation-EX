@@ -3,101 +3,8 @@
    niet in EXRAIL zitten en/of kunnen
    =============================================================================== */
 
-/* Shows current locos running and direction on screen 2 */ 
-STEALTH_GLOBAL(
-  extern int cab_now;                   // gedefinieerd in myhall.cpp
-  
-  void updateLocoScreen() {
-    byte row = 1;
-    const byte maxRows = 3;
-    
-    // We onthouden de status van maximaal 2 locomotieven (voor rij 1 en rij 2 op het scherm)
-    // We slaan op: [loco_address, target_speed_with_direction_bit]
-    static int last_loco_id[3] = {0, 0, 0};
-    static byte last_raw_speed[3] = {0, 0, 0};
-    
-    bool change_detected = false;
-    
-    // Eerste ronde: We lopen door de actieve locs om te controleren of er IETS veranderd is
-    byte check_row = 0;
-    for (auto loco = LocoSlot::getFirst(); loco && check_row < (maxRows - 1); loco = loco->getNext(), check_row++) {
-      int current_loco = loco->getLoco();
-      byte current_raw = loco->getTargetSpeed(); // Bevat zowel snelheid als de 0x80 richting-bit
-      
-      // Als de loc op deze positie is veranderd, OF zijn snelheid/richting is veranderd:
-      if (last_loco_id[check_row] != current_loco || last_raw_speed[check_row] != current_raw) {
-        change_detected = true;
-        
-        // Sla de nieuwe status direct op in ons geheugen
-        last_loco_id[check_row] = current_loco;
-        last_raw_speed[check_row] = current_raw;
-      }
-    }
-    
-    // Als er absoluut geen verandering is gedetecteerd, breken we hier direct af.
-    // Geen LCD-output, dus ook geen terminal-ruis!
-    if (!change_detected) {
-      return;
-    }
-    
-    // Tweede ronde: Er is een verandering gedetecteerd, dus we schrijven het scherm opnieuw
-    for (auto loco = LocoSlot::getFirst(); loco && row < maxRows; loco = loco->getNext(), row++) {
-      auto speed = loco->getTargetSpeed();
-      auto direction = (speed & 0x80) ? 'V' : 'A';
-      speed &= 0x7F;
-      if (speed > 0) speed--;
-      
-      // Update het LCD scherm (nu met rostername en maximaal 8 characters)
-      //StringFormatter::lcd2(1, row, F("Loco: %2d %3d %c"), loco->getLoco(), speed, direction);
-      StringFormatter::lcd2(1, row, F("%s %3d %c"), 
-        String(RMFT2::getRosterName(loco->getLoco())).substring(0, 8).c_str(), 
-        speed, direction);      
-    }
-  }  
-)
-
-/* Shows status of pre-defined routes on screen 2, only on state change */
-AUTOSTART SEQUENCE(40)
-    STEALTH(
-      // De route ID's staan in myAliases_stm32.h
-      // 1. Vaste 'static' variabelen om de vorige status te onthouden tussen de loops door
-      static bool last_state_1 = false;
-      static bool last_state_2 = false;
-      static bool last_state_3 = false;
-      static bool last_state_4 = false;
-
-      // 2. Haal de huidige status op (true = actief, false = inactief)
-      bool current_state_1 = RMFT2::ifRouteState(ROUTE_1, 1);
-      bool current_state_2 = RMFT2::ifRouteState(ROUTE_2, 1);
-      bool current_state_3 = RMFT2::ifRouteState(ROUTE_3, 1);
-      bool current_state_4 = RMFT2::ifRouteState(ROUTE_4, 1);
-
-      // 3. Controleer of er iets is veranderd ten opzichte van de vorige meting
-      if (current_state_1 != last_state_1 || 
-          current_state_2 != last_state_2 || 
-          current_state_3 != last_state_3 || 
-          current_state_4 != last_state_4) {
-
-          // Er is een verandering! Update het LCD scherm (en dus eenmalig de terminal)
-          StringFormatter::lcd2(1, 0, F("Route 1:%1s 2:%1s 3:%1s 4:%1s"),
-              current_state_1 ? F("*") : F("-"),
-              current_state_2 ? F("*") : F("-"),
-              current_state_3 ? F("*") : F("-"),
-              current_state_4 ? F("*") : F("-")
-          );
-
-          // 4. Sla de nieuwe status op voor de volgende vergelijking
-          last_state_1 = current_state_1;
-          last_state_2 = current_state_2;
-          last_state_3 = current_state_3;
-          last_state_4 = current_state_4;
-      }
-    )
-    DELAY(2500) // Wacht 2.5 seconden voor de volgende snelle check
-FOLLOW(40)
-
 /* ====================================================================
-   De C++ Kalibratie & Detector Handler voor ADS1115 blockdetectors
+   De C++ Kalibratie & Detector Handler voor ADS1115/ADC blockdetectors
    ==================================================================== */
 STEALTH_GLOBAL(
   struct AnalogBlockSensor {
@@ -118,7 +25,9 @@ STEALTH_GLOBAL(
   static AnalogBlockSensor analogSensors[] = {
     {BD_HBU_SENSOR, BD_HBU,                   300, 150, 300, 2000, 0, false, 0, 0}, // schakelt in waarde 300 boven meting, moet 150ms hoog zijn
     {BD_HBI_SENSOR, BD_HBI,                   300, 150, 300, 2000, 0, false, 0, 0},
-    {BD_DORP_STATION_SENSOR, BD_DORP_STATION, 300, 150, 300, 2000, 0, false, 0, 0}
+    {BD_DORP_STATION_SENSOR, BD_DORP_STATION, 300, 150, 300, 2000, 0, false, 0, 0},
+    {BD_D_4_SENSOR, BD_D_4,                   300, 150, 300, 2000, 0, false, 0, 0},
+    {BD_D_5_SENSOR, BD_D_5,                   300, 150, 300, 2000, 0, false, 0, 0}
   };
 
 
@@ -198,76 +107,6 @@ STEALTH_GLOBAL(
             IODevice::write(analogSensors[i].digitalVpin, LOW);
           }
         }
-      }
-    }
-  }
-)
-
-
-/* ====================================================================
-                      Centrale Sound-Engine
-   ==================================================================== */
-STEALTH_GLOBAL(
-  void playSoundEffect(uint16_t locoAddr, int effectId, int volume, int dfPlayerVpin, bool start_stop) {
-    if (locoAddr == 0) return; // Veiligheidscheck: geen loc actief
-
-    // -------------------------------------------------------------
-    // 1. CONTROLEREN OF HET EEN DCC SOUND-LOC IS (Functie mapping)
-    //    Bij LOC #17 is dus een BELL functie 3 ->FON(3) 
-    //    en bij LOC #13 Functie 15 =>FON(15)
-    // -------------------------------------------------------------
-    int soundFunc = -1; // -1 betekent: Geen DCC sound, gebruik DFPlayer
-
-    switch (locoAddr) {
-      case 19:
-        if (effectId == FX_BELL)          soundFunc = 9;
-        if (effectId == FX_WHISTLE_1)     soundFunc = 2;
-        if (effectId == FX_WHISTLE_2)     soundFunc = 2;
-        if (effectId == FX_CON_WHISTLE_1) soundFunc = 16;
-        break;      
-      case 17:
-        if (effectId == FX_BELL)          soundFunc = 3;
-        if (effectId == FX_WHISTLE_1)     soundFunc = 2;
-        if (effectId == FX_WHISTLE_2)     soundFunc = 17;
-        if (effectId == FX_CON_WHISTLE_1) soundFunc = 9;
-        break;
-      case 13:
-        if (effectId == FX_BELL)      soundFunc = 15;
-        if (effectId == FX_WHISTLE_1) soundFunc = 8;
-        if (effectId == FX_WHISTLE_2) soundFunc = 8;
-        break;
-      case 10:
-        if (effectId == FX_BELL)      soundFunc = 3;
-        if (effectId == FX_WHISTLE_1) soundFunc = 2;
-        if (effectId == FX_WHISTLE_2) soundFunc = 2;
-        break;
-      case 9:
-        if (effectId == FX_BELL)      soundFunc = 4;
-        if (effectId == FX_WHISTLE_1) soundFunc = 2;
-        if (effectId == FX_WHISTLE_2) soundFunc = 2;
-        break;
-    }
-
-    // -------------------------------------------------------------
-    // 2. UITVOEREN: Fysieke Sound-loc OF DFPlayer
-    // -------------------------------------------------------------
-    if (soundFunc != -1) {
-      // Het is een Sound-loc: Stuur DCC functie AAN (FON(#) of UIT)
-      DCC::setFn(locoAddr, soundFunc, start_stop);
-    } 
-    else {
-      // Het is GEEN sound-loc: Gebruik de DFPlayer via IODevice
-      // SD-Kaart structuur: Folder = LocAdres (/04, /05, /11 etc.), Track = /001.mp3, /002.mp3
-      if (start_stop) {
-        int track = effectId;
-  
-        // 1. Stel eerst de folder in: Folder = locoAddr
-        IODevice::writeAnalogue(dfPlayerVpin, 0, locoAddr, DFPlayerBase::DF_FOLDER);
-
-        // 2. Speel het geluid af: Track = track
-        IODevice::writeAnalogue(dfPlayerVpin, track, volume, DFPlayerBase::DF_PLAY);
-        // even controleren weer wat er zou moeten gebeuren, later verwijderen.
-        //StringFormatter::lcd2(1, 6, F("Play: %3d Fol: %3d"), track, locoAddr); // debug
       }
     }
   }
