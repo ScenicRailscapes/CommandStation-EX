@@ -11,6 +11,8 @@
 The configuration file for DCC-EX * * * * NODE * * * * * 
 
 **********************************************************************/
+#define NODENUM 1  // Node nummer voor de node specifieke configuratiebestanden
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 //

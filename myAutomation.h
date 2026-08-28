@@ -1,23 +1,30 @@
-/* 
+/***********************************************************************
   This file contains (general) automation setups and automations itselfs
-*/
+  ***********************************************************************/
 
 // Include files, order is important
-#include "myHal.h"
-#include "myAliases_stm32.h"
-#include "myMacros.h"
-#include "myStealthCode.h"
-// #include "myLedsandLights.h"
-//#include "myBlocks.h"
-#include "mySignals.h"
-#include "myNodeSensoren.h"
-// #include "myReverseLoopAutomation.h"
-// #include "mySounds.h"
-// #include "myRoutes.h"
-// #include "mySwitches.h"
-// #include "myMimicPanel.h"
-// #include "myServosAndMotors.h"
-// #include "myTestExrailKladboek.h"
+#if NODENUM == 1 // Defined in config.h
+  #include "myHal_1.h"
+  #include "myAliases_1.h"
+  #include "myMacros_1.h"
+  #include "myStealthCode.h"
+  #include "mySignals_1.h"
+  #include "myNodeSensoren_1.h"
+#elif NODENUM == 2
+  #include "myHal_2.h"
+  #include "myAliases_2.h"
+  #include "myMacros_2.h"
+  #include "myStealthCode.h"
+  #include "mySignals_2.h"
+  #include "myNodeSensoren_2.h"
+#else // node 3
+  #include "myHal_3.h"
+  #include "myAliases_3.h"
+  #include "myMacros_3.h"
+  #include "myStealthCode.h"
+  #include "mySignals_3.h"
+  #include "myNodeSensoren_3.h"
+#endif
 
 AUTOSTART
   LCD(0, " SilberBachTalBahn node #1")

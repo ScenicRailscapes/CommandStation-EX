@@ -1,10 +1,11 @@
-/*
- This file contains aliases for sensors, locs, switches, relays, motors, servos, latches and other items 
- used in the DCC-EX Command Station setup for the Silberbacktal Bahn model railroad.
-*/
+/*/**********************************************************************
+ This file contains aliases for sensors, locs, switches, relays, motors, 
+ servos, latches and other items used in the DCC-EX Command Station 
+ setup for the Silberbacktal Bahn model railroad.
+/********************************************************************** */
 
 /*
-  Block detect via ADS1115 aangesloten op deze DCC-EX Node 
+  Block detect via ADC GPIO's van deze DCC-EX Node 
 */
 
 /* ====================================================================

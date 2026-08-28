@@ -22,7 +22,4 @@ ALIAS(BD_D_5, 2104)                 // Branchlijn dorp - havendorp
 
 // IR Sensoren, die worden wel lokaal verwerkt en als bezet status doorgegeven.
 
-
-
-// mischien moet dit 1 malig met autostart?
 SHARED_SENSOR(2100,5)               // en share bovenstaande naar de nodes en control station

@@ -1,1 +1,1 @@
-//I2CManager.forceClock(100000);// Set I2C clock to 100kHz, as some devices do not work at 400kHz
+I2CManager.forceClock(100000);// Set I2C clock to 100kHz, as some devices do not work at 400kHz

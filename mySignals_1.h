@@ -1,8 +1,6 @@
-/* Alternatief plan om met Matrix Signalen te werken ipv de ESP32 die als DCC-Accessorie decoder staat
-   met een I2C GPIO Expander de verschillende signal matrixen direct op de pinnen aansluiten.
-   In principe kunnen er 4 blockSignals & 2 exitSignals of 3 blockSignals, 1 exit en 1 entrySignal op
-   een 16 poort GPIO extender
-*/
+/************************************************************************
+ Matrix Signalen gekoppeld aan de GPIO vPins van een ESP32 DCC-EX NODE
+ ***********************************************************************/
 
 /* Hoe te gebruiken ... 
   RED(152)    // Zet Exit Signal 152 op Dubbel Rood (Aspect 0)
@@ -14,7 +12,7 @@
 */
 
 /* Alle gebruikte macros zijn gedefinieerd in myMacros.h */
-#include "myMacros.h"
+#include "myMacros_1.h"
 
 /* --------------------------------------------------------------------
    SEIN DECLARATIES (Maakt automatisch alle VIRTUAL_SIGNALs aan)
