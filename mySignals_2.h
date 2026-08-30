@@ -12,7 +12,7 @@
 */
 
 /* Alle gebruikte macros zijn gedefinieerd in myMacros.h */
-#include "myMacros_1.h"
+#include "myMacros_2.h"
 
 /* --------------------------------------------------------------------
    SEIN DECLARATIES (Maakt automatisch alle VIRTUAL_SIGNALs aan)

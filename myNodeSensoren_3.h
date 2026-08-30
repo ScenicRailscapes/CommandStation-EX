@@ -21,10 +21,10 @@ ALIAS(BD_D_4, 2103)                 // Yard dal - havendorp
 ALIAS(BD_D_5, 2104)                 // Branchlijn dorp - havendorp
 
 // HeartBeat 
-HAL(Bitmap,2500,1)
-ALIAS(HEARTBEAT_NODE_1, 2500)
+HAL(Bitmap,2502,1)
+ALIAS(HEARTBEAT_NODE_3, 2502)
 // IR Sensoren, die worden wel lokaal verwerkt en als bezet status doorgegeven.
 
 SHARED_SENSOR(2100,5)               // en share bovenstaande naar de nodes en control station
-SHARED_SENSOR(HEARTBEAT_NODE_1)
+SHARED_SENSOR(HEARTBEAT_NODE_3)
 
