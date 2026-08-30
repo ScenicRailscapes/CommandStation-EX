@@ -227,5 +227,6 @@
  IO_trainbrains.h IO_Bitmap.h IO_VL53L0X.h IO_XL9535.h IO_WaveShare.h \
  IO_PCF85063.h IO_NVSMap.h EXRAIL2MacroReset.h EXRAIL2MacroBase.h \
  myAutomation.h myHal_1.h myAliases_1.h myMacros_1.h myStealthCode.h \
- mySignals_1.h myNodeSensoren_1.h EXRAILAsserts.h Ztest.h Sniffer.h \
- DCCPacket.h DCCDecoder.h mySetup.h
+ mySignals_1.h myNodeSensoren_1.h myServosAndMotors_1.h \
+ my_NodeAutomation_1.h EXRAILAsserts.h Ztest.h Sniffer.h DCCPacket.h \
+ DCCDecoder.h mySetup.h
