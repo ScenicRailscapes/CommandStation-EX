@@ -814,7 +814,11 @@
 ///param freq Frequency is default 0, or 1..3
 
 #define SIGNAL(redpin,amberpin,greenpin,description...)
+<<<<<<< HEAD
 ///brief Define a Signal with LOW=on leds
+=======
+///brief Define a Signal with LOW=on leds (rare case)
+>>>>>>> upstream/devel
 ///see SIGNALH
 ///param redpin vpin for RED state, also acts as signal_id
 ///param amberpin vpin for AMBER state
@@ -822,11 +826,26 @@
 ///param description... Quoted text description of signal
 
 #define SIGNALH(redpin,amberpin,greenpin,description...)
+<<<<<<< HEAD
 ///brief define a signal with HIGH=ON leds
+=======
+///brief define a signal with HIGH=ON leds (use LED_SIGNAL prefereably)
+>>>>>>> upstream/devel
 ///param redpin vpin for RED state, also acts as signal_id
 ///param amberpin vpin for AMBER state
 ///param greenpin vpin for GREEN state
 ///param description... Quoted text description of signal
+<<<<<<< HEAD
+=======
+
+#define LED_SIGNAL(signalid,redpin,amberpin,greenpin,description...)
+///brief define a signal with HIGH=ON leds
+///param signalid unique identifier for the signal
+///param redpin vpin for RED state
+///param amberpin vpin for AMBER state
+///param greenpin vpin for GREEN state
+///param description... Quoted text description of signal
+>>>>>>> upstream/devel
 
 #define SPEED(speed)
 ///brief Changes current tasks loco speed without changing direction

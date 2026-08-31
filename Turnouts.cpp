@@ -131,6 +131,10 @@
     if (nodeCast) NodeManager::cast(F("<H %d %d>"), id, closeFlag ? 0 : 1);
     Turnout *tt = Turnout::get(id);
     if (!tt) tt=VpinTurnout::create(id,0, closeFlag);
+<<<<<<< HEAD
+=======
+    tt->_turnoutData.closed = closeFlag;
+>>>>>>> upstream/devel
     tt->setClosedInternal(closeFlag);
 #if defined(EXRAIL_ACTIVE)
     RMFT2::turnoutEvent(id, closeFlag);    
@@ -147,6 +151,17 @@
     return true;
 }
 
+<<<<<<< HEAD
+=======
+void Turnout::setRamDescription(const char *desc) {
+    if (_turnoutData.ramDescription) return; // No renaming of turnouts.
+    if (desc) {
+      _turnoutData.ramDescription = (char *)malloc(strlen(desc)+1);
+      strcpy(_turnoutData.ramDescription, desc);
+    }
+  }
+
+>>>>>>> upstream/devel
 /* static */ void Turnout::shareNodesToCS() {
     
     DIAG(F("Sharing turnouts to CS"));

@@ -136,12 +136,16 @@ public:
   inline uint16_t getId() { return _turnoutData.id; }
   inline Turnout *next() { return _nextTurnout; }
   inline const char *getRamDescription() { return _turnoutData.ramDescription; }
+<<<<<<< HEAD
   inline void setRamDescription(const char *desc) {
     if (_turnoutData.ramDescription) return; // No renaming of turnouts.
     _turnoutData.ramDescription = (char *)malloc(strlen(desc)+1);
     strcpy(_turnoutData.ramDescription, desc);
   }
 
+=======
+  void setRamDescription(const char *desc);
+>>>>>>> upstream/devel
   void printState(Print *stream);
   static void shareAll();
   /* 

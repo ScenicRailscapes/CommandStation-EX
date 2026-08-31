@@ -3,7 +3,9 @@
 
 #include "StringFormatter.h"
 
-#define VERSION "5.9.0"
+#define VERSION "5.9.2"
+// 5.9.2  - Fixed null turnout descripotions and ifthrown state
+// 5.9.1  - Added LED_SIGNAL exrail macro
 // 5.9.0  - Major update for Nodes
 //        - Removed AVR support
 //        - Removed obsolete <t and <R variants with ignored arguments
