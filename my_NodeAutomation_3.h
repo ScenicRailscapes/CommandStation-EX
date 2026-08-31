@@ -8,11 +8,8 @@ AUTOSTART
   PRINT("We kunnen verder")
   PARSE("<D NODE OFF>") // voor nu even, anders wordt alle node info gedumpt
   // Zet de analoge porten als input. Zonder dit lijkt het of 0 of het hangt
-  IFLT(BD_HBU_SENSOR, 255)          ENDIF
-  IFLT(BD_HBI_SENSOR, 255)          ENDIF
-  IFLT(BD_DORP_STATION_SENSOR, 255) ENDIF
-  IFLT(BD_D_4_SENSOR, 255)          ENDIF
-  IFLT(BD_D_5_SENSOR, 255)          ENDIF
+  IFLT(BD_S_5_SENSOR, 255)          ENDIF
+  IFLT(BD_S_RIJ_SENSOR, 255)        ENDIF
   DELAY(500)
   CALIBRATE_BLOCKSENSOREN()
 

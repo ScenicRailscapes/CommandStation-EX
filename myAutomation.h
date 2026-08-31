@@ -11,7 +11,7 @@
   #include "mySignals_1.h"
   #include "myNodeSensoren_1.h"
   #include "myServosAndMotors_1.h"
-//#include "myBlocks_1.h"  
+  #include "myBlocks_1.h"  
   #include "my_NodeAutomation_1.h"
 #elif NODENUM == 2
   #include "myHal_2.h"

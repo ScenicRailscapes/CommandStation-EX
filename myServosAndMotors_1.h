@@ -13,3 +13,5 @@ SERVO_TURNOUT(1004, 404, 250, 160, Fast, "S04 Yard oost")
 SERVO_TURNOUT(1005, 405, 270, 200, Fast, "S05 Yard west")
 SERVO_TURNOUT(1006, 406, 390, 330, Fast, "S06 Helix buitenring / dorp")                 // S06
 SERVO_TURNOUT(1007, 407, 410, 250, Fast, "S07 Branchlijn hoofdstation / Haven-dorp")    // S07
+
+// vPin 415, 414, 413 (laatste blok) voor Sein 101

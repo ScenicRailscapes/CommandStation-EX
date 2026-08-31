@@ -4,12 +4,16 @@
 */
 
 
-// Servos via PC9685 #1 (400-415)
-SERVO_TURNOUT(1000, 400, 240, 160, Fast, HIDDEN) // links af deel 3-weg wissel - hidden voor alleen in route gebruik. Kan beschadigen al links en rechts elkaar tegen werken
-SERVO_TURNOUT(1001, 401, 240, 160, Fast, HIDDEN) // rechtsaf deel 3-weg wissel
-SERVO_TURNOUT(1002, 402, 260, 170, Fast, "S02 Yard dal - Helix buitenring")             // S02
-SERVO_TURNOUT(1003, 403, 255, 180, Fast, "S03 Yard dal") // yard dal - terug naar havendorp   // S03
-SERVO_TURNOUT(1004, 404, 250, 160, Fast, "S04 Yard oost")
-SERVO_TURNOUT(1005, 405, 270, 200, Fast, "S05 Yard west")
-SERVO_TURNOUT(1006, 406, 390, 330, Fast, "S06 Helix buitenring / dorp")                 // S06
-SERVO_TURNOUT(1007, 407, 410, 250, Fast, "S07 Branchlijn hoofdstation / Haven-dorp")    // S07
+// Servos via PC9685 #2 (420-435)
+// SERVO_TURNOUT(id, vpin, active_angle, inactive_angle, profile, "description") // profile: Instant, Fast, Medium, Slow, Bounce, NoPowerOff
+SERVO_TURNOUT(1020, 420, 260, 170, Fast, "S09 SchaduwStat 1 en 2 links")
+SERVO_TURNOUT(1021, 421, 270, 200, Fast, "S10 SchaduwStat 3 en 4 links")
+SERVO_TURNOUT(1022, 422, 260, 190, Fast, "S11 SchaduwStat 5 en 6 links")
+SERVO_TURNOUT(1023, 423, 250, 160, Fast, "S12 Helix binnenring / bergdorp station") // S12
+SERVO_TURNOUT(1024, 424, 270, 170, Fast, "S13 Dorp branchlijn / brouwerij")         // S13
+
+//CONFIGURE_SERVO(101,300,400,slow)
+// Raar geval met turnigy 9g servo, lijkt 360 graden servo te zijn 150-360 ccw (360 langszaam) en 380-600 cw (380 langszaam), aanzetten met <z vpin>
+// LEDS - pwm via PC9685 #2 (420-435) - EXRAIL Command: SET(vPin), terminal. command: <z vpin> 
+CONFIGURE_SERVO(454, 360, 0, NoPowerOff)
+CONFIGURE_SERVO(430, 1536, 0, NoPowerOff)

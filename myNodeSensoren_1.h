@@ -12,19 +12,26 @@ ALIAS(BD_D_4_SENSOR, 35)
 ALIAS(BD_D_5_SENSOR, 32)
 // GPIO 33 ADC nog over.
 
-// Bitmaps Analoge blockdetectors bezetmelders 
-HAL(Bitmap,2100,5)                  // create flags 2100..2105 // blockdetect latches
-ALIAS(BD_HBU, 2100)                 // Flag to indicate Helix Buitenring is occupied
-ALIAS(BD_HBI, 2101)                 // Helix binnenring
-ALIAS(BD_DORP_STATION, 2102)        // Branchlijn dorp - station - havendorp
-ALIAS(BD_D_4, 2103)                 // Yard dal - havendorp
-ALIAS(BD_D_5, 2104)                 // Branchlijn dorp - havendorp
+// IR Sensoren via I2C IO-Extender #1 (300-315). Intern voor Node gebruik, extern naar control station via bezet melding
+ALIAS (IR_HBU_D, 300)     // IR Sensor Helix dal niveau buitenring
+ALIAS (IR_HBU_M, 301)     // IR Sensor Helix midden niveau buitenring
+ALIAS (IR_HBI_B, 302)     // IR Sensor Helix berg niveau buitenring
+ALIAS (IR_D_1_1, 308)     // IR Sensor Dorp branchlijn west (berg)
+ALIAS (IR_D_1_2, 309)     // IR Sensor Dorp branchlijn station
+ALIAS (IR_D_1_3, 310)     // IR Sensor hoofdspoor dorp - haven
+ALIAS (IR_D_2_1, 312)     // IR Sensor Hoofdspoor #1 Berg
+ALIAS (IR_D_3_1, 311)     // IR Sensor Hoofdspoor #2 Berg
+ALIAS (IR_HBI_D, 313)     // IR Sensor Helix dal niveau binnenring
+ALIAS (IR_HBI_M, 314)     // IR Sensor Helix midden niveau binnenring
+ALIAS (IR_HBU_B, 315)     // IR Sensor Helix berg niveau binnenring
 
 // HeartBeat 
 HAL(Bitmap,2500,1)
 ALIAS(HEARTBEAT_NODE_1, 2500)
-// IR Sensoren, die worden wel lokaal verwerkt en als bezet status doorgegeven.
 
-SHARED_SENSOR(2100,5)               // en share bovenstaande naar de nodes en control station
+// Share status naar nodes en control station (Alias gedefinieerd in myAliases)
+//SHARED_SENSOR(2000,5)   // Share BlockDetect status
+//SHARED_SENSOR(2010,10)  // Share IR status
+SHARED_SENSOR(2100,5)     // share status BlockDetect naar de nodes en control station <--- Hmmm, denk alleen de bezet melding sharen... niet deze
 SHARED_SENSOR(HEARTBEAT_NODE_1)
 

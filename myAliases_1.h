@@ -16,15 +16,15 @@
 // ALIAS DEFINITIES VOOR DE SEINEN AANGESLOTEN OP DEZE NODE
 // --------------------------------------------------------------------
 
-// BlockSignal 100 (Pool 100)
+// BlockSignal 100 (Seinpaal 100)
 ALIAS(SIG_100_J4, 25)  // GPIO 25
 ALIAS(SIG_100_J3, 26)
 ALIAS(SIG_100_J1, 27)
 
-// BlockSignal 101 (Pool 101)
-ALIAS(SIG_101_J4, 0) // GPIO 16
-ALIAS(SIG_101_J3, 4)
-ALIAS(SIG_101_J1, 16)
+// BlockSignal 101 (Seinpaal 101) - Deze zit op de PWM controller
+ALIAS(SIG_101_J4, 415) // GPIO 16
+ALIAS(SIG_101_J3, 414)
+ALIAS(SIG_101_J1, 413)
 
 // EntrySignal 110
 ALIAS(SIG_110_J4, 14) // GPIO 14
@@ -35,8 +35,8 @@ ALIAS(SIG_111_J4, 2)  // GPIO 2
 ALIAS(SIG_111_J3, 15)
 
 // EntrySignal 112
-ALIAS(SIG_112_J4, 13) // GPIO 13
-ALIAS(SIG_112_J3, 23)
+ALIAS(SIG_112_J4, 16) // GPIO 16
+ALIAS(SIG_112_J3, 4)
 
 // ExitSignal 120 
 ALIAS(SIG_120_J4, 19) // GPIO 19
@@ -44,27 +44,36 @@ ALIAS(SIG_120_J3, 18)
 ALIAS(SIG_120_J2, 5)
 ALIAS(SIG_120_J1, 17)
 
+// Over op Node 1: GPIO 13, 23 (gesplitst over zijdes) 
+
 // Bitmaps (Latches )voor bezet / vrij 
-// HAL(Bitmap,2000,60) // create flags 2000..2060 // Block bezet flags/latches
-// // node 1
-// ALIAS(BD_HBI_1_BEZET, 2000)         // Block #1 occupied latch
-// ALIAS(BD_HBU_1_BEZET, 2001)         // Block #2 occupied latch
-// ALIAS(BD_D_1_BEZET, 2002)           // Block #3 occupied latch
-// ALIAS(BD_D_4_BEZET, 2003)           // Block #6 occupied latch
-// ALIAS(BD_D_5_BEZET, 2004)           // Block #13 occupied latch
+HAL(Bitmap,2000,60) // create flags 2000..2060 // Block bezet flags/latches
+// node 1
+ALIAS(BD_HBI_1_BEZET, 2000)         // Block #1 occupied latch
+ALIAS(BD_HBU_1_BEZET, 2001)         // Block #2 occupied latch
+ALIAS(BD_D_1_BEZET, 2002)           // Block #3 occupied latch
+ALIAS(BD_D_4_BEZET, 2003)           // Block #6 occupied latch
+ALIAS(BD_D_5_BEZET, 2004)           // Block #13 occupied latch
 
-// ALIAS(IR_D_1_1_BEZET, 2010)         // IR Sensor Dorp branchlijn west (berg) bezet latch
-// ALIAS(IR_D_1_2_BEZET, 2011)         // IR Sensor Dorp branchlijn station bezet latch
-// ALIAS(IR_D_1_3_BEZET, 2012)         // IR Sensor hoofdspoor dorp - haven bezet latch
-// ALIAS(IR_D_2_1_BEZET, 2013)         // IR Sensor Hoofdspoor #1 Berg bezet latch
-// ALIAS(IR_D_3_1_BEZET, 2014)         // IR Sensor Hoofdspoor #2 Berg bezet latch
-// ALIAS(IR_HBI_M_BEZET, 2015)         // IR Sensor Helix midden niveau binnenring bezet latch
-// ALIAS(IR_HBI_B_BEZET, 2016)         // IR Sensor Helix berg niveau binnenring bezet latch
-// ALIAS(IR_HBI_D_BEZET, 2017)         // IR Sensor Helix dal niveau binnenring bezet latch
-// ALIAS(IR_HBU_D_BEZET, 2018)         // IR Sensor Helix dal niveau buitenring bezet latch
-// ALIAS(IR_HBU_M_BEZET, 2019)         // IR Sensor Helix midden niveau buitenring bezet latch
-// ALIAS(IR_HBU_B_BEZET, 2020)         // IR Sensor Helix berg niveau buitenring bezet latch
+ALIAS(IR_D_1_1_BEZET, 2010)         // IR Sensor Dorp branchlijn west (berg) bezet latch
+ALIAS(IR_D_1_2_BEZET, 2011)         // IR Sensor Dorp branchlijn station bezet latch
+ALIAS(IR_D_1_3_BEZET, 2012)         // IR Sensor hoofdspoor dorp - haven bezet latch
+ALIAS(IR_D_2_1_BEZET, 2013)         // IR Sensor Hoofdspoor #1 Berg bezet latch
+ALIAS(IR_D_3_1_BEZET, 2014)         // IR Sensor Hoofdspoor #2 Berg bezet latch
+ALIAS(IR_HBI_M_BEZET, 2015)         // IR Sensor Helix midden niveau binnenring bezet latch
+ALIAS(IR_HBI_B_BEZET, 2016)         // IR Sensor Helix berg niveau binnenring bezet latch
+ALIAS(IR_HBI_D_BEZET, 2017)         // IR Sensor Helix dal niveau binnenring bezet latch
+ALIAS(IR_HBU_D_BEZET, 2018)         // IR Sensor Helix dal niveau buitenring bezet latch
+ALIAS(IR_HBU_M_BEZET, 2019)         // IR Sensor Helix midden niveau buitenring bezet latch
+ALIAS(IR_HBU_B_BEZET, 2020)         // IR Sensor Helix berg niveau buitenring bezet latch
 
+// Bitmaps Analoge blockdetectors melders (onbewerkt voor in Stealth)
+HAL(Bitmap,2100,5)                  // create flags 2100..2105 // blockdetect latches
+ALIAS(BD_HBU, 2100)                 // Flag to indicate Helix Buitenring is occupied
+ALIAS(BD_HBI, 2101)                 // Helix binnenring
+ALIAS(BD_DORP_STATION, 2102)        // Branchlijn dorp - station - havendorp
+ALIAS(BD_D_4, 2103)                 // Yard dal - havendorp
+ALIAS(BD_D_5, 2104)                 // Branchlijn dorp - havendorp
 
 // node 2
 // ALIAS(BD_D_2_BEZET, 2030)           // Block #4 occupied latch 

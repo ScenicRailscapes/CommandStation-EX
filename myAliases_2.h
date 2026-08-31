@@ -16,33 +16,33 @@
 // ALIAS DEFINITIES VOOR DE SEINEN AANGESLOTEN OP DEZE NODE
 // --------------------------------------------------------------------
 
-// BlockSignal 100 (Pool 100)
-ALIAS(SIG_100_J4, 25)  // GPIO 25
-ALIAS(SIG_100_J3, 26)
-ALIAS(SIG_100_J1, 27)
+// // BlockSignal 100 (Pool 100)
+// ALIAS(SIG_100_J4, 25)  // GPIO 25
+// ALIAS(SIG_100_J3, 26)
+// ALIAS(SIG_100_J1, 27)
 
-// BlockSignal 101 (Pool 101)
-ALIAS(SIG_101_J4, 0) // GPIO 16
-ALIAS(SIG_101_J3, 4)
-ALIAS(SIG_101_J1, 16)
+// // BlockSignal 101 (Pool 101)
+// ALIAS(SIG_101_J4, 0) // GPIO 16
+// ALIAS(SIG_101_J3, 4)
+// ALIAS(SIG_101_J1, 16)
 
-// EntrySignal 110
-ALIAS(SIG_110_J4, 14) // GPIO 14
-ALIAS(SIG_110_J3, 12)
+// // EntrySignal 110
+// ALIAS(SIG_110_J4, 14) // GPIO 14
+// ALIAS(SIG_110_J3, 12)
 
-// EntrySignal 111
-ALIAS(SIG_111_J4, 2)  // GPIO 2
-ALIAS(SIG_111_J3, 15)
+// // EntrySignal 111
+// ALIAS(SIG_111_J4, 2)  // GPIO 2
+// ALIAS(SIG_111_J3, 15)
 
-// EntrySignal 112
-ALIAS(SIG_112_J4, 13) // GPIO 13
-ALIAS(SIG_112_J3, 23)
+// // EntrySignal 112
+// ALIAS(SIG_112_J4, 13) // GPIO 13
+// ALIAS(SIG_112_J3, 23)
 
-// ExitSignal 120 
-ALIAS(SIG_120_J4, 19) // GPIO 19
-ALIAS(SIG_120_J3, 18)
-ALIAS(SIG_120_J2, 5)
-ALIAS(SIG_120_J1, 17)
+// // ExitSignal 120 
+// ALIAS(SIG_120_J4, 19) // GPIO 19
+// ALIAS(SIG_120_J3, 18)
+// ALIAS(SIG_120_J2, 5)
+// ALIAS(SIG_120_J1, 17)
 
 // Bitmaps (Latches )voor bezet / vrij 
 // HAL(Bitmap,2000,60) // create flags 2000..2060 // Block bezet flags/latches

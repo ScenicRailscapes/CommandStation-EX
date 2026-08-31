@@ -20,16 +20,39 @@ STEALTH_GLOBAL(
     uint32_t dropTimeMs;   // Interne timer voor uitschakelen
   };
 
-  // Configuratie per sensor: 
-  // { Analog VPIN, Digital VPIN, Threshold, Hysteresis, OnDelay(ms), OffDelay(ms), BaseLine, InitialState, RiseTime, DropTime }
-  static AnalogBlockSensor analogSensors[] = {
-    {BD_HBU_SENSOR, BD_HBU,                   300, 150, 300, 2000, 0, false, 0, 0}, // schakelt in waarde 300 boven meting, moet 150ms hoog zijn
-    {BD_HBI_SENSOR, BD_HBI,                   300, 150, 300, 2000, 0, false, 0, 0},
-    {BD_DORP_STATION_SENSOR, BD_DORP_STATION, 300, 150, 300, 2000, 0, false, 0, 0},
-    {BD_D_4_SENSOR, BD_D_4,                   300, 150, 300, 2000, 0, false, 0, 0},
-    {BD_D_5_SENSOR, BD_D_5,                   300, 150, 300, 2000, 0, false, 0, 0}
-  };
+    // Configuratie per sensor: 
+    // { Analog VPIN, Digital VPIN, Threshold, Hysteresis, OnDelay(ms), OffDelay(ms), BaseLine, InitialState, RiseTime, DropTime }
+  #if NODENUM == 1
 
+    static AnalogBlockSensor analogSensors[] = {
+      {BD_HBU_SENSOR, BD_HBU,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_HBI_SENSOR, BD_HBI,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_DORP_STATION_SENSOR, BD_DORP_STATION, 300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_D_4_SENSOR, BD_D_4,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_D_5_SENSOR, BD_D_5,                   300, 150, 300, 2000, 0, false, 0, 0}
+    };
+
+  #elif NODENUM == 2
+
+    static AnalogBlockSensor analogSensors[] = {
+      {BD_D_2_SENSOR, BD_D_2,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_D_3_SENSOR, BD_D_3,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_S_1_SENSOR, BD_S_1,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_S_2_SENSOR, BD_S_2,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_S_3_SENSOR, BD_S_3,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_S_4_SENSOR, BD_S_4,                   300, 150, 300, 2000, 0, false, 0, 0}
+    };
+
+  #elif NODENUM == 3
+
+    static AnalogBlockSensor analogSensors[] = {
+      {BD_S_5_SENSOR, BD_S_5,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_S_RIJ_SENSOR, BD_S_RIJ,               300, 150, 300, 2000, 0, false, 0, 0}
+    }; 
+    
+  #else
+    #error "Ongeldig of niet-gedefinieerd NODENUM opgegeven!"
+  #endif
 
   // Hier kan nog een error check, als de waarde op 0 is, dan is er waarschijnlijk een communicatie problem op de I2C
   // lijn, dan een melding maken op het LCD1 scherm ofzo, misschien iets met een LED ?

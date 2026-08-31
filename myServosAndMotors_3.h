@@ -4,12 +4,21 @@
 */
 
 
-// Servos via PC9685 #1 (400-415)
-SERVO_TURNOUT(1000, 400, 240, 160, Fast, HIDDEN) // links af deel 3-weg wissel - hidden voor alleen in route gebruik. Kan beschadigen al links en rechts elkaar tegen werken
-SERVO_TURNOUT(1001, 401, 240, 160, Fast, HIDDEN) // rechtsaf deel 3-weg wissel
-SERVO_TURNOUT(1002, 402, 260, 170, Fast, "S02 Yard dal - Helix buitenring")             // S02
-SERVO_TURNOUT(1003, 403, 255, 180, Fast, "S03 Yard dal") // yard dal - terug naar havendorp   // S03
-SERVO_TURNOUT(1004, 404, 250, 160, Fast, "S04 Yard oost")
-SERVO_TURNOUT(1005, 405, 270, 200, Fast, "S05 Yard west")
-SERVO_TURNOUT(1006, 406, 390, 330, Fast, "S06 Helix buitenring / dorp")                 // S06
-SERVO_TURNOUT(1007, 407, 410, 250, Fast, "S07 Branchlijn hoofdstation / Haven-dorp")    // S07
+// Servos via PC9685 #3 (440-455)
+SERVO_TURNOUT(1030, 440, 320, 210, Fast, "S15 SchaduwStat 1 en 2 rechts")   // S15
+SERVO_TURNOUT(1031, 441, 290, 210, Fast, "S16 SchaduwStat 3 en 4 rechts")   // S16
+SERVO_TURNOUT(1032, 442, 270, 190, Fast, "S17 SchaduwStat 5 en 6 rechts")   // S17
+SERVO_TURNOUT(1033, 443, 250, 160, Fast, "S18 Locoshed / haven")            // S18
+SERVO_TURNOUT(1034, 444, 330, 260, Fast, "S19 Haven - dorp branchlijn")     // S19 (defect??)
+SERVO_TURNOUT(1035, 445, 350, 250, Fast, "S20 Main #1 / schaduwstation")    // S20 hoofdspoor 1 / schaduwstation
+SERVO_TURNOUT(1036, 446, 280, 130, Fast, "S21 Dorp / dal")                  // S21
+SERVO_TURNOUT(1037, 447, 250, 160, Fast, "S22 Dorp / Vissersdorp station")  // S22
+SERVO_TURNOUT(1038, 448, 290, 220, Fast, "S23 Haven / main #1")             // S23
+SERVO_TURNOUT(1039, 449, 335, 235, Fast, "S24 Haven - dorp / main #2")      // S24
+SERVO_TURNOUT(1040, 450, 250, 150, Fast, "S25 main #1 / main #2")           // S25
+
+// LEDS - pwm via PC9685 #3 (440-455) - EXRAIL Command: SET(vPin), terminal. command: <z vpin> 
+CONFIGURE_SERVO(454, 2000, 0, NoPowerOff)                               // pwm lights locoshed dorp op 454
+CONFIGURE_SERVO(455, 3000, 0, NoPowerOff)                               // pwm lights liechtenstein dorp op 455
+// CONFIGURE_SERVO(111, 2437, 0, PCA9685::NoPowerOff)
+// camservo op 454

@@ -15,9 +15,6 @@ AUTOSTART
   IFLT(BD_D_5_SENSOR, 255)          ENDIF
   DELAY(500)
   CALIBRATE_BLOCKSENSOREN()
-
-  // Zet heartbeat signaal aan voor naar command station
-  BLINK(HEARTBEAT_NODE_1,500,500)
 DONE
 
 // --- Continue loop voor uitlezen blockdetectors analoge ports
@@ -26,3 +23,10 @@ AUTOSTART SEQUENCE(2)
   PROCESS_BLOCKSENSOREN()
   DELAY(1000) 
 FOLLOW(2)
+
+AUTOSTART SEQUENCE(3)
+  // Zet heartbeat signaal aan voor naar command station
+  BLINK(HEARTBEAT_NODE_1,500,500)
+  DELAYMINS(5)
+  RESET(HEARTBEAT_NODE_1)
+FOLLOW(3)
