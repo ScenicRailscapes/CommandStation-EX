@@ -222,12 +222,9 @@ void SensorGroup::doExrailSensorGroup(GroupProcess action, Print * stream, VPIN 
 #undef SIGNALH
 #define SIGNALH(redpin,amberpin,greenpin,description...) \
   new LEDSignal(redpin,redpin,amberpin,greenpin,false,S_DESC(description));
-<<<<<<< HEAD
-=======
 #undef LED_SIGNAL
 #define LED_SIGNAL(signalid,redpin,amberpin,greenpin,description...) \
   new LEDSignal(signalid,redpin,amberpin,greenpin,false,S_DESC(description));
->>>>>>> upstream/devel
 #undef SERVO_SIGNAL
 #define SERVO_SIGNAL(vpin,redval,amberval,greenval,description...) \
   new ServoSignal(vpin,vpin,redval,amberval,greenval,S_DESC(description));
@@ -777,12 +774,8 @@ int RMFT2::onLCCLookup[RMFT2::countLCCLookup];
 #define SETLOCO(loco) OPCODE_SETLOCO,V(loco),
 #define SETFREQ(freq) OPCODE_SETFREQ,V(freq),
 #define SIGNAL(redpin,amberpin,greenpin,description...) 
-<<<<<<< HEAD
-#define SIGNALH(redpin,amberpin,greenpin,description...) 
-=======
 #define SIGNALH(redpin,amberpin,greenpin,description...)
 #define LED_SIGNAL(signalid,redpin,amberpin,greenpin,description...)
->>>>>>> upstream/devel
 #define SHARED_WRITE_VPINS(vpin,count)
 #define SPEED(speed) OPCODE_SPEED,V(speed),
 #define SPEEDUP(speedstep) OPCODE_SPEEDUP,V(speedstep),
