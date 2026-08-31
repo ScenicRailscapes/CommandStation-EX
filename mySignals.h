@@ -1,7 +1,4 @@
-/* Alternatief plan om met Matrix Signalen te werken ipv de ESP32 die als DCC-Accessorie decoder staat
-   met een I2C GPIO Expander de verschillende signal matrixen direct op de pinnen aansluiten.
-   In principe kunnen er 4 blockSignals & 2 exitSignals of 3 blockSignals, 1 exit en 1 entrySignal op
-   een 16 poort GPIO extender
+/* Alle seinen aangesloten via remote Nodes. Op de nodes staan ook de definities (VIRTUAL_SIGNALs).
 */
 
 /* Hoe te gebruiken ... 
@@ -16,23 +13,23 @@
 /* Alle gebruikte macros zijn gedefinieerd in myMacros.h */
 #include "myMacros.h"
 
-/* --------------------------------------------------------------------
-   SEIN DECLARATIES (Maakt automatisch alle VIRTUAL_SIGNALs aan)
-   -------------------------------------------------------------------- */
+// /* --------------------------------------------------------------------
+//    SEIN DECLARATIES (Maakt automatisch alle VIRTUAL_SIGNALs aan)
+//    -------------------------------------------------------------------- */
 
-// Blokseinen (3 pinnen)
-DEFINE_BLOCK_SIGNAL(100, SIG_100_J4, SIG_100_J3, SIG_100_J1)   //  BD_D_5
-DEFINE_BLOCK_SIGNAL(101, SIG_101_J4, SIG_101_J3, SIG_101_J1)   //  BD_D_1 
-//DEFINE_BLOCK_SIGNAL(102, SIG_102_J4, SIG_102_J3, SIG_102_J1)   //
-//DEFINE_BLOCK_SIGNAL(103, SIG_103_J4, SIG_103_J3, SIG_103_J1)   // 
+// // Blokseinen (3 pinnen)
+// DEFINE_BLOCK_SIGNAL(100, SIG_100_J4, SIG_100_J3, SIG_100_J1)   //  BD_D_5
+// DEFINE_BLOCK_SIGNAL(101, SIG_101_J4, SIG_101_J3, SIG_101_J1)   //  BD_D_1 
+// //DEFINE_BLOCK_SIGNAL(102, SIG_102_J4, SIG_102_J3, SIG_102_J1)   //
+// //DEFINE_BLOCK_SIGNAL(103, SIG_103_J4, SIG_103_J3, SIG_103_J1)   // 
 
-// Inrijsein (2 pinnen)
-DEFINE_ENTRY_SIGNAL(110, SIG_110_J4, SIG_110_J3)    // Entry/exit berg vanuit dorp
-DEFINE_ENTRY_SIGNAL(111, SIG_111_J4, SIG_111_J3)    // BD_D_4 dal
-DEFINE_ENTRY_SIGNAL(112, SIG_112_J4, SIG_112_J3)    // BD_HBI dal
+// // Inrijsein (2 pinnen)
+// DEFINE_ENTRY_SIGNAL(110, SIG_110_J4, SIG_110_J3)    // Entry/exit berg vanuit dorp
+// DEFINE_ENTRY_SIGNAL(111, SIG_111_J4, SIG_111_J3)    // BD_D_4 dal
+// DEFINE_ENTRY_SIGNAL(112, SIG_112_J4, SIG_112_J3)    // BD_HBI dal
 
-// Uitrijsein (4 pinnen)
-DEFINE_EXIT_SIGNAL(120, SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1) // DB_HBU dal + rangeer sein yard dal
+// // Uitrijsein (4 pinnen)
+// DEFINE_EXIT_SIGNAL(120, SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1) // DB_HBU dal + rangeer sein yard dal
 
 
 /* misschien macros met alleen een Sensor, maar wel met verschillende signalen die gezet kunnen worden en eventueel timeouts
@@ -60,11 +57,11 @@ DONE
 // Sein 101
 ONSENSOR(BD_D_1_BEZET)
     IF(BD_D_1_BEZET)
-        RED(100)
+        RED(101)
         AFTER(IR_D_1_2_BEZET) // station
-            AMBER(100)  
+            AMBER(101)  
     ELSE
-        GREEN(100)
+        GREEN(101)
   ENDIF
 DONE
 

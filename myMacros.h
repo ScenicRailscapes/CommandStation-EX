@@ -359,7 +359,7 @@ STEALTH( processAnalogSensors(); )
 
 
 // Of gekoppeld aan het Sein ID via een custom macro:
-#define SET_SIG_120_WHITE() SET_EXIT_SIGNAL_WHITE(SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1)   
+//#define SET_SIG_120_WHITE() SET_EXIT_SIGNAL_WHITE(SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1)   
 
 /* ==================================================================== */
 #endif // MY_MACROS_H

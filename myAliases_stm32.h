@@ -79,59 +79,59 @@ ALIAS (IR_D_2_2, 351)               // IR Sensor Hoofdspoor #1 Dorp
 ALIAS (IR_D_1_4, 352)               // IR Sensor Haven - dorp hoofdspoor
 // Block detectors (negatief voor block occupied)
 
-/* ====================================================================
-   SEIN CONFIGURATIE (EXRAIL)
-   ==================================================================== */
+// /* ====================================================================
+//    SEIN CONFIGURATIE (EXRAIL)
+//    ==================================================================== */
 
-// --------------------------------------------------------------------
-// ALIAS DEFINITIES VOOR I2C GPIO EXPANDER VPINs 
-// --------------------------------------------------------------------
+// // --------------------------------------------------------------------
+// // ALIAS DEFINITIES VOOR I2C GPIO EXPANDER VPINs 
+// // --------------------------------------------------------------------
 
-// (tijdelijk) Aangesloten op PCF9558 PCM controller #4 //I2C EX-IOExpander #1 (vPin 360-385)
-// BlockSignal 100 (Pool 100)
-ALIAS(SIG_100_J4, 364)
-ALIAS(SIG_100_J3, 365)
-ALIAS(SIG_100_J1, 366)
+// // (tijdelijk) Aangesloten op PCF9558 PCM controller #4 //I2C EX-IOExpander #1 (vPin 360-385)
+// // BlockSignal 100 (Pool 100)
+// ALIAS(SIG_100_J4, 364)
+// ALIAS(SIG_100_J3, 365)
+// ALIAS(SIG_100_J1, 366)
 
-// BlockSignal 101 (Pool 101)
-ALIAS(SIG_101_J4, 368)
-ALIAS(SIG_101_J3, 369)
-ALIAS(SIG_101_J1, 370)
+// // BlockSignal 101 (Pool 101)
+// ALIAS(SIG_101_J4, 368)
+// ALIAS(SIG_101_J3, 369)
+// ALIAS(SIG_101_J1, 370)
 
-// BlockSignal 102 (Pool 102)
-//ALIAS(SIG_102_J4, 376)
-//ALIAS(SIG_102_J3, 377)
-//ALIAS(SIG_102_J1, 378)
+// // BlockSignal 102 (Pool 102)
+// //ALIAS(SIG_102_J4, 376)
+// //ALIAS(SIG_102_J3, 377)
+// //ALIAS(SIG_102_J1, 378)
 
-// EntrySignal 110
-ALIAS(SIG_110_J4, 372)
-ALIAS(SIG_110_J3, 373)
+// // EntrySignal 110
+// ALIAS(SIG_110_J4, 372)
+// ALIAS(SIG_110_J3, 373)
 
-// EntrySignal 111
-ALIAS(SIG_111_J4, 374)
-ALIAS(SIG_111_J3, 375)
+// // EntrySignal 111
+// ALIAS(SIG_111_J4, 374)
+// ALIAS(SIG_111_J3, 375)
 
-// EntrySignal 112 deze kan voor nu gesplist over 367 en 371
-ALIAS(SIG_112_J4, 367)
-ALIAS(SIG_112_J3, 371)
+// // EntrySignal 112 deze kan voor nu gesplist over 367 en 371
+// ALIAS(SIG_112_J4, 367)
+// ALIAS(SIG_112_J3, 371)
 
-// ExitSignal 120 
-ALIAS(SIG_120_J4, 360)
-ALIAS(SIG_120_J3, 361)
-ALIAS(SIG_120_J2, 362)
-ALIAS(SIG_120_J1, 363)
+// // ExitSignal 120 
+// ALIAS(SIG_120_J4, 360)
+// ALIAS(SIG_120_J3, 361)
+// ALIAS(SIG_120_J2, 362)
+// ALIAS(SIG_120_J1, 363)
 
-// Aangesloten op I2C I/O #5 expander 380-395
+// // Aangesloten op I2C I/O #5 expander 380-395
 
-// BlockSignal 102 (Pool 102)
-// ALIAS(SIG_102_J4, 368)
-// ALIAS(SIG_102_J3, 369)
-// ALIAS(SIG_102_J1, 370)
+// // BlockSignal 102 (Pool 102)
+// // ALIAS(SIG_102_J4, 368)
+// // ALIAS(SIG_102_J3, 369)
+// // ALIAS(SIG_102_J1, 370)
 
-// BlockSignal 103 (Pool 103)
-// ALIAS(SIG_103_J4, 368)
-// ALIAS(SIG_103_J3, 369)
-// ALIAS(SIG_103_J1, 370)
+// // BlockSignal 103 (Pool 103)
+// // ALIAS(SIG_103_J4, 368)
+// // ALIAS(SIG_103_J3, 369)
+// // ALIAS(SIG_103_J1, 370)
 
 // Bitmaps (Latches )voor bezet / vrij 
 HAL(Bitmap,2000,60) // create flags 2000..2060 // Block bezet flags/latches
@@ -232,4 +232,17 @@ ALIAS(RELAIS_DCC_REVERSE, RELAIS_KEERLUS)   // Relais - DCC reverse loop relais,
 // Motors
 
 
-ALIAS(POWER_ON,254)                // Er is nog geen EXRail poweron status dus LATCH maken            
+// Remote (NODE) heartbeat on/offline sensoren
+ALIAS(REMOTE_NODE_1, 2500)
+ALIAS(REMOTE_NODE_2, 2501)
+ALIAS(REMOTE_NODE_3, 2502)
+// On/Offline status
+HAL(Bitmap,2505,3)                // create flags 2505-2507 Remote Node On/Offline
+ALIAS(REMOTE_NODE_1_STATUS, 2505) // Bitmap Node 1 on/offline status
+ALIAS(REMOTE_NODE_2_STATUS, 2506) // Bitmap Node 2 on/offline status
+ALIAS(REMOTE_NODE_3_STATUS, 2507) // Bitmap Node 3 on/offline status
+// On/Offline warning led
+// Kan eventueel ook via NeoPixel of iets anders. Voor nu op GPIO Expander?
+ALIAS(REMOTE_NODE_1_LED, 16) // tijdelijk op pinnen DCC controller
+ALIAS(REMOTE_NODE_2_LED, 27)
+ALIAS(REMOTE_NODE_3_LED, 17)       

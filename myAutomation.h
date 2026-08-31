@@ -17,6 +17,7 @@
 #include "myMimicPanel.h"
 #include "myServosAndMotors.h"
 #include "myTestExrailKladboek.h"
+#include "myRemoteSensors.h"
 
 
 AUTOSTART
@@ -34,7 +35,6 @@ AUTOSTART SEQUENCE(1)
   //PARSE("<C WIFI \"Nijlstroom_24\" \"52694646\">")
   //PARSE("<C WIFI HOSTNAME \"SilberBachTalBahn\">")
   PRINT("Alles goed zetten")
-  UNLATCH(POWER_ON) // Unlatch power on
   RESET(2000,50)  // Geen idee of dit nodig is of werkt, de bezetmelders resetten voor het mimicpanel
 
   DELAY(1000) // even wachten
@@ -49,18 +49,14 @@ AUTOSTART SEQUENCE(1)
   SET_TRACK(A,MAIN)
   SET_TRACK(B,MAIN)
   POWERON
-  //HAL(TM1638, 600, TM1638_CLOCK, TM1638_STROBE, TM1638_DATA)  // Init de TM1683 LED/Key matrix hier ivm blokkeren init.
-  DELAY(2000)
-  // Seinen nog nodig na een syn sensor ?
-  // GREEN(100)
-  // GREEN(101)
-  // GREEN(102)
-  // GREEN(110)
-  // GREEN(111)
-  // GREEN(112)
-  // GREEN(120)
+  DELAY(500)
+  PARSE("<D NODE OFF>") // voor nu even, anders wordt alle node info gedumpt
 
-  // 1. Kalibreer de ADS1115 nul-waarden direct bij opstart
+  // REMOTE SENSORS via Nodes
+  REMOTE_SENSOR(2100,5) // BlockDetect sensors Node #1
+  REMOTE_SENSOR(2500,3) // HeartBeat vPin Node #1, Node #2 en Node #3
+
+  // 1. Kalibreer de ADS1115 nul-waarden direct bij opstart (later de nodes)
   DELAY(3000)
   CALIBRATE_ADS1115()
   DELAY(2000)
@@ -127,3 +123,16 @@ FOLLOW(46)
 ROUTE(990,"ReCalibrate Blockdetectors")
   CALIBRATE_ADS1115() // later hernoemen naar RECALIBRATE_BLOCKSENSORS
 DONE
+
+// simpele HeartBeat node 1 monitoring via led
+// ONSENSOR(REMOTE_NODE_1)
+//   IF(REMOTE_NODE_1) SET(REMOTE_NODE_1_LED) ELSE RESET(REMOTE_NODE_1_LED) ENDIF
+// DONE
+
+// Testje voor later met timeout functies
+AUTOSTART SEQUENCE(5)
+	ATTIMEOUT(REMOTE_NODE_1, 500)
+	  SET(REMOTE_NODE_1_LED)	// Node online
+	IFTIMEOUT RESET(REMOTE_NODE_1_LED) ENDIF // Node offline
+	DELAY(500)
+FOLLOW(5)

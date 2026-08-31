@@ -29,7 +29,7 @@
  bv <C WIFI "Nijlstroom_24" "52694646">
  <C WIFI HOSTNAME "SilberBachTalBahn">
  Met <D WIFI SHOW> kan je de huidige wifi config zien.
- <C WIFI AP "SilberBachAP" "MsJmdg11"> voor AP mode
+<C WIFI AP "SilberBachAP" "MsJmdg11"> voor AP mode
 */
 
 /**********************************************************************
@@ -40,9 +40,9 @@ The configuration file for DCC-EX Command Station
 
 /* Welke pins worden gebruikt voor TM1638 display en relais op een ESP32 of een Nucleo */
 #ifdef ARDUINO_ARCH_ESP32
-  #define TM1638_CLOCK   16
-  #define TM1638_DATA    27
-  #define TM1638_STROBE  17
+  // #define TM1638_CLOCK   16
+  // #define TM1638_DATA    27
+  // #define TM1638_STROBE  17
   #define RELAIS_KEERLUS 14
 #else
   #define TM1638_CLOCK   PC6
