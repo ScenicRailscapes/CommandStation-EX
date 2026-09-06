@@ -13,18 +13,21 @@
 /* 
   Wissel detectie mbt reverse loop branchlijn dorp
 */
+// West zijde (berg)
+ONTHROW(1007)
+    IFTHROWN(1007) SET(RELAIS_DCC_REVERSE) ENDIF
+DONE
 
-ONTHROW(1007) // Branchlijn hoofdstation / Haven-dorp naar dorp
-  LOOP_ENTRY_WEST // set reverse loop when wissel to station is thrown
+ONCLOSE(1007)
+    IFCLOSED(1007) RESET(RELAIS_DCC_REVERSE) ENDIF
 DONE
-ONCLOSE(1007) // Branchlijn hoofdstation / Haven-dorp naar dorp
-  LOOP_ENTRY_EAST // reset reverse loop when wissel to haven/yard is closed  
-DONE  
-ONTHROW(1034) // Yard dorp - dorp branchlijn naar dorp
-  LOOP_ENTRY_WEST // set reverse loop when wissel to station is thrown
+// Oostzijde (haven)
+ONCLOSE(1034)
+    IFCLOSED(1034) RESET(RELAIS_DCC_REVERSE) ENDIF
 DONE
-ONCLOSE(1034) // Yard dorp - dorp branchlijn naar dorp
-  LOOP_ENTRY_EAST // reset reverse loop when wissel to haven/yard is closed
+
+ONTHROW(1034)
+    IFTHROWN(1034) SET(RELAIS_DCC_REVERSE) ENDIF
 DONE
 
 // // test om beetje visiueel te maken wat er gebeurt met de IR sensoren

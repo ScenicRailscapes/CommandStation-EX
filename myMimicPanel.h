@@ -182,3 +182,30 @@ BIND_SENSOR_MIMIC_IR(IR_D_4_2_BEZET, 11011, 1)
 #define MIMIC_ROUTE_91_INACTIVE       NEOPIXEL(11002, PCT(BRIGHTNESS), 0, 0, 4)  /* Rood 3-weg Wissel HELIX DAL BINNENRING */
 #define MIMIC_ROUTE_92_ACTIVE         NEOPIXEL(11144, 0, PCT(BRIGHTNESS), 0, 4) /* Groen 3-weg Wissel HELIX DAL BUITENRING */
 #define MIMIC_ROUTE_92_INACTIVE       NEOPIXEL(11144, PCT(BRIGHTNESS), 0, 0, 4)  /* Rood 3-weg Wissel HELIX DAL BUITENRING */
+
+
+/* --------------------------------------------------------------------
+   5. Synchroniseer de status van bezet flags met MIMIC panel leds
+   -------------------------------------------------------------------- */
+
+SEQUENCE(45)
+  PRINT("EXRAIL: Bezetmelders en Mimic Panel synchroniseren...")
+  // Helix
+  SYNC_SENSOR_EXPLICIT(BD_HBI, BD_HBI_1_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_HBU, BD_HBU_1_BEZET)
+
+  // Dorp / Hoofdspoor
+  SYNC_SENSOR_EXPLICIT(BD_DORP_STATION,  BD_D_1_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_2,   BD_D_2_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_3,   BD_D_3_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_4,   BD_D_4_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_D_5,   BD_D_5_BEZET)
+
+  // Schaduwstation
+  SYNC_SENSOR_EXPLICIT(BD_S_1,   BD_S_1_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_2,   BD_S_2_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_3,   BD_S_3_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_4,   BD_S_4_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_5,   BD_S_5_BEZET)
+  SYNC_SENSOR_EXPLICIT(BD_S_RIJ, BD_S_RIJ_BEZET)
+RETURN

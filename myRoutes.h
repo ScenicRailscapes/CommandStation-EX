@@ -59,8 +59,8 @@ AUTOMATION(1650, "AutoRoute: Start dal CCW")
     // 3. WISSELS GOED ZETTEN NA VERLATEN BD_D_4
     // Rit eerst over hoofdspoor #1, dan naar dorp
     PRINT("AutoRit: Gaan BD_D_4 verlaten. Wissels richting hoofdsporen")
-    THROW(1038)   // S23 Haven / main #1
-    THROW(1035)   // S20 Main #1 / schaduwstation
+    IFCLOSED(1038) THROW(1038) ENDIF    // S23 Haven / main #1
+    IFCLOSED(1035) THROW(1035) ENDIF    // S20 Main #1 / schaduwstation
     RANDOM_FOLLOW(ROUTE_1,ROUTE_2, ROUTE_1)
     //RANDOM_CALL(ROUTE_1,ROUTE_2) // deze komen hier terug...
     
@@ -81,7 +81,7 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
   IFTHROWN(1038) CLOSE(1038) ENDIF
   IFTHROWN(1039) CLOSE(1039) ENDIF
   // Kruisen van Hoofdspoor #2 naar #1
-  THROW(1040)   // S25 main #1 / main #2
+  IFCLOSED(1040) THROW(1040)   // S25 main #1 / main #2
   //WAIT_WHILE_RED(102) // Is er nu nog niet als sein. Waar wachten? nog bepalen
 
   // 1. Hoofdspoor #1 : SNELHEID VERLAGEN BIJ 1E IR DETECTOR 
@@ -95,8 +95,8 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
     PRINT("AutoRit: IR_D_2_1 berg geraakt")
     // Wissels omzetten om de helix halverwege te verlaten richting het dorp
     SOUND_RIJDEN
-    THROW(1006)   // S06 Helix buitenring / dorp
-    CLOSE(1007)   // S08 Branchlijn hoofdstation / Haven-dorp
+    IFCLOSED(1006) THROW(1006) ENDIF    // S06 Helix buitenring / dorp
+    IFTHROWN(1007) CLOSE(1007) ENDIF    // S08 Branchlijn hoofdstation / Haven-dorp
     RESTORE_SPEED
     DELAYRANDOM(3000, 6000)    // Even wachten voor Whistle/Horn
     IFRANDOM(60) SOUND_HORN   // Whistle / horn voor binnenrijden, 60% kans op kort, 40% op lang
@@ -129,7 +129,7 @@ ROUTE(ROUTE_1,"Route #1 CCW Hoofdspoor #1")
     PRINT("AutoRit: Blok BD_D_5 bereikt. Snelheid terug naar 30")
     DELAY(5000)
     SOUND_RIJDEN        // Rijgeluiden 
-    CLOSE(1006)         // S06 Helix buitenring / dorp
+    IFTHROWN(1006) CLOSE(1006) ENDIF          // S06 Helix buitenring / dorp
     SET(BD_D_5_UITRIT)  // flag dat we op de BD_D_5 rijden
     PRINT("AutoRit: Wissel S06 omgezet naar Helix buitenring")
   
@@ -162,9 +162,9 @@ ROUTE(ROUTE_2,"Route #2 CCW Hoofdspoor #2")
   // Eventueel vanuit de BD_D_5 komende 
   IF(BD_D_5_UITRIT)
     IFTHROWN(1039) CLOSE(1039) ENDIF
-    CLOSE(1040)
+    IFTHROWN(1040) CLOSE(1040) ENDIF
   ELSE
-    THROW(1040)   // S25 main #1 / main #2
+    IFCLOSED(1040) THROW(1040) ENDIF  // S25 main #1 / main #2
   ENDIF
   //WAIT_WHILE_RED(102)
   // AT wacht tot de sensor actief (1) wordt
@@ -237,11 +237,11 @@ ROUTE(ROUTE_3,"Dorp - station")
   ROUTE_CAPTION(ROUTE_3,"Active")
   PRINT("AutoRit: Route #3 CW Dorp-Station-Haven")
   // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
-    THROW (1007) // S08 Branchlijn hoofdstation / Haven-dorp
-    CLOSE (1037) // S22 Dorp -> Vissersdorp station"
-    THROW (1034) // S19 Haven -> dorp 
-    THROW (1039) // 
-    CLOSE (1024) // S13 -> hoofdstation
+    IFCLOSED(1007) THROW (1007) ENDIF // S08 Branchlijn hoofdstation / Haven-dorp
+    IFTHROWN(1037) CLOSE (1037) ENDIF  // S22 Dorp -> Vissersdorp station"
+    IFCLOSED(1034) THROW (1034) ENDIF  // S19 Haven -> dorp 
+    IFCLOSED(1039) THROW (1039) ENDIF  // 
+    IFTHROWN(1024) CLOSE (1024) ENDIF  // S13 -> hoofdstation
   
   SPEED(0)  // remmen
   DELAY(6000) // Geef remtijd
@@ -265,11 +265,12 @@ ROUTE(ROUTE_4,"Dorp - haven dorp - Station")
   // hier iets maken als er 1 of twee rondes geweest zijn, een melding op scherm en parkeren op yard ofzo om loc om te keren
   DELAY(4000)
   PRINT("AutoRit: wissels zetten voor keerlus naar station")
-  CLOSE (1007) // S08 Branchlijn hoofdstation / Haven-dorp
-  CLOSE (1037) // S22 Dorp -> Vissersdorp station"
-  THROW (1039) // 
-  THROW (1034) // S19 Haven -> dorp 
-  CLOSE (1024) // S13 -> hoofdstation
+  IFTHROWN(1007) CLOSE (1007) ENDIF  // S08 Branchlijn hoofdstation / Haven-dorp
+  IFTHROWN(1037) CLOSE (1037) ENDIF  // S22 Dorp -> Vissersdorp station"
+  IFCLOSED(1034) THROW (1034) ENDIF  // S19 Haven -> dorp 
+  IFCLOSED(1039) THROW (1039) ENDIF  // 
+  IFTHROWN(1024) CLOSE (1024) ENDIF  // S13 -> hoofdstation  
+
   // 1. Dorpbranch CW: Hoofdstation nadert
   AT(IR_D_1_2_BEZET)
     SPEED_REL(50)
@@ -357,22 +358,22 @@ ROUTE(ROUTE_5,"Keer om via keerlus dorp")
       DELAY(3000)   // uittesten of we echt voorbij zijn.. desnoods via AFTER achter AT
       SOUND_BELL
       // 1. Horn en wissels omzetten
-      THROW(1007) // S08 Branchlijn hoofdstation / Haven-dorp
-      THROW(1024) // Wissel brouwerij
+      IFCLOSED(1007) THROW(1007) ENDIF  // S08 Branchlijn hoofdstation / Haven-dorp
+      IFCLOSED(1024) THROW(1024) ENDIF  // Wissel brouwerij
       // 2. Rij achteruit
       REV(10)
   // 3. Voorbij station, zet wissel weer om
   AT (IR_D_1_2_BEZET)
       PRINT("AutoRit: voorbij Station, wissels goedzetten")
-      THROW(1007) // S08 Branchlijn hoofdstation / Haven-dorp
-      CLOSE(1036) // S21 Dorp / dal
-      THROW(1037) // S22 Dorp / havendorp
+      IFCLOSED(1007) THROW(1007) ENDIF  // S08 Branchlijn hoofdstation / Haven-dorp
+      IFTHROWN(1036) CLOSE(1036) ENDIF  // S21 Dorp / dal
+      IFCLOSED(1037) THROW(1037) ENDIF  // S22 Dorp / havendorp
   // 4. Voorbij de yard/haven / branchlijn
   AT(IR_D_1_4_BEZET)
       PRINT("AutoRit: voorbij yard dorp")
       SOUND_HORN
   AT(IR_D_1_5_BEZET)  // voorbij de bocht
-      CLOSE(1039) // Havendorp - hoodroute #2
+      IFTHROWN(1039) CLOSE(1039) ENDIF  // Havendorp - hoodroute #2
       DELAY(5000) // beginnen met 5 sec, later afhankelijk van snelheid maken
       SET_LOCO_SPEED(0)  // voor nu even stop, kijken waar we zijn
       PRINT("AutoRit: We staan nu weer CCW")
@@ -384,3 +385,84 @@ ROUTE(ROUTE_5,"Keer om via keerlus dorp")
       FOLLOW(ROUTE_1) // we gaan verder met route_1
 DONE
 
+
+
+/*
+  Speciale Routes
+*/
+
+ROUTE(90,"Schaduwstation")
+    THROW (1000) // links af deel 3-weg wissel
+    THROW (1001) // rechts af deel 3-weg wissel
+    ROUTE_INACTIVE(91) 
+    ROUTE_INACTIVE(92)
+    MIMIC_ROUTE_90_ACTIVE
+    MIMIC_ROUTE_91_INACTIVE
+    MIMIC_ROUTE_92_INACTIVE 
+    //DONE
+    RETURN
+
+ROUTE(91,"Helix binnenring")
+    THROW (1000) // links af deel 3-weg wissel
+    CLOSE (1001) // rechts af deel 3-weg wissel
+    ROUTE_INACTIVE(90)
+    ROUTE_INACTIVE(92)   
+    MIMIC_ROUTE_90_INACTIVE
+    MIMIC_ROUTE_91_ACTIVE
+    MIMIC_ROUTE_92_INACTIVE      
+    //DONE
+    RETURN
+
+ROUTE(92,"Helix buitenring")
+    CLOSE (1000) // links af deel 3-weg wissel
+    CLOSE (1001) // rechts af deel 3-weg wissel
+    THROW (1002) // Helix buitenring
+    ROUTE_INACTIVE(90)
+    ROUTE_INACTIVE(91)
+    MIMIC_ROUTE_90_INACTIVE
+    MIMIC_ROUTE_91_INACTIVE
+    MIMIC_ROUTE_92_ACTIVE    
+    //DONE
+    RETURN
+
+ROUTE(93, "Yard dal")
+    CLOSE (1000) // links af deel 3-weg wissel
+    CLOSE (1001) // rechts af deel 3-weg wissel
+    CLOSE (1002) // Yard dal
+    ROUTE_INACTIVE(90)
+    ROUTE_INACTIVE(91)
+    ROUTE_INACTIVE(92)    
+    MIMIC_ROUTE_90_INACTIVE
+    MIMIC_ROUTE_91_INACTIVE
+    MIMIC_ROUTE_92_ACTIVE 
+    //SET_SIG_120_WHITE() // Rangeer signaal staat nu op node #1. Nog iets voor bedenken..
+    DONE
+    RETURN
+
+ROUTE(94, "Rangeer op yard")
+    CLOSE(1002) // Yard dal
+    DONE
+
+ROUTE(95, "Yard dal naar vissersdorp")
+    CLOSE (1000) // links af deel 3-weg wissel
+    CLOSE (1001) // rechts af deel 3-weg wissel
+    CLOSE(1002) // Yard dal
+    THROW (1003) // Yard dal naar vissersdorp
+    DONE
+
+ROUTE(96, "Helix CCW vissersdorp - hoofdstation")
+    CLOSE (1007) // S08 Branchlijn hoofdstation / Haven-dorp
+    CLOSE (1037) // S22 Dorp -> Vissersdorp station"
+    THROW (1034) // S19 Haven -> dorp 
+    THROW (1039) // 
+    CLOSE (1024) // S13 -> hoofdstation
+    DONE    
+
+    // even checken
+ROUTE(97, "Helix CCW dorp - hoofdstation - havendorp - helix CW")
+    THROW (1007) // S08 Branchlijn hoofdstation / Haven-dorp
+    CLOSE (1037) // S22 Dorp -> Vissersdorp station"
+    THROW (1034) // S19 Haven -> dorp 
+    THROW (1039) // 
+    CLOSE (1024) // S13 -> hoofdstation
+    DONE        

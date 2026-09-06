@@ -7,11 +7,6 @@
     PLAY_FOLDER(player+10000,folder) \
     PLAY_TRACK(player+10000,track,volume)
 
-// macro voor de 7-segment display 
-#define CLEARSEG7(firstVpin) \
-  SEG7(firstVpin,0,4R) \
-  SEG7(firstVpin+4,0,4R)
-
 /* ====================================================================
    CENTRALE MACRO VOOR BLOKBEVEILIGING MET IR EN RICHTING
    ==================================================================== */
@@ -198,23 +193,19 @@
 #define SIGNAL_3A_AMBER(pin)  AMBER(pin)
 #define SIGNAL_3A_GREEN(pin)  GREEN(pin)    
 
-/* ====================================================================
-   LIVE DEFINITIE VAN DE KEERLUS SEQUENCES
-   ==================================================================== */
-// We sturen de pinnen direct aan via de macro-expansie!
-#define LOOP_ENTRY_WEST \
-    SET(REVERSE_SIGNAL_ACTIVE) \
-    RESET(RELAIS_DCC_REVERSE) \
-    BLINK(600,500,500)
+// keerlus op node 1
+// /* ====================================================================
+//    LIVE DEFINITIE VAN DE KEERLUS SEQUENCES
+//    ==================================================================== */
+// // We sturen de pinnen direct aan via de macro-expansie!
+// #define LOOP_ENTRY_WEST \
+//     SET(REVERSE_SIGNAL_ACTIVE) \
+//     RESET(RELAIS_DCC_REVERSE) 
 
-#define LOOP_ENTRY_EAST \
-    RESET(REVERSE_SIGNAL_ACTIVE) \
-    DELAY(8000) /* even wachten tot de trein het keerlusdeel heeft verlaten */ \
-    SET(RELAIS_DCC_REVERSE) \
-    RESET(600)
-
-    // hier kan misschien de SEIN aansturing tussen, dus bij de loops een RED(101) ??, maar hoe krijgen we groen?
-
+// #define LOOP_ENTRY_EAST \
+//     RESET(REVERSE_SIGNAL_ACTIVE) \
+//     DELAY(8000) /* even wachten tot de trein het keerlusdeel heeft verlaten */ \
+//     SET(RELAIS_DCC_REVERSE) 
 
 // // moet nog iets maken wat het actieve loco address oppikt.. Kan met een STEALTH en locoAddr
 #define LOCO_HANDOVER(loconum, sequencenum) \
@@ -249,25 +240,25 @@
     RESET(BEZET_FLAG) \
   ENDIF
 
-/* ====================================================================
-   EXRAIL MACRO'S VOOR ANALOGE BLOKDETECTIE
-   ==================================================================== */
+// /* ====================================================================
+//    EXRAIL MACRO'S VOOR ANALOGE BLOKDETECTIE
+//    ==================================================================== */
 
-// Macro om kalibratie uit te voeren
-#define CALIBRATE_ADS1115() \
-  PRINT("Starten van handmatige herkalibratie...") \
-  STEALTH( calibrateAnalogSensors(); )
+// // Macro om kalibratie uit te voeren
+// #define CALIBRATE_ADS1115() \
+//   PRINT("Starten van handmatige herkalibratie...") \
+//   STEALTH( calibrateAnalogSensors(); )
 
-// Macro om alle sensoren 1 keer uit te lezen
-#define PROCESS_ADS1115() \
-STEALTH( processAnalogSensors(); )
+// // Macro om alle sensoren 1 keer uit te lezen
+// #define PROCESS_ADS1115() \
+// STEALTH( processAnalogSensors(); )
 
-/* ====================================================================
-   EXRAIL ANALOGE BLOKDETECTIE DIAGNOSE MACRO'S
-   ==================================================================== */
+// /* ====================================================================
+//    EXRAIL ANALOGE BLOKDETECTIE DIAGNOSE MACRO'S
+//    ==================================================================== */
 
-// Print eenmalig de status van alle analoge poorten naar de Seriële Monitor
-#define DIAG_ADS1115()        STEALTH( printADS1115Diagnostics(); )
+// // Print eenmalig de status van alle analoge poorten naar de Seriële Monitor
+// #define DIAG_ADS1115()        STEALTH( printADS1115Diagnostics(); )
 
 
 /* ====================================================================

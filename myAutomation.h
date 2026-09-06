@@ -5,20 +5,19 @@
 // Include files, order is important
 #include "myHal.h"
 #include "myAliases_stm32.h"
+#include "myRemoteSensors.h"
 #include "myMacros.h"
 #include "myStealthCode.h"
 #include "myLedsandLights.h"
-#include "myBlocks.h"
+//#include "myBlocks.h" // naar nodes
 #include "mySignals.h"
 #include "myReverseLoopAutomation.h"
 #include "mySounds.h"
-#include "myRoutes.h"
 #include "mySwitches.h"
 #include "myMimicPanel.h"
-#include "myServosAndMotors.h"
+//#include "myServosAndMotors.h"  // naar nodes
+#include "myRoutes.h"
 #include "myTestExrailKladboek.h"
-#include "myRemoteSensors.h"
-
 
 AUTOSTART
 
@@ -35,10 +34,8 @@ AUTOSTART SEQUENCE(1)
   //PARSE("<C WIFI \"Nijlstroom_24\" \"52694646\">")
   //PARSE("<C WIFI HOSTNAME \"SilberBachTalBahn\">")
   PRINT("Alles goed zetten")
-  RESET(2000,50)  // Geen idee of dit nodig is of werkt, de bezetmelders resetten voor het mimicpanel
-
+  RESET(2000,90)  // Geen idee of dit nodig is of werkt, de bezetmelders resetten voor het mimicpanel
   DELAY(1000) // even wachten
-  RESET(300, 16) // Reset I2C I/O #1 expander
   RESET(320, 16) // Reset I2C I/O #2 expander
   RESET(340, 16) // Reset I2C I/O #3 expander
   RESET(360, 16) // Reset I2C I/O #3 expander
@@ -51,14 +48,6 @@ AUTOSTART SEQUENCE(1)
   POWERON
   DELAY(500)
   PARSE("<D NODE OFF>") // voor nu even, anders wordt alle node info gedumpt
-
-  // REMOTE SENSORS via Nodes
-  REMOTE_SENSOR(2100,5) // BlockDetect sensors Node #1
-  REMOTE_SENSOR(2500,3) // HeartBeat vPin Node #1, Node #2 en Node #3
-
-  // 1. Kalibreer de ADS1115 nul-waarden direct bij opstart (later de nodes)
-  DELAY(3000)
-  CALIBRATE_ADS1115()
   DELAY(2000)
   NEOPIXEL(11000,30,30,30,200)
   DELAY(1000)
@@ -119,16 +108,6 @@ SEQUENCE(46)
   DELAYMINS(1)
 FOLLOW(46)
 
-// Handmatige herkalibratie route
-ROUTE(990,"ReCalibrate Blockdetectors")
-  CALIBRATE_ADS1115() // later hernoemen naar RECALIBRATE_BLOCKSENSORS
-DONE
-
-// simpele HeartBeat node 1 monitoring via led
-// ONSENSOR(REMOTE_NODE_1)
-//   IF(REMOTE_NODE_1) SET(REMOTE_NODE_1_LED) ELSE RESET(REMOTE_NODE_1_LED) ENDIF
-// DONE
-
 // Testje voor later met timeout functies
 AUTOSTART SEQUENCE(5)
 	ATTIMEOUT(REMOTE_NODE_1, 500)
@@ -136,3 +115,17 @@ AUTOSTART SEQUENCE(5)
 	IFTIMEOUT RESET(REMOTE_NODE_1_LED) ENDIF // Node offline
 	DELAY(500)
 FOLLOW(5)
+
+AUTOSTART SEQUENCE(6)
+	ATTIMEOUT(REMOTE_NODE_2, 500)
+	  SET(REMOTE_NODE_2_LED)	// Node online
+	IFTIMEOUT RESET(REMOTE_NODE_2_LED) ENDIF // Node offline
+	DELAY(500)
+FOLLOW(6)
+
+AUTOSTART SEQUENCE(7)
+	ATTIMEOUT(REMOTE_NODE_3, 500)
+	  SET(REMOTE_NODE_3_LED)	// Node online
+	IFTIMEOUT RESET(REMOTE_NODE_3_LED) ENDIF // Node offline
+	DELAY(500)
+FOLLOW(7)

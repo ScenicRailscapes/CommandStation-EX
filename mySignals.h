@@ -46,55 +46,56 @@
 // Sein 100
 ONSENSOR(BD_D_5_BEZET)
     IF(BD_D_5_BEZET)
-        RED(100)
-        DELAY(5000)
-        AMBER(100)  
+        RED(100) DELAY(100) RED(100)
+        DELAY(5000) 
+        AMBER(100) DELAY(100) AMBER(100) 
     ELSE
-        GREEN(100)
+        GREEN(100) DELAY(100) GREEN(100)
   ENDIF
 DONE
 
 // Sein 101
 ONSENSOR(BD_D_1_BEZET)
     IF(BD_D_1_BEZET)
-        RED(101)
+        RED(101) DELAY(100) RED(101)
         AFTER(IR_D_1_2_BEZET) // station
-            AMBER(101)  
+            AMBER(101) DELAY(100) AMBER(101)
     ELSE
-        GREEN(101)
+        GREEN(101) DELAY(100) GREEN(101)
   ENDIF
 DONE
 
 // Sein 120 en 110
 ONSENSOR(BD_HBU_1_BEZET)
     IF(BD_HBU_1_BEZET)
-        RED(120)
-        RED(110)
+        //PRINT("HBU Bezet") ELSE PRINT("HBU Vrij") ENDIF
+        RED(120) DELAY(100) RED(120)
+        RED(110)  DELAY(100) RED(110)
         AFTER(IR_HBU_M_BEZET)
-            GREEN(110)      // entry dorp->berg vrij want voorbij dorp CCW of CW maakt niet uit
-            IF(BD_HBU_1_CW) // rijden ClockWise dus naar boven)
-                AMBER(120)  // dan mag er beneden verder gereden worden na passeren midden helix
+            GREEN(110) DELAY(100) GREEN(110)   // entry dorp->berg vrij want voorbij dorp CCW of CW maakt niet uit
+            IF(BD_HBU_1_CW)                    // rijden ClockWise dus naar boven)
+                AMBER(120)                     // dan mag er beneden verder gereden worden na passeren midden helix
             ENDIF
     ELSE
-        GREEN(120)
-        GREEN(110)
+        GREEN(120) DELAY(100) GREEN(120)
+        GREEN(110) DELAY(100) GREEN(110)
   ENDIF
 DONE
 
 // Sein 111
 ONSENSOR(BD_D_4_BEZET)
     IF(BD_D_4_BEZET)
-        RED(111)
+        RED(111) DELAY(100) RED(111)
     ELSE
-        GREEN(111)
+        GREEN(111) DELAY(100) GREEN(111)
   ENDIF
 DONE
 
 // Sein 112
 ONSENSOR(BD_HBI_1_BEZET)
     IF(BD_HBI_1_BEZET)
-        RED(112)
+        RED(112) DELAY(100) RED(112)
     ELSE
-        GREEN(112)
+        GREEN(112) DELAY(100) GREEN(112)
   ENDIF
 DONE

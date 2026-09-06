@@ -48,7 +48,7 @@
     STEALTH( playSoundEffect(loco, effect_id, 0, dfplayervpin, false); )
 
 #define SOUND_OPTREKKEN             SOUND_START(FX_ACCEL, 25, 10000)
-#define SOUND_RIJDEN                SOUND_START(FX_CRUISE, 25, 10000)
+#define SOUND_RIJDEN                SOUND_START(FX_CRUISE,18, 10000)
 #define SOUND_AFREMMEN              SOUND_START(FX_DECEL, 11, 10000)
 #define SOUND_REMMEN                SOUND_START(FX_BRAKE, 20, 10000)
 

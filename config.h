@@ -43,7 +43,7 @@ The configuration file for DCC-EX Command Station
   // #define TM1638_CLOCK   16
   // #define TM1638_DATA    27
   // #define TM1638_STROBE  17
-  #define RELAIS_KEERLUS 14
+  // #define RELAIS_KEERLUS 14
 #else
   #define TM1638_CLOCK   PC6
   #define TM1638_DATA    PC5
