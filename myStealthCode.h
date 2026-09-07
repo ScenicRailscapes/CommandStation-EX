@@ -25,12 +25,10 @@ STEALTH_GLOBAL(
   #if NODENUM == 1
 
     static AnalogBlockSensor analogSensors[] = {
-      {BD_HBU_SENSOR, BD_HBU,                   300, 150, 300, 2000, 0, false, 0, 0},
-      {BD_HBI_SENSOR, BD_HBI,                   300, 150, 300, 2000, 0, false, 0, 0},
-      {BD_DORP_STATION_SENSOR, BD_DORP_STATION, 300, 150, 300, 2000, 0, false, 0, 0},
-      {BD_D_4_SENSOR, BD_D_4,                   300, 150, 300, 2000, 0, false, 0, 0},
-      {BD_D_5_SENSOR, BD_D_5,                   300, 150, 300, 2000, 0, false, 0, 0}
-    };
+      {BD_HBU_SENSOR, BD_HBU,                   100, 50, 300, 2000, 0, false, 0, 0},
+      {BD_HBI_SENSOR, BD_HBI,                   100, 50, 300, 2000, 0, false, 0, 0},
+      {BD_DORP_STATION_SENSOR, BD_DORP_STATION, 100, 50, 300, 2000, 0, false, 0, 0}
+    };    
 
   #elif NODENUM == 2
 
@@ -40,14 +38,16 @@ STEALTH_GLOBAL(
       {BD_S_1_SENSOR, BD_S_1,                   300, 150, 300, 2000, 0, false, 0, 0},
       {BD_S_2_SENSOR, BD_S_2,                   300, 150, 300, 2000, 0, false, 0, 0},
       {BD_S_3_SENSOR, BD_S_3,                   300, 150, 300, 2000, 0, false, 0, 0},
-      {BD_S_4_SENSOR, BD_S_4,                   300, 150, 300, 2000, 0, false, 0, 0}
+      {BD_S_4_SENSOR, BD_S_4,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_S_5_SENSOR, BD_S_5,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_S_RIJ_SENSOR, BD_S_RIJ,               300, 150, 300, 2000, 0, false, 0, 0}      
     };
 
   #elif NODENUM == 3
 
     static AnalogBlockSensor analogSensors[] = {
-      {BD_S_5_SENSOR, BD_S_5,                   300, 150, 300, 2000, 0, false, 0, 0},
-      {BD_S_RIJ_SENSOR, BD_S_RIJ,               300, 150, 300, 2000, 0, false, 0, 0}
+      {BD_D_4_SENSOR, BD_D_4,                   300, 150, 300, 2000, 0, false, 0, 0},
+      {BD_D_5_SENSOR, BD_D_5,                   300, 150, 300, 2000, 0, false, 0, 0}     
     }; 
     
   #else

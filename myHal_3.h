@@ -54,9 +54,9 @@
 //   Number of VPINs=16 (numbered 100-115)
 //   I2C address of module=0x40
 
-HAL(PCA9685,400, 16, 0x40)
+// HAL(PCA9685,400, 16, 0x40)
 // HAL(PCA9685,420, 16, 0x41)
-// HAL(PCA9685,440, 16, 0x42)
+HAL(PCA9685,440, 16, 0x42)
 // HAL(PCA9685,360, 16, 0x45) // #1 Seinen set 1
 
 //=======================================================================
@@ -78,7 +78,7 @@ HAL(PCA9685,400, 16, 0x40)
 //   Number of VPINs=16 (numbered 200-215)
 //   I2C address of module=0x23
 
-HAL(PCF8575,300, 16, 0x20) // #1
+HAL(PCF8575,340, 16, 0x22) // #3
 
 
 //=======================================================================
@@ -110,7 +110,7 @@ HAL(PCF8575,300, 16, 0x20) // #1
   ADDR + ASCL: 0x4B
 */
 
-HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
+//HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
 //HAL(ADS111x,505, 4, 0x49)  // #2 four-input ADS1115 on pins 505..508
 //HAL(ADS111x,510, 4, 0x4A)  // #3 four-input ADS1115 on pins 510..513
 //HAL(ADS111x,515, 4, 0x4B)  // #4 four-input ADS1115 on pins 515..518

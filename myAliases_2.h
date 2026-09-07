@@ -16,82 +16,60 @@
 // ALIAS DEFINITIES VOOR DE SEINEN AANGESLOTEN OP DEZE NODE
 // --------------------------------------------------------------------
 
-// // BlockSignal 100 (Pool 100)
-// ALIAS(SIG_100_J4, 25)  // GPIO 25
-// ALIAS(SIG_100_J3, 26)
-// ALIAS(SIG_100_J1, 27)
+// EntrySignal 117
+ALIAS(SIG_117_J4, 25) // GPIO 25
+ALIAS(SIG_117_J3, 26)
 
-// // BlockSignal 101 (Pool 101)
-// ALIAS(SIG_101_J4, 0) // GPIO 16
-// ALIAS(SIG_101_J3, 4)
-// ALIAS(SIG_101_J1, 16)
+// EntrySignal 118
+ALIAS(SIG_118_J4, 27)  // GPIO 27
+ALIAS(SIG_118_J3, 14)
 
-// // EntrySignal 110
-// ALIAS(SIG_110_J4, 14) // GPIO 14
-// ALIAS(SIG_110_J3, 12)
 
-// // EntrySignal 111
-// ALIAS(SIG_111_J4, 2)  // GPIO 2
-// ALIAS(SIG_111_J3, 15)
+// Bitmaps Analoge blockdetectors bezetmelders 
+HAL(Bitmap,2100,6)         // create flags 2110..2115 // blockdetect latches
+ALIAS(BD_D_2, 2100)        // Flag to indicate Helix Buitenring is occupied
+ALIAS(BD_D_3, 2101)        // Helix binnenring
+ALIAS(BD_S_1, 2102)        // Branchlijn dorp - station - havendorp
+ALIAS(BD_S_2, 2103)        // Yard dal - havendorp
+ALIAS(BD_S_3, 2104)        // Branchlijn dorp - havendorp
+ALIAS(BD_S_4, 2105)        // Branchlijn dorp - havendorp
+ALIAS(BD_S_5, 2106)        // Block #8 Parkeerspoor #5
+ALIAS(BD_S_RIJ, 2107)      // Block #9 Doorrij spoor
 
-// // EntrySignal 112
-// ALIAS(SIG_112_J4, 13) // GPIO 13
-// ALIAS(SIG_112_J3, 23)
-
-// // ExitSignal 120 
-// ALIAS(SIG_120_J4, 19) // GPIO 19
-// ALIAS(SIG_120_J3, 18)
-// ALIAS(SIG_120_J2, 5)
-// ALIAS(SIG_120_J1, 17)
+HAL(Bitmap,2013,2)                  // create flags 2013-2014 // IR bezet flags/latches
+ALIAS(IR_D_2_1_BEZET, 2013)         // IR Sensor Hoofdspoor #1 Berg bezet latch
+ALIAS(IR_D_3_1_BEZET, 2014)         // IR Sensor Hoofdspoor #2 Berg bezet latch
 
 // Bitmaps (Latches )voor bezet / vrij 
-// HAL(Bitmap,2000,60) // create flags 2000..2060 // Block bezet flags/latches
-// // node 1
-// ALIAS(BD_HBI_1_BEZET, 2000)         // Block #1 occupied latch
-// ALIAS(BD_HBU_1_BEZET, 2001)         // Block #2 occupied latch
-// ALIAS(BD_D_1_BEZET, 2002)           // Block #3 occupied latch
-// ALIAS(BD_D_4_BEZET, 2003)           // Block #6 occupied latch
-// ALIAS(BD_D_5_BEZET, 2004)           // Block #13 occupied latch
+HAL(Bitmap,2030,6)                  // create flags 2000..2035 // Block bezet flags/latches
+ALIAS(BD_D_2_BEZET, 2030)           // Block #4 occupied latch 
+ALIAS(BD_D_3_BEZET, 2031)           // Block #5 occupied latch
+ALIAS(BD_S_1_BEZET, 2032)           // Block #7 occupied latch
+ALIAS(BD_S_2_BEZET, 2033)           // Block #8 occupied latch
+ALIAS(BD_S_3_BEZET, 2034)           // Block #9 occupied latch
+ALIAS(BD_S_4_BEZET, 2035)           // Block #10 occupied latch
+HAL(Bitmap,2045,14)                 // create flags 2045..2059 // Block bezet flags/latches
+ALIAS(BD_S_5_BEZET, 2045)           // Block #11 occupied latch
+ALIAS(BD_S_RIJ_BEZET, 2046)         // Block #12 occupied latch
 
-// ALIAS(IR_D_1_1_BEZET, 2010)         // IR Sensor Dorp branchlijn west (berg) bezet latch
-// ALIAS(IR_D_1_2_BEZET, 2011)         // IR Sensor Dorp branchlijn station bezet latch
-// ALIAS(IR_D_1_3_BEZET, 2012)         // IR Sensor hoofdspoor dorp - haven bezet latch
-// ALIAS(IR_D_2_1_BEZET, 2013)         // IR Sensor Hoofdspoor #1 Berg bezet latch
-// ALIAS(IR_D_3_1_BEZET, 2014)         // IR Sensor Hoofdspoor #2 Berg bezet latch
-// ALIAS(IR_HBI_M_BEZET, 2015)         // IR Sensor Helix midden niveau binnenring bezet latch
-// ALIAS(IR_HBI_B_BEZET, 2016)         // IR Sensor Helix berg niveau binnenring bezet latch
-// ALIAS(IR_HBI_D_BEZET, 2017)         // IR Sensor Helix dal niveau binnenring bezet latch
-// ALIAS(IR_HBU_D_BEZET, 2018)         // IR Sensor Helix dal niveau buitenring bezet latch
-// ALIAS(IR_HBU_M_BEZET, 2019)         // IR Sensor Helix midden niveau buitenring bezet latch
-// ALIAS(IR_HBU_B_BEZET, 2020)         // IR Sensor Helix berg niveau buitenring bezet latch
+ALIAS(IR_S_1_BEZET, 2047)           // IR Stop sensor parkeerspoor #1 bezet latch
+ALIAS(IR_S_2_BEZET, 2048)           // IR Stop sensor parkeerspoor #2 bezet latch
+ALIAS(IR_S_3_BEZET, 2049)           // IR Stop sensor parkeerspoor #3 bezet latch
+ALIAS(IR_S_4_BEZET, 2050)           // IR Stop sensor parkeerspoor #4 bezet latch
+ALIAS(IR_S_5_BEZET, 2051)           // IR Stop sensor parkeerspoor #5 bezet latch
 
+ALIAS(BD_D_2_CW, 2053)              // Trein rijdt Clockwise door blok 2
+ALIAS(BD_D_2_CCW, 2054)             // Trein rijdt Counter Clockwise door blok 2
+ALIAS(BD_D_3_CW, 2055)              // Trein rijdt Clockwise door blok 3
+ALIAS(BD_D_3_CCW, 2056)             // Trein rijdt Counter Clockwise door blok 3
 
-// node 2
-// ALIAS(BD_D_2_BEZET, 2030)           // Block #4 occupied latch 
-// ALIAS(BD_D_3_BEZET, 2031)           // Block #5 occupied latch
-// ALIAS(BD_S_1_BEZET, 2032)           // Block #7 occupied latch
-// ALIAS(BD_S_2_BEZET, 2033)           // Block #8 occupied latch
-// ALIAS(BD_S_3_BEZET, 2034)           // Block #9 occupied latch
-// ALIAS(BD_S_4_BEZET, 2035)           // Block #10 occupied latch
+HAL(Bitmap,2062,1)                  // create flags 2062 // Block bezet flags/latches (deze later weg)
+ALIAS(IR_S_RIJ_BEZET, 2062)         // IR Stop sensor doorrij spoor bezet latch
 
-// ALIAS(IR_S_1_BEZET, 2040)           // IR Stop sensor parkeerspoor #1 bezet latch
-// ALIAS(IR_S_2_BEZET, 2041)           // IR Stop sensor parkeerspoor #2 bezet latch
-// ALIAS(IR_S_3_BEZET, 2042)           // IR Stop sensor parkeerspoor #3 bezet latch
-// ALIAS(IR_S_4_BEZET, 2043)           // IR Stop sensor parkeerspoor #4 bezet latch
-// ALIAS(IR_S_5_BEZET, 2044)           // IR Stop sensor parkeerspoor #5 bezet latch
-// Rest nog ruimte voor 1 of 2 seinen, bv voor hoofdspoor
+HAL(Bitmap,2066,2)                  // create flags 2066-2067 // IR bezet flags/latches
+ALIAS(IR_D_3_2_BEZET, 2066)         // IR Sensor Hoofdspoor #2 Dorp bezet latch
+ALIAS(IR_D_2_2_BEZET, 2067)         // IR Sensor Hoofdspoor #1 Dorp bezet latch
 
-// node 3
-// ALIAS(BD_S_5_BEZET, 2050)           // Block #11 occupied latch
-// ALIAS(BD_S_RIJ_BEZET, 2051)         // Block #12 occupied latch
-
-// ALIAS(IR_S_RIJ_BEZET, 2052)         // IR Stop sensor doorrij spoor bezet latch
-// ALIAS(IR_D_1_5_BEZET, 2053)         // IR Sensor Visserdorp - dorp hoofdspoor bezet latch
-// ALIAS(IR_D_4_1_BEZET, 2054)         // IR Sensor Connectie spoor #1 Dorp bezet latch
-// ALIAS(IR_D_4_2_BEZET, 2055)         // IR Sensor Connectie spoor #1 Dal bezet latch
-// ALIAS(IR_D_3_2_BEZET, 2056)         // IR Sensor Hoofdspoor #2 Dorp bezet latch
-// ALIAS(IR_D_2_2_BEZET, 2057)         // IR Sensor Hoofdspoor #1 Dorp bezet latch
-// ALIAS(IR_D_1_4_BEZET, 2058)         // IR Sensor Haven - dorp hoofdspoor bezet latch
 
 
 

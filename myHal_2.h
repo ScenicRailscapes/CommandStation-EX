@@ -54,10 +54,7 @@
 //   Number of VPINs=16 (numbered 100-115)
 //   I2C address of module=0x40
 
-HAL(PCA9685,400, 16, 0x40)
-// HAL(PCA9685,420, 16, 0x41)
-// HAL(PCA9685,440, 16, 0x42)
-// HAL(PCA9685,360, 16, 0x45) // #1 Seinen set 1
+HAL(PCA9685,420, 16, 0x41)
 
 //=======================================================================
 // The following directive defines an PCF8574 8-port I2C GPIO Extender module.
@@ -78,8 +75,7 @@ HAL(PCA9685,400, 16, 0x40)
 //   Number of VPINs=16 (numbered 200-215)
 //   I2C address of module=0x23
 
-HAL(PCF8575,300, 16, 0x20) // #1
-
+//HAL(PCF8575,320, 16, 0x21) // #2
 
 //=======================================================================
 // Play mp3 player DFPlayer Mini

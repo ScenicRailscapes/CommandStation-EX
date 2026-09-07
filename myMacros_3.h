@@ -223,6 +223,10 @@
 // Macro om kalibratie uit te voeren
 #define CALIBRATE_BLOCKSENSOREN() \
   PRINT("Starten van handmatige herkalibratie...") \
+  IFLT(BD_D_4_SENSOR, 255) \
+  ENDIF \
+  IFLT(BD_D_5_SENSOR, 255) \
+  ENDIF \
   STEALTH( calibrateAnalogSensors(); )
 
 // Macro om alle sensoren 1 keer uit te lezen
@@ -326,7 +330,7 @@ STEALTH( processAnalogSensors(); )
 
 
 // Of gekoppeld aan het Sein ID via een custom macro:
-#define SET_SIG_120_WHITE() SET_EXIT_SIGNAL_WHITE(SIG_120_J4, SIG_120_J3, SIG_120_J2, SIG_120_J1)   
+#define SET_SIG_121_WHITE() SET_EXIT_SIGNAL_WHITE(SIG_121_J4, SIG_121_J3, SIG_121_J2, SIG_121_J1)   
 
 /* ==================================================================== */
 #endif // MY_MACROS_H

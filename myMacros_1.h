@@ -223,6 +223,12 @@
 // Macro om kalibratie uit te voeren
 #define CALIBRATE_BLOCKSENSOREN() \
   PRINT("Starten van handmatige herkalibratie...") \
+  IFLT(BD_HBU_SENSOR, 255) \
+  ENDIF \
+  IFLT(BD_HBI_SENSOR, 255) \
+  ENDIF \
+  IFLT(BD_DORP_STATION_SENSOR, 255) \
+  ENDIF \
   STEALTH( calibrateAnalogSensors(); )
 
 // Macro om alle sensoren 1 keer uit te lezen

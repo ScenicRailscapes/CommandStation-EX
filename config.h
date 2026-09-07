@@ -1,9 +1,10 @@
 /****************** W I F I C O N F I G ******************************
  Wifi config is nu via de commandline te doen:
  bv <C WIFI "Nijlstroom_24" "52694646">
- <C WIFI HOSTNAME "SilberBachTalBahn">
+ <C WIFI HOSTNAME "DCCEX Node #1">
  Met <D WIFI SHOW> kan je de huidige wifi config zien.
  <C WIFI AP "SilberBachAP" "MsJmdg11"> voor AP mode
+ <C WIFI "DCCEX_d58140" "PASS_d58140">
 */
 
 /**********************************************************************
@@ -68,5 +69,5 @@ The configuration file for DCC-EX * * * * NODE * * * * *
 // quickly to detect them.
 // To work around this, uncomment the STARTUP_DELAY line below and set a value in
 // milliseconds that works for your environment, default is 3000 (3 seconds).
-#define STARTUP_DELAY 1000
+#define STARTUP_DELAY 15000 // wifi netwerk via DCC-EX Station controller. Moet even online komen
 
