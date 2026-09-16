@@ -388,8 +388,24 @@ DONE
 
 
 /*
-  Speciale Routes
+  Speciale Routes en/of getriggerd via node 3 bitmaps
 */
+
+ONBITMAP(ROUTE_90)
+  IF(ROUTE_90) CALL(90) ENDIF
+DONE
+
+ONBITMAP(ROUTE_91)
+  IF(ROUTE_91) CALL(91) ENDIF
+DONE
+
+ONBITMAP(ROUTE_92)
+  IF(ROUTE_92) CALL(92) ENDIF
+DONE
+
+ONBITMAP(ROUTE_93)
+  IF(ROUTE_93) CALL(93) ENDIF
+DONE
 
 ROUTE(90,"Schaduwstation")
     THROW (1000) // links af deel 3-weg wissel

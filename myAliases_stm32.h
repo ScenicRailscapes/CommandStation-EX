@@ -121,6 +121,13 @@ HAL(Bitmap,2095,3)                  // create flags 2095..2097 // blockdetect la
 ALIAS(BD_D_5, 2095)                 // Block #13 yard vissersdorp /dorp branchlijn
 ALIAS(BD_D_4, 2096)                 // Block #10 Connectie dorp en hoofdsporen naar yard en helix dal 
 
+// Bitmaps 3-weg wissel routes
+HAL(Bitmap,2190,4)                  // create flags 2190..2193 // route latches
+ALIAS(ROUTE_90, 2190)                // Route 90 Schaduwstation
+ALIAS(ROUTE_91, 2191)                // Route 91 Helix binnenring
+ALIAS(ROUTE_92, 2192)                // Route 92 Helix buitenring
+ALIAS(ROUTE_93, 2193)                // Route 93 Yard dal
+
 // Routes
 ALIAS(ROUTE_1,1660)                 // Alias voor route 1660 
 ALIAS(ROUTE_2,1661)                 // Alias voor route 1661

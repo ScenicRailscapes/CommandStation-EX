@@ -39,6 +39,7 @@ REMOTE_SENSOR(2003,2)   // 2003-2004 BlockDetectors BD_D_4_Bezet en BD_D_5_Bezet
 REMOTE_SENSOR(2062,4)   // 2060-2065 IR Node 3 bezetmelders 
 REMOTE_SENSOR(2068,5)   // 2068-2072 IR Node 3 bezetmelders
 REMOTE_SENSOR(2095,3)   // 2095-2097 BD_D4 en BD_D5 status voor mimicpanel sync
+REMOTE_SENSOR(2190,4)   // 2190-2193 3-weg wissel routes
 
 // even misbruiken voor export juist in plaats van import
 // SHARED_SENSOR(2030,40)  // 2030-2069 exporteer alle IR en blockdetect bezetmelders
