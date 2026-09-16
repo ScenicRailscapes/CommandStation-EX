@@ -1,78 +1,119 @@
-/* =======================================================================================
-   Dit bestand bevat de (EXRAIL) setups voor de schakelaars, relais en track statusdisplay
-   Ook de schakelaars van bv de TM1638 decoder en LED display worden hier geconfigureerd
-  ======================================================================================== */
-#include "myMacros.h"
-
-/* TM1638 Button and LED module setup */
-ONBUTTON(600)   // Reverse loop toggle switch
-    IFNOT(REVERSE_SIGNAL_ACTIVE)
-      LOOP_ENTRY_WEST             // Set naar normaal signaal om aan oostkant uit te rijden
-      RESET(DORP_STATION_DETECT)  // reset station detectie
-      RESET(DORP_WEST_DETECT)     // reset west detectie
-    ELSE
-      LOOP_ENTRY_EAST             // Set naar normaal signaal om aan oostkant uit te rijden
-      RESET(DORP_STATION_DETECT)  // reset station detectie
-      RESET(DORP_WEST_DETECT)     // reset west detectie      
-    ENDIF
-  DONE
-
-ONBUTTON(606) // Testing, play some sounds
-  BLINK(606,500,500)  // blink the second led
-  SEG7(600,"Soun"_s7,4R) SEG7(604,"d"_s7,4R) // write Sound to the display (start Vpin 600, split over 2 segments
-  PLAYSND(2,1,7,20)  // Set folder to 01 player 1, play 007 (Pass 3 Steam loco) 
-  PLAYSND(0,1,3,18)  // Play 003 (Arrival Elec loco) 
-  PLAYSND(1,1,3,18)  // Play 003 (Arrival Steam loco)
-  DELAY(10000)
-  RESET(606)
-  CLEARSEG7(600)         // clear the display
-  DONE
-
- ONBUTTON(601) //  Track power on/off MAIN A + MAIN B
-  IFNOT(POWER_ON)
-    SET_TRACK(A,MAIN)
-    SET_TRACK(B,MAIN) 
-    POWERON             // turn track power on
-    SET(601)            // light the seventh led
-    SEG7(600,"ON"_s7,4R) SEG7(604,"AB"_s7,4R) // write Track to the display (start Vpin 600, split over 2 segments
-    SET(POWER_ON) // tijdelijk, uitzoeken hoe poweron status opgevraagd kan worden
-  ELSE 
-    POWEROFF                  // turn track power off
-    RESET(601)                // off the seventh led
-    CLEARSEG7(600)            // clear the display
-    RESET(POWER_ON)
+// Toggled met de 3-weg wissel tussen schaduwstation, helix binnen, helixbuiten en yard
+ONBUTTON(SWITCH_1)
+  PRINT ("Button 1")
+  IF(ROUTE_90) // 90 geselecteerd, nu naar 91 toggle
+    RESET(ROUTE_90)
+    RESET(ROUTE_92)
+    RESET(ROUTE_93)
+    SET(ROUTE_91)
+    PRINT("Route 91 geselecteerd")
+    DONE
   ENDIF
-  DONE 
-
-ONBUTTON(607)
-  STEALTH(
-    DCC::setFn(19, 2, true);
-    delay(2000);
-    DCC::setFn(19, 2, false);
-  )
+  IF(ROUTE_91) // 91 geselecteerd, nu naar 92 toggle
+    RESET(ROUTE_90)
+    RESET(ROUTE_91)
+    RESET(ROUTE_93)
+    SET(ROUTE_92)
+    PRINT("Route 92 geselecteerd")
+    DONE
+  ENDIF
+  IF(ROUTE_92) // 92 geselecteerd, nu naar 93 toggle
+    RESET(ROUTE_90)
+    RESET(ROUTE_91)
+    RESET(ROUTE_92)
+    SET(ROUTE_93)
+    PRINT("Route 93 geselecteerd")
+    DONE
+  ENDIF
+  IF(ROUTE_93) // 93 geselecteerd, nu naar 90 toggle
+    RESET(ROUTE_91)
+    RESET(ROUTE_92)
+    RESET(ROUTE_93)
+    SET(ROUTE_90)
+    PRINT("Route 90 geselecteerd")
+    DONE
+  ENDIF
 DONE
-  // hoe de status van power on/off uit te lezen?
-// ONBUTTON(607) //  Track power on/off MAIN A
-//   IFNOT(POWER_ON) 
-//     POWERON                   // turn track power on
-//     SET(607)                  // light the seventh led
-//     SEG7(600,"ON"_s7,4R) SEG7(604,"A "_s7,4R) // write Track to the display (start Vpin 600, split over 2 segments
-//     SET(POWER_ON)
-//   ELSE
-//     POWEROFF                  // turn track power off
-//     RESET(607)                // off the seventh led
-//     CLEARSEG7(600)            // clear the display
-//     RESET(POWER_ON)
-//   ENDIF
-//   DONE
 
+ONBUTTON(SWITCH_2)
+  PRINT ("Button 2")
+  TOGGLE_TURNOUT(1006) // S06 
+DONE
 
-// ONBUTTON(602)
-//   ASPECT(CROSSING_1,ADEM+FAST)   // fade slow
-//   DELAY(5000)
-//   ASPECT(CROSSING_1,KNIPPER+FAST)   // blink fast
-//   AT(601) ASPECT(CROSSING_1,OFF) // stop
-// DONE
+ONBUTTON(SWITCH_3)
+  PRINT ("Button 3")
+  TOGGLE_TURNOUT(1007) // S07
+DONE
 
+ONBUTTON(SWITCH_4)
+  PRINT ("Button 4")  
+  TOGGLE_TURNOUT(1018) // S18
+DONE
 
+ONBUTTON(SWITCH_5)
+  PRINT ("Button 5")
+  TOGGLE_TURNOUT(1019) // S19
+DONE
+
+ONBUTTON(SWITCH_6)
+  PRINT ("Button 6")
+  TOGGLE_TURNOUT(1020) // S20
+DONE
+
+ONBUTTON(SWITCH_7)
+  PRINT ("Button 7")
+  TOGGLE_TURNOUT(1021) // S21
+DONE
+
+ONBUTTON(SWITCH_8)
+  PRINT ("Button 8")
+  TOGGLE_TURNOUT(1022) // S22
+DONE
+
+ONBUTTON(SWITCH_9)
+  PRINT ("Button 9")
+  TOGGLE_TURNOUT(1023) // S23
+DONE
+
+ONBUTTON(SWITCH_10)
+  PRINT ("Button 10")
+  TOGGLE_TURNOUT(1024) // S24
+DONE
+
+ONBUTTON(SWITCH_11)
+  PRINT ("Button 11")
+  TOGGLE_TURNOUT(1025) // S25
+DONE
+
+ONBUTTON(SWITCH_12)
+  PRINT ("Button 12")
+  TOGGLE_TURNOUT(1013) // S13
+DONE
+
+// Deze zijn ingewikkelder.. moet keuzes laten maken welk spoor dus een toggle werkt niet
+// Dat betekent dus een close voor beide is bv de bovenste route en en throw voor beide de lagere route ofzo
+// kortom, uitzoeken voor bv spoor 1 of de S06 en S15 een close of throw moeten zijn
+ONBUTTON(SWITCH_13)
+  PRINT ("Button 13") 
+  TOGGLE_TURNOUT(1009) // S09
+  TOGGLE_TURNOUT(1015) // S15
+DONE
+
+ONBUTTON(SWITCH_14)
+  PRINT ("Button 14")
+  TOGGLE_TURNOUT(1010) // S10
+  TOGGLE_TURNOUT(1016) // S16
+DONE
+
+ONBUTTON(SWITCH_15)
+  PRINT ("Button 15")
+  TOGGLE_TURNOUT(1011) // S11
+  TOGGLE_TURNOUT(1017) // S17
+DONE
+
+ONBUTTON(SWITCH_16)
+  PRINT ("Button 16")
+  TOGGLE_TURNOUT(1012) // S12
+  TOGGLE_TURNOUT(1018) // S18
+DONE
 

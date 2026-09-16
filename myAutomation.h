@@ -34,6 +34,7 @@
   #include "myServosAndMotors_3.h"
   #include "myBlocks_3.h"
   #include "my_NodeAutomation_3.h"
+  #include "mySwitches.h"
 #endif
 
 /* 

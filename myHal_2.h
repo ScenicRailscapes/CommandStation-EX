@@ -106,7 +106,7 @@ HAL(PCA9685,420, 16, 0x41)
   ADDR + ASCL: 0x4B
 */
 
-HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
+HAL(ADS111x,500, 4, 0x49)  // #1 four-input ADS1115 on pins 500..503
 //HAL(ADS111x,505, 4, 0x49)  // #2 four-input ADS1115 on pins 505..508
 //HAL(ADS111x,510, 4, 0x4A)  // #3 four-input ADS1115 on pins 510..513
 //HAL(ADS111x,515, 4, 0x4B)  // #4 four-input ADS1115 on pins 515..518
@@ -127,4 +127,4 @@ HAL(ADS111x,500, 4, 0x48)  // #1 four-input ADS1115 on pins 500..503
       NEOPIXEL(11020 ,63, 30, 1, 10) zet 10 pixels op goed zichtbaar oranje
 */  
     // Let op de vPin nummer en de aantallen pixels dat deze niet een andere vPin overschrijven. 160 pixels per meter 
-//HAL(NeoPixel,11000,160,NEO_GRB,0x60)
+//HAL(NeoPixel,1000,250,NEO_GRB,0x60)

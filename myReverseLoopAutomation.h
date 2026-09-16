@@ -20,26 +20,10 @@ DONE
 ONCLOSE(1007) // Branchlijn hoofdstation / Haven-dorp naar dorp
   LOOP_ENTRY_EAST // reset reverse loop when wissel to haven/yard is closed  
 DONE  
-ONTHROW(1034) // Yard dorp - dorp branchlijn naar dorp
+ONTHROW(1019) // Yard dorp - dorp branchlijn naar dorp
   LOOP_ENTRY_WEST // set reverse loop when wissel to station is thrown
 DONE
-ONCLOSE(1034) // Yard dorp - dorp branchlijn naar dorp
+ONCLOSE(1019) // Yard dorp - dorp branchlijn naar dorp
   LOOP_ENTRY_EAST // reset reverse loop when wissel to haven/yard is closed
 DONE
 
-// // test om beetje visiueel te maken wat er gebeurt met de IR sensoren
-
-// ONSENSOR(DORP_WEST_DETECT)  // IR Sensor dorp west
-//   IF(DORP_WEST_DETECT)
-//     SET(601) // light second led
-//   ELSE
-//     RESET(601) // turn off second led
-//   ENDIF
-// DONE  
-// ONSENSOR(DORP_STATION_DETECT)  // IR Sensor dorp station
-//   IF(DORP_STATION_DETECT)
-//     SET(602) // light second led
-//   ELSE
-//     RESET(602) // turn off second led
-//   ENDIF
-// DONE

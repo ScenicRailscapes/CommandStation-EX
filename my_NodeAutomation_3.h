@@ -10,6 +10,7 @@ AUTOSTART
   PARSE("<D NODE OFF>") // voor nu even, anders wordt alle node info gedumpt
   DELAY(500)
   CALIBRATE_BLOCKSENSOREN()
+  SET(ROUTE_92)
 DONE
 
 // --- Continue loop voor uitlezen blockdetectors analoge ports
