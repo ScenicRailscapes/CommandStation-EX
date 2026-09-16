@@ -38,20 +38,6 @@ The configuration file for DCC-EX Command Station
 
 **********************************************************************/
 
-/* Welke pins worden gebruikt voor TM1638 display en relais op een ESP32 of een Nucleo */
-#ifdef ARDUINO_ARCH_ESP32
-  // #define TM1638_CLOCK   16
-  // #define TM1638_DATA    27
-  // #define TM1638_STROBE  17
-  // #define RELAIS_KEERLUS 14
-#else
-  #define TM1638_CLOCK   PC6
-  #define TM1638_DATA    PC5
-  #define TM1638_STROBE  PC8
-  #define RELAIS_KEERLUS PA11
-#endif
-
-
 /////////////////////////////////////////////////////////////////////////////////////
 // If you want to add your own motor driver definition(s), add them here
 //   For example MY_SHIELD with display name "MINE":

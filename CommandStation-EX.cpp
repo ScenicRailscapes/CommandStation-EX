@@ -165,7 +165,7 @@ void setup()
   } else {
     nodeSharePending = true; // node Will share turnouts list to CS on next loop
   }
-  LCD(3, F("Ready"));
+  //LCD(3, F("Ready"));
 
 }
 

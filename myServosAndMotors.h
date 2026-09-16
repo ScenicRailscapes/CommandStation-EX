@@ -78,7 +78,7 @@ ROUTE(94, "Rangeer op yard")
 ROUTE(95, "Yard dal naar vissersdorp")
     CLOSE (1000) // links af deel 3-weg wissel
     CLOSE (1001) // rechts af deel 3-weg wissel
-    CLOSE(1002) // Yard dal
+    CLOSE (1002) // Yard dal
     THROW (1003) // Yard dal naar vissersdorp
     DONE
 
@@ -86,7 +86,7 @@ ROUTE(96, "Helix CCW vissersdorp - hoofdstation")
     CLOSE (1007) // S08 Branchlijn hoofdstation / Haven-dorp
     CLOSE (1037) // S22 Dorp -> Vissersdorp station"
     THROW (1034) // S19 Haven -> dorp 
-    THROW (1039) // 
+    THROW (1039) // S24
     CLOSE (1024) // S13 -> hoofdstation
     DONE    
 
@@ -95,7 +95,7 @@ ROUTE(97, "Helix CCW dorp - hoofdstation - havendorp - helix CW")
     THROW (1007) // S08 Branchlijn hoofdstation / Haven-dorp
     CLOSE (1037) // S22 Dorp -> Vissersdorp station"
     THROW (1034) // S19 Haven -> dorp 
-    THROW (1039) // 
+    THROW (1039) // S24
     CLOSE (1024) // S13 -> hoofdstation
     DONE        
 

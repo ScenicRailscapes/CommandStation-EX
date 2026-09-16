@@ -231,7 +231,7 @@ void CommandDistributor::setClockTime(int16_t clocktime, int8_t clockrate, bool 
         byte hh=clocktime/60;
         byte mm=clocktime%60;
         if (hh>23) hh=0;
-        LCD(6,clockrate<=1?F("Time %d%d:%d%d"):F("Time %d%d:%d%d (%d)"),
+        LCD(3,clockrate<=1?F("Time %d%d:%d%d"):F("Time %d%d:%d%d (%d)"),
              hh/10, hh%10, mm/10, mm%10, clockrate);
 
         // look for an event for this time

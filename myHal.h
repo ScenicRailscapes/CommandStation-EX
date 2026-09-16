@@ -79,7 +79,7 @@ HAL(HALDisplay<OLED>,1, 0x3c, 128, 64)
 //   I2C address of module=0x23
 
 //HAL(PCF8575,300, 16, 0x26) // #1
-//HAL(PCF8575,320, 16, 0x21) // #2
+HAL(PCF8575,320, 16, 0x21) // CS Schakelaars en leds
 //HAL(PCF8575,340, 16, 0x22) // #3
 //HAL(PCF8575,360, 16, 0x23) // #4 MIMIC PANEL
 
@@ -135,7 +135,7 @@ HAL(DFPlayer,10002, 1, 0x4C)
       NEOPIXEL(11020 ,63, 30, 1, 10) zet 10 pixels op goed zichtbaar oranje
 */  
     // Let op de vPin nummer en de aantallen pixels dat deze niet een andere vPin overschrijven. 160 pixels per meter 
-HAL(NeoPixel,11000,160,NEO_GRB,0x60)
+HAL(NeoPixel,11000,190,NEO_GRB,0x60)
 
 /* =======================================================================
   The following directive defines an IO_EXIOExpander.h device driver
