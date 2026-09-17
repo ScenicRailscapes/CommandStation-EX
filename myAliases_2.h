@@ -12,10 +12,6 @@
    SEIN CONFIGURATIE (EXRAIL)
    ==================================================================== */
 
-// --------------------------------------------------------------------
-// ALIAS DEFINITIES VOOR DE SEINEN AANGESLOTEN OP DEZE NODE
-// --------------------------------------------------------------------
-
 // EntrySignal 117
 ALIAS(SIG_117_J4, 25) // GPIO 25
 ALIAS(SIG_117_J3, 26)
@@ -69,58 +65,3 @@ ALIAS(IR_S_RIJ_BEZET, 2062)         // IR Stop sensor doorrij spoor bezet latch
 HAL(Bitmap,2066,2)                  // create flags 2066-2067 // IR bezet flags/latches
 ALIAS(IR_D_3_2_BEZET, 2066)         // IR Sensor Hoofdspoor #2 Dorp bezet latch
 ALIAS(IR_D_2_2_BEZET, 2067)         // IR Sensor Hoofdspoor #1 Dorp bezet latch
-
-
-
-
-/* 
-  Aangesloten op I2C I/O #1 expander 300-315
-  IR Sensors (infrarood) voor blok detectie
-//Laten aanbieden via SHARED_SENSOR
-*/
-/*
-ALIAS (IR_HBU_D, 300)               // IR Sensor Helix dal niveau buitenring
-ALIAS (IR_HBU_M, 301)               // IR Sensor Helix midden niveau buitenring
-ALIAS (IR_HBI_B, 302)               // IR Sensor Helix berg niveau buitenring
-ALIAS (IR_D_1_1, 308)               // IR Sensor Dorp branchlijn west (berg)
-ALIAS (IR_D_1_2, 309)               // IR Sensor Dorp branchlijn station
-ALIAS (IR_D_1_3, 310)               // IR Sensor hoofdspoor dorp - haven
-ALIAS (IR_D_2_1, 312)               // IR Sensor Hoofdspoor #1 Berg
-ALIAS (IR_D_3_1, 311)               // IR Sensor Hoofdspoor #2 Berg
-ALIAS (IR_HBI_D, 313)               // IR Sensor Helix dal niveau binnenring
-ALIAS (IR_HBI_M, 314)               // IR Sensor Helix midden niveau binnenring
-ALIAS (IR_HBU_B, 315)               // IR Sensor Helix berg niveau binnenring
-
-// Aangesloten op I2C I/O #2 expander 320-335 OF op de node zelf, zijn er niet veel
-// IR Sensors (infrarood) voor blok detectie
-ALIAS (IR_S_1, 330)                 // IR Stop sensor parkeerspoor #1
-ALIAS (IR_S_2, 331)                 // IR Stop sensor parkeerspoor #2
-ALIAS (IR_S_3, 332)                 // IR Stop sensor parkeerspoor #3
-ALIAS (IR_S_4, 333)                 // IR Stop sensor parkeerspoor #4
-ALIAS (IR_S_5, 334)                 // IR Stop sensor parkeerspoor #5
-// Block detectors (negatief voor block occupied)
-// let op moet dit negatief zijn? op BD_S_1  ??
-ALIAS(BD_S_1, 320)                  // Block #4 Parkeerspoor #1
-ALIAS(BD_S_2, -321)                 // Block #5 Parkeerspoor #2
-ALIAS(BD_S_3, -322)                 // Block #6 Parkeerspoor #3
-ALIAS(BD_S_4, -323)                 // Block #7 Parkeerspoor #4
-ALIAS(BD_S_5, -324)                 // Block #8 Parkeerspoor #5
-ALIAS(BD_S_RIJ, -325)               // Block #9 Doorrij spoor
-ALIAS(BD_D_4, -326)                 // Block #10 Connectie dorp en hoofdsporen naar yard en helix dal 
-ALIAS(BD_D_2, -327)                 // Block #11 Hoofdspoor #1
-ALIAS(BD_D_3, -328)                 // Block #12 Hoofdspoor #2
-ALIAS(BD_D_5, -329)                 // Block #13 yard vissersdorp /dorp branchlijn
-
-// Aangesloten op I2C I/O #3 expander 340-355
-// IR Sensors (infrarood) voor blok detectie
-ALIAS (IR_S_RIJ, 340)               // IR Stop sensor doorrij spoor
-ALIAS (IR_L_1, 341)                 // IR Sensor Liechtenstein spoor eindpunt
-ALIAS (IR_L_2, 345)                 // IR Sensor Liechtenstein spoor station midden
-ALIAS (IR_L_3, 346)                 // IR Sensor Liechtenstein spoorstation berg
-ALIAS (IR_D_1_5, 342)               // IR Sensor Visserdorp - dorp hoofdspoor
-ALIAS (IR_D_4_1, 349)               // IR Sensor Connectie spoor #1 Dorp 
-ALIAS (IR_D_4_2, 348)               // IR Sensor Connectie spoor #1 Dal
-ALIAS (IR_D_3_2, 350)               // IR Sensor Hoofdspoor #2 Dorp
-ALIAS (IR_D_2_2, 351)               // IR Sensor Hoofdspoor #1 Dorp
-ALIAS (IR_D_1_4, 352)               // IR Sensor Haven - dorp hoofdspoor
-*/

@@ -90,30 +90,49 @@ ONBUTTON(SWITCH_12)
   TOGGLE_TURNOUT(1013) // S13
 DONE
 
-// Deze zijn ingewikkelder.. moet keuzes laten maken welk spoor dus een toggle werkt niet
-// Dat betekent dus een close voor beide is bv de bovenste route en en throw voor beide de lagere route ofzo
-// kortom, uitzoeken voor bv spoor 1 of de S06 en S15 een close of throw moeten zijn
-ONBUTTON(SWITCH_13)
-  PRINT ("Button 13") 
-  TOGGLE_TURNOUT(1009) // S09
-  TOGGLE_TURNOUT(1015) // S15
+// Schaduwstation wissels
+
+ONBUTTON(SWITCH_13)   // schaduwstation spoor #1 en #2
+  PRINT("Button 13") 
+  THROW(1017)
+  THROW(1016)
+  THROW(1015)
+
+  CLOSE(1009)
+  CLOSE(1010)
+  CLOSE(1011)  
 DONE
 
-ONBUTTON(SWITCH_14)
-  PRINT ("Button 14")
-  TOGGLE_TURNOUT(1010) // S10
-  TOGGLE_TURNOUT(1016) // S16
+ONBUTTON(SWITCH_14)   // schaduwstation spoor #3 en #4
+  PRINT("Button 14")
+  THROW(1017)
+  THROW(1016)
+  CLOSE(1015)
+
+  THROW(1009)
+  CLOSE(1010)
+  CLOSE(1011)
 DONE
 
-ONBUTTON(SWITCH_15)
-  PRINT ("Button 15")
-  TOGGLE_TURNOUT(1011) // S11
-  TOGGLE_TURNOUT(1017) // S17
+ONBUTTON(SWITCH_15)   // schaduwstation spoor #5
+  PRINT("Button 15")
+  THROW(1017)
+  CLOSE(1016)
+  CLOSE(1015)
+
+  THROW(1009)
+  THROW(1010)
+  CLOSE(1011)
 DONE
 
-ONBUTTON(SWITCH_16)
-  PRINT ("Button 16")
-  TOGGLE_TURNOUT(1012) // S12
-  TOGGLE_TURNOUT(1018) // S18
+ONBUTTON(SWITCH_16) // schaduwstation doorrijspoor
+  PRINT("Button 16")
+  CLOSE(1017)
+  CLOSE(1016)
+  CLOSE(1015)
+  
+  THROW(1009)
+  THROW(1010)
+  THROW(1011)
 DONE
 

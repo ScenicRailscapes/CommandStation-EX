@@ -1,4 +1,5 @@
 AUTOSTART
+  SET(2)  // ff testen of de node wel boot
   LCD(0, "SilberBachTalBahn node #1")
   LCD(1,"")
   LCD(2,"")
@@ -29,7 +30,7 @@ FOLLOW(3)
 AUTOSTART SEQUENCE(4)
   // regelmatig broadcast alle shared sensors en wissels
   PARSE("<D SHARE>")
-  DELAYMINS(7)
+  DELAYMINS(15)
 FOLLOW(4)
 
 ROUTE (990, "Calibrate BlockSensoren")
